@@ -1,0 +1,88 @@
+#app
+server:
+  port: 8020
+  session:
+    timeout: 1800
+  connection-timeout:  60000
+#spring
+spring:
+  application:
+    name: springboot
+  http:
+    encoding:
+      force: true
+      charset: UTF-8
+      enabled: true
+  
+  mvc:
+    view:
+      prefix: /WEB-INF/jsp/
+      suffix: .jsp
+        
+  profiles:
+    active: dev
+
+  jackson:
+    date-format: YYYY-MM-DD
+    joda-date-time-format: YYYY-MM-DD HH:mm:ss
+  cache:
+    ehcache:
+      config: classpath:ehcache.xml
+
+mybatis:
+  mapper-locations: com/yx/entity/mapper/*Mapper.xml
+logging:
+  level: 
+    org.springframework.web: DEBUG
+    com.nico.web: TRACE
+    com.yx.youchubank: INFO
+  path: /var/logs
+  file: /logs/webmagic.log
+---
+spring:
+   profiles: dev
+   datasource:
+     url: jdbc:mysql://192.168.254.108:3306/webmagic?useUnicode=true&characterEncoding=utf-8
+     username: root
+     password: 123456
+     driver-class-name: com.mysql.jdbc.Driver
+     type: com.alibaba.druid.pool.DruidDataSource
+# 初始化大小，最小，最大  
+     initialSize: 5
+     minIdle: 5
+     maxActive: 20
+# 配置获取连接等待超时的时间  
+     maxWait: 60000
+# 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒  
+     timeBetweenEvictionRunsMillis: 60000
+# 配置一个连接在池中最小生存的时间，单位是毫秒  
+     minEvictableIdleTimeMillis: 300000
+# 校验SQL，Oracle配置               validationQuery: SELECT 1 FROM DUAL，如果不配validationQuery项，则下面三项配置无用  
+     validationQuery: SELECT 'x'
+     testWhileIdle: true
+     testOnBorrow: false
+     testOnReturn: false
+# 打开PSCache，并且指定每个连接上PSCache的大小  
+     poolPreparedStatements: true
+     maxPoolPreparedStatementPerConnectionSize: 20
+# 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙  
+     filters: stat,wall,log4j
+# 通过connectProperties属性来打开mergeSql功能；慢SQL记录  
+     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+# 合并多个DruidDataSource的监控数据  
+     useGlobalDataSourceStat: true
+   redis:
+        host: 192.168.254.108
+        port: 6379
+        password: 
+        pool:
+          max-active: 100
+          max-idle: 10
+          max-wait: 100000
+        timeout: 5000
+        commandTimeout: 5000
+sendserver:
+   HOST: 'http://211.156.32.71:8081/Consensus/Client/'
+   MAC: 52:54:00:1D:D2:FE
+   PWD: 123456
+   JSON: '{"type":1,"mac":"52:54:00:1D:D2:FE","synonym":{"邮储银行":"邮政储蓄银行 邮储行","湖南":"长沙 湘潭 株洲 邵阳 岳阳 常德 益阳 郴州 衡阳 娄底 怀化 永州 张家界 湘西"},"depth":20,"task":{"bean_status":null,"id":98,"title":"邮储银行","categoryId":42,"attention":0.3,"mustword":"湖南 邮储银行","orword":"","notword":"","issnapshot":null,"isdownphoto":null,"enable":1,"monitortime":180,"createon":"1551150726000","createby":"youchubank","updateby":"youchubank","updateon":"1551150726000","name":"常规监测","companyName":"湖南邮储银行","companyId":19,"sitetype":null},"targetsite":{"siteCode":"N0000759","sysType":0,"scanfrequency":180,"title":"百度网页","sitetype":"1","sleep":2,"serialVersionUID":1,"depth":10,"id":476,"state":0},"isdownphoto":0,"warning":{"serialVersionUID":1,"replyCount":1000,"clickCount":1000,"citedCount":1000},"id":"23654-21","targetsiteid":476,"state":3,"time":1551150726154,"taskid":98}'
