@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>
+	<!--广州医科大学http://210.38.57.81:7001/portlet_sso/Messge.jsp?mid=6380 -->
+	<forurlReg><![CDATA[http://210.38.57.81:7001/portlet_sso/Messge.jsp\?[\S]+]]></forurlReg>
+	<!-- 临时集合 页面下载前获取-->
+	<load_on_items>
+		<item name="siteName" mode="str">
+   	 		<![CDATA[广州医科大学]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[main]]>
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<!-- 能够获取到列表块 视为此模板匹配成功 -->
+		<item name="main" mode="xpath" type="tmp">
+   			<![CDATA[//div[@class='main']/@class]]>
+		</item> 
+	</tmp_items>
+	<Contents>
+		<!--标题 -->
+		<item name="Title" mode="xpath">
+    	<![CDATA[//div[@class='news_neirong']/h2/strong/text()]]>
+		</item>
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="tmp_pubDateTime" mode="xpath" type="tmp">
+    	<![CDATA[//div[@class='news_neirong']/p[@class='inf']/text()]]>
+		</item>
+		<item name="pubDateTime" mode="regular" dateformat="yyyy-MM-dd"
+			parent="tmp_pubDateTime">
+    	<![CDATA[发布日期：(.*?)\s]]>
+		</item>
+		<item name="tmp_ClickCount" mode="xpath" type="tmp"><!--点击量 -->
+    	<![CDATA[//div[@class='news_neirong']/p[@class='inf']/font/text()]]>
+		</item>
+		<item name="ClickCount" mode="regular"  parent="tmp_ClickCount">
+    	     <![CDATA[^(.*?)次浏览]]>   	     
+		</item>
+		<item name="Content" mode="xpath" ><!--内容 -->
+    	<![CDATA[//div[@id='contentText']/html()]]>
+		</item>
+	</Contents>
+</html>

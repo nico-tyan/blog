@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html>
+     <!-- 重庆工商大学融智学院  http://www.cqrz.edu.cn/ss_list.jsp?a50667t=34&a50667p=1&a50667c=10&a50667i=%E9%87%8D%E5%BA%86&entrymode=1&condition=0&Find=find&INTEXT2=6YeN5bqG&wbtreeid=1585&news_search_code=&INTEXT= -->
+     <forurlReg><![CDATA[http://www.cqrz.edu.cn/ss_list.jsp\?[\S]+]]></forurlReg>
+     <!-- 临时集合 页面下载前获取-->
+     <load_on_items>
+          <item name="siteCode" mode="str"><![CDATA[N0001264]]></item>
+          <item name="siteName" mode="str"><![CDATA[重庆工商大学融智学院]]></item>
+          <item name="type" mode="str">
+               <![CDATA[1]]>
+               <!-- 1 搜索列表  2 详情 -->
+          </item>
+          <item name="siteUrl" mode="str">
+               <![CDATA[http://www.cqrz.edu.cn/ss_list.jsp?a50667t=34&a50667p={Page}&a50667c=10&a50667i={Keyword}&entrymode=1&condition=0&Find=find&INTEXT2=6YeN5bqG&wbtreeid=1585&news_search_code=&INTEXT=]]>
+               <!--搜索链接 -->
+          </item>
+          <item name="charset" mode="str"><![CDATA[utf-8]]></item>
+          <item name="url_charset" mode="str"><![CDATA[utf-8]]></item>
+          <item name="get_next_url" mode="str">
+               <![CDATA[1]]>
+               <!--  get_next_url =1 为获取下一页， 其它为替换 -->
+          </item>
+          <item name="load_referer" mode="str" type="tmp">
+               <!-- 检查是否需要referer -->
+               <![CDATA[#]]>
+          </item>
+          <item name="statusCode" mode="str">
+               <![CDATA[200]]>
+               <!--下载返回码为 200 视为成功 -->
+          </item>
+          <item name="cycle_retry_times" mode="str">
+               <![CDATA[1]]>
+               <!-- 重试次数 -->
+          </item>
+          <!--内容解析成功必须存在的几个 值  -->
+          <item name="exist_keys" mode="str">
+               <![CDATA[clearfix]]>
+               <!-- 能够获取到列表块 视为此模板匹配成功 -->
+          </item>
+     </load_on_items>
+     <!-- 临时集合  页面下载后获取-->
+     <tmp_items>
+          <!-- 能够获取到列表块 视为此模板匹配成功 -->
+          <item name="clearfix" mode="xpath" type="tmp"><![CDATA[//div[@class='wp-inner clearfix']/@class]]></item>
+     </tmp_items>
+     <list>
+          <item name="list_items" mode="xpath" type="tmp">
+               <!--相当于添加了一个父类 （标题url这些需要获取的共同路径）  下面的网站主题就可以写精简 -->
+               <![CDATA[//div[@id="wp_news_w9"]/form/table[2]/tbody/tr]]>
+          </item>
+     </list>
+     <items>
+          <item name="Title" mode="xpath">
+               <!-- 标题 -->
+               <![CDATA[a/text()]]>
+          </item>
+          <item name="Url" mode="xpath">
+               <!-- url链接 -->
+               <![CDATA[a/@href]]>
+          </item>
+          <item name="tmp_pubDateTime" mode="xpath" type="tmp">
+               <!-- 时间 -->
+               <![CDATA[em/text()]]>
+          </item>
+          <item name="pubDateTime" mode="regular" parent="tmp_pubDateTime" dateformat="yyyy-MM-dd"><![CDATA[^(.*?)$]]></item>
+     </items>
+     <!-- 获取下一页地址 -->
+     <page>
+          <item name="page" mode="xpath" type="tmp"><![CDATA[//a[@class='Next']/@href]]></item>
+     </page>
+</html>
+

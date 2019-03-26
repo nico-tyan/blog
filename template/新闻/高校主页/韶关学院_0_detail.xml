@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>
+	<!--韶关学院http://www.sgu.edu.cn/News_Details.aspx?id=67511-->
+	<forurlReg><![CDATA[http://www.sgu.edu.cn/News_Details[\S]+]]></forurlReg>
+	<!-- 临时集合 页面下载前获取-->
+	<load_on_items>
+		<item name="siteName" mode="str">
+   	 		<![CDATA[韶关学院]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[content]]>
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<!-- 能够获取到列表块 视为此模板匹配成功 -->
+		<item name="content" mode="xpath" type="tmp">
+   			<![CDATA[//div[@id='content']/@id]]>
+		</item> 
+	</tmp_items>
+	<Contents>
+		<!--标题 -->
+		<item name="Title" mode="xpath">
+    	<![CDATA[//div[@class='title']/h1/span/text()]]>
+		</item>
+		<item name="Author" mode="xpath"><!--作者  -->
+    	<![CDATA[//ul[@class='author']/li[1]/span/text()]]>
+		</item>
+	<!-- 	
+		<item name="pubDateTime" mode="regular" dateformat="yyyy-MM-dd">
+    	<![CDATA[FONT-SIZE: 12pt">((\d{4})</span>[\s\S]*?年<span>(\d{1,2})</span>月<span>(\d{1,2})</span>日</span>)]]>
+		</item> -->
+		<item name="ClickCount" mode="xpath"><!--点击量 -->
+    	<![CDATA[//ul[@class='author']/li[3]/span[@id='lbViewCount']/text()]]>
+		</item>
+		<item name="Content" mode="xpath" ><!--内容 -->
+    	<![CDATA[//div[@id='a_content']/html()]]>
+		</item>
+	</Contents>
+</html>

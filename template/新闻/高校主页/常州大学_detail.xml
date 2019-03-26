@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>
+	<!-- 常州大学http://news.cczu.edu.cn/2017/0808/c6620a162829/page.htm -->
+	<forurlReg><![CDATA[http://[\S]+.cczu.edu.cn/[\S]+]]></forurlReg>
+	<!-- 临时集合 页面下载前获取-->
+	<load_on_items>
+		<item name="siteName" mode="str">
+   	 		<![CDATA[常州大学]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[container]]>
+		</item>
+		<item name="id" mode="regular" type="tmp" ref="url"> <!-- 引用  url匹配   -->  
+    	<![CDATA[(\d+)/page.htm]]>
+		</item>
+
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<!-- 能够获取到列表块 视为此模板匹配成功 -->
+		<item name="container" mode="xpath" type="tmp">
+   			<![CDATA[//div[@id='container']/@id]]>
+		</item> 
+	</tmp_items>
+	<Contents>
+		<!--标题 -->
+		<item name="Title" mode="xpath">
+    	<![CDATA[//span[@class='Article_Title']/text()]]>
+		</item>
+		<item name="Author" mode="xpath"><!--作者  -->
+    	<![CDATA[//span[@class='Article_Author']/text()]]>
+		</item>
+		<item name="pubDateTime" mode="regular" dateformat="yyyy-MM-dd">
+    	<![CDATA[(\d+-\d+-\d+)]]>
+		</item>
+		<item name="Content" mode="xpath" ><!--内容 -->
+    	<![CDATA[//div[@class='wp_articlecontent']/html()]]>
+		</item>
+	</Contents>
+	<!-- ajax异步获取 -->
+	<ajax>
+		<method><![CDATA[get]]></method>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<!-- 组装 请求连接  ref引用已获取或已处理数据  data_type 数据类型-->
+		<!-- http://news.cczu.edu.cn/_visitcountdisplay?siteId=111&type=3&articleId=162829 -->
+		<url_join ref="id" data_type="String"><![CDATA[http://news.cczu.edu.cn/_visitcountdisplay?siteId=111&type=3&articleId=]]></url_join>
+		<item name="ClickCount" mode="regular">
+	    	<![CDATA[(\d+)]]>
+		</item>
+	</ajax>
+</html>

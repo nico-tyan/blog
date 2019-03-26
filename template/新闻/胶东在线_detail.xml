@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>
+	<!-- 胶东在线http://www.jiaodong.net/news/system/2017/09/24/013517002.shtml -->
+	<forurlReg><![CDATA[http://[\S]+.jiaodong.net/[\S]+]]></forurlReg>
+	<!-- 临时集合 页面下载前获取-->
+	<load_on_items>
+		<item name="siteName" mode="str">
+   	 		<![CDATA[胶东在线]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[gbk]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[gbk]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[Title|Content]]>
+		</item>
+	</load_on_items>
+	
+	<Contents>
+		<!--标题 -->
+		<item name="Title" mode="xpath">
+    	<![CDATA[//div[@class='millia']/h1/text()|//div[@id='content']/h1/text()|//div[@id='millia']/h1/text()|//div[@class='zw_nav2']/h1/text()]]>
+		</item>
+		<item name="Author" mode="regular"><!--作者  -->
+    	<![CDATA[]]>
+		</item>
+		<item name="tmp_From" mode="xpath" type="tmp" >
+    	     <![CDATA[//div[@class='source f14']/text()]]>   	     
+		</item>
+		<item name="From" mode="regular"  parent="tmp_From">
+    	     <![CDATA[来源：(.*?)\s]]>   	     
+		</item>
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="tmp_pubDateTime" mode="xpath" type="tmp">
+    	<![CDATA[//div[@class='source f14']/text()|//div[@class='source f12 lh32']/text()|//div[@class='c666 f14 lh34 source']/text()|//div[@class='fl w320 pt5 pb5 pl100']/text()]]>
+		</item>
+		<item name="pubDateTime" mode="regular" dateformat="yyyy-MM-dd HH:mm"
+			parent="tmp_pubDateTime">
+    	<![CDATA[(\d+-\d+-\d+ \d+:\d+)]]>
+		</item>
+		<item name="Content" mode="xpath" ><!--内容 -->
+    	<![CDATA[//div[@class='f18 lh36']/html()|//div[@class='content f14 lh26 pt30']/html()|//div[@id='content']/html()|//div[@class='content_nav']/html()]]>
+		</item>
+	</Contents>
+</html>

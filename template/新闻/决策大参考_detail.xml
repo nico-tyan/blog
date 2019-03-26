@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>	
+	<!--决策大参考_detail.xml     http://www.ccin.com.cn/ccin/news/2018/04/13/375668.shtml 详细页 -->      
+	<forurlReg ><![CDATA[http://www.ccin.com.cn[\S]*]]></forurlReg>
+	<!-- 临时集合 页面下载前获取-->
+	<load_on_items>
+	   <item name="siteName" mode="str">
+   	 		<![CDATA[决策大参考]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[GBK]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[GBK]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[Title|Content|pubDateTime]]>
+		</item>
+		<item name="first_keys" mode="str">
+   			<![CDATA[main]]>
+		</item>
+		<item name="next_url" mode="regular" type="tmp" ref="url"><!--引用  url匹配  -->
+    	<![CDATA[^(.*?)\.htm]]>
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<item name="main" mode="xpath" type="tmp">
+   			<![CDATA[//div[@class="thtml_div"]/@class]]>
+		</item>
+	</tmp_items>
+	<tmp_items>
+		
+	</tmp_items>
+	<!--内容块 -->
+	<Contents>
+	
+		<!--标题 -->		
+	  	<item name="Title" mode="xpath">
+    		<![CDATA[//div[@class="news_con_tit"]/h2/text()]]>
+		</item>
+		
+	    <item name="Author1" mode="xpath" type="tmp">
+    		<![CDATA[//div[@class="news_con_tit"]/text()]]>
+		</item>	
+		<item name="Author" mode="regular" parent="Author1">
+    		<![CDATA[作者：(.*?)\d+年]]>
+		</item>	
+						
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="pubDateTime" mode="regular" parent="Author1" dateformat="yyyy年MM月dd日">
+    	     <![CDATA[(\d+年\d+月\d+日)]]>   	     
+		</item>
+
+	
+		<item name="From" mode="xpath"  >
+		<![CDATA[//div[@class="news_con_tit"]/a/text()]]>
+		</item> 
+  
+     	<item name="ClickCount" mode="xpath" regex="," replacement="" trim="1"><!--点击量 -->
+    	<![CDATA[]]>
+		</item>
+		<item name="ReplyCount" mode="xpath"><!--回复数 -->
+    	<![CDATA[]]>
+		</item>
+		<item name="Summary" mode="xpath"><!-- 摘要 -->
+		 <![CDATA[]]>
+		</item>
+		
+		<item name="Content" mode="xpath"><!--内容 -->
+    	<![CDATA[//div[@class="con"]/html()]]>
+		</item>
+	</Contents>	
+	<page>
+	<!--翻页 下一页规则 -->
+    	<item name="page" mode="xpath"  >
+	         <![CDATA[]]>
+	   </item>
+
+	</page> 
+	<!--翻页 下一页内容-->
+	<Next_Contents>
+		<item name="Content" mode="xpath"><!--内容 -->
+    	<![CDATA[]]>
+		</item>
+	</Next_Contents>
+	
+</html>

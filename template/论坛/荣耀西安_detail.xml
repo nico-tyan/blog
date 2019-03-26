@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>
+	<!-- 荣耀西安http://www.ixian.cn/thread-1487489-1-1.html -->
+	<forurlReg><![CDATA[http[\S]+www.ixian.cn/[\S]+]]></forurlReg>
+	<!-- 临时集合 页面下载前获取-->
+	<load_on_items>
+		<item name="siteName" mode="str">
+   	 		<![CDATA[荣耀西安]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[gbk]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[gbk]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[wp]]>
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<!-- 能够获取到列表块 视为此模板匹配成功 -->
+		<item name="wp" mode="xpath" type="tmp">
+   			<![CDATA[//div[@id='wp']/@id]]>
+		</item> 
+	</tmp_items>
+	
+	<Contents>
+		<!--标题 -->
+		<item name="Title" mode="xpath">
+    	<![CDATA[//h1/span/text()]]>
+		</item>
+		<item name="Author" mode="xpath"><!--作者  -->
+    	<![CDATA[//div[@class='pi']/div[@class='authi']/a/text()]]>
+		</item>
+		<item name="Summary" mode="xpath"> <!--摘要 -->
+		</item>
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="tmp_pubDateTime" mode="xpath" type="tmp">
+    	<![CDATA[//div[@class='comiis_viewtit']/p/span/text()]]>
+		</item>
+		<item name="pubDateTime" mode="regular" dateformat="yyyy-MM-dd HH:mm"
+			parent="tmp_pubDateTime">
+    	<![CDATA[发表于: (.*?)\s\s]]>
+		</item>
+		<item name="ClickCount" mode="xpath" regex="," replacement=""><!--点击量 -->
+    	<![CDATA[//div[@class='comiis_viewtit']/p/span/em[1]/text()]]>
+		</item>
+		<item name="ReplyCount" mode="xpath"><!--回复数 -->
+    	<![CDATA[//div[@class='comiis_viewtit']/p/span/em[2]/text()]]>
+		</item>
+		<item name="Content" mode="xpath" ><!--内容 -->
+    	<![CDATA[//td[@class='t_f']/html()]]>
+		</item>
+	</Contents>
+	<Append_Contents>
+		<!-- json方式获取 -->
+		<!--json 图文  http://slide.news.sina.com.cn/w/slide_1_2841_108369.html -->
+		<!-- <item name="slide_data" mode="regular" type="tmp">
+	    	<![CDATA[var slide_data = ([\S\s]+})\s+var ARTICLE_DATA]]>
+		</item>
+		标题
+		<item name="Title" mode="json" parent="slide_data">
+    	<![CDATA[$.. slide.title]]>
+		</item>
+		<item name="pubDateTime" mode="json" dateformat="yyyy-MM-dd HH:mm:ss" parent="slide_data">
+    	<![CDATA[$.. slide.createtime]]>
+		</item>
+		<item name="images" mode="json" parent="slide_data" type="tmp">
+    	<![CDATA[$..images]]>
+		</item>
+		<item name="Content" mode="json_subset" parent="images" append_s="&lt;p&gt;" append_e="&lt;/p&gt;">
+    	<![CDATA[$..image_url@IMG|$..intro]]>如果存在@IMG <img> src="" 包围</img>
+		</item> -->
+	</Append_Contents>
+	
+	<page>
+		<!--翻页 下一页规则 -->
+		<!-- 第一种方式 --> 
+		<item name="page" mode="xpath" type="tmp">
+   			<![CDATA[]]> 
+		</item>
+		<!-- 第二种方式 -->
+		<item name="currentPage" mode="regular" type="tmp">
+   			<![CDATA[]]>
+		</item>
+		<item name="countPage" mode="regular" type="tmp">
+   			<![CDATA[]]>
+		</item>
+		<!-- append_page = 0 or 1   时 递增规则 0 或 1 开始 --> 
+		<url_join ref="next_url" append_page="1"><![CDATA[_]]></url_join>
+		<url_join ><![CDATA[.shtml]]></url_join>
+	</page>
+	<!-- 翻页 下一页内容 -->
+	<Next_Contents>
+		<item name="Content" mode="xpath"><!-- 内容 -->
+    	<![CDATA[]]>
+		</item>
+	</Next_Contents>
+	<!--最终获取到的内容过滤  如广告-->
+	<regex_filter ><![CDATA[<div class="attach_nopermission[^>]*?>[\s\S]+?</div>]]></regex_filter>
+	<!-- 
+	<regex_filter ><![CDATA[<a[^>]*?>[\s\S]+?</a>]]></regex_filter> 如替换掉所有a标签
+	<css_filter><![CDATA[a[href]]]></css_filter>//带有href属性的a元素 删除
+	<css_filter><![CDATA[img[src$=.png]]]></css_filter>//扩展名为.png的图片   删除
+	<css_filter><![CDATA[h3.r > a]]></css_filter>//在h3元素之后的a元素   删除 
+	-->
+</html>

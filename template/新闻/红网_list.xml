@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>
+	<!-- 红网http://s.rednet.cn/?scope=1&title=0&q=%E6%B9%96%E5%8D%97&page_size=10&date_range=4&orderby=1&page=1-->
+	<!-- http://s.rednet.cn/?scope=1&q=q&title=0-->
+	<forurlReg><![CDATA[http://s.rednet.cn[\S]+]]></forurlReg>
+	<!-- 临时集合 页面下载前获取-->
+	<load_on_items>
+	 <item name="siteCode" mode="str"><![CDATA[N0000707]]></item>
+	 <item name="siteName" mode="str"><![CDATA[红网]]></item>
+			<item name="type" mode="str">
+   			<![CDATA[1]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="siteUrl" mode="str">
+   			<![CDATA[http://s.rednet.cn/?scope=10&q={Keyword}&title=0&orderby=1&date_range=2]]> <!--搜索链接 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="get_next_url" mode="str">
+   			<![CDATA[1]]><!--  get_next_url =1 为获取下一页， 其它为替换 -->
+		</item>
+		<item name="load_referer" mode="str" type="tmp"><!-- 检查是否需要referer -->
+   			<![CDATA[#]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值  -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[main-wrapper]]> <!-- 能够获取到列表块 视为此模板匹配成功 -->
+		</item>
+	</load_on_items>
+	<cookie_data_join name="yd_captcha_token" ref="gen_str">
+	<![CDATA[ycnr60ZDoC8ySqmxnFJlevKaV/8AweWJbFRIwCIxGjLs2FtVaxPbmQeCyiO+OXdeR42/fgeMpyzlLEes65Fpbw%3D%3D]]>
+	</cookie_data_join>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<!-- 能够获取到列表块 视为此模板匹配成功 -->
+		<item name="main-wrapper" mode="xpath" type="tmp">
+   			<![CDATA[//table[@id='main-layout']/@id]]>
+		</item> 
+	</tmp_items>
+	
+	<list>
+ 		<item name="list_items" mode="xpath" type="tmp"><!--相当于添加了一个父类 （标题url这些需要获取的共同路径）  下面的网站主题就可以写精简 -->
+ 			<![CDATA[div[@class='module']]]>
+		</item>
+	</list>
+	<items>
+		<item name="Title" mode="xpath"><!-- 标题 -->
+   			<![CDATA[div[@class='title']/a/allText()]]>
+		</item>
+		<item name="Url" mode="xpath"><!-- url链接 -->
+   			<![CDATA[div[@class='title']/a/@href]]>
+		</item>
+		<item name="pubDateTime" mode="xpath"
+		dateformat="yyyy-MM-dd">
+		<![CDATA[div[@class='sub-title']/span/@title]]>
+		</item>
+	</items>
+</html>

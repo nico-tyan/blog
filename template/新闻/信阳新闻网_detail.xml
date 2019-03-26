@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>
+	<!-- 信阳新闻网http://www.xyxww.com.cn/jhtml/cjxw/133982.html -->
+	<forurlReg><![CDATA[https?://[\S]+.xyxww.com.cn/[\S]+]]></forurlReg>
+	<!-- 临时集合 页面下载前获取-->
+	<load_on_items>
+		<item name="siteName" mode="str">
+   	 		<![CDATA[信阳新闻网]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[Title|Content|pubDateTime]]>
+		</item>
+		<item name="next_url" mode="regular" type="tmp" ref="url"><!--  引用  url匹配     -->
+    		<![CDATA[html/(\S+)/content]]>
+		</item>
+		<item name="first_keys" mode="str">
+   			<![CDATA[main]]>
+		</item>		
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<!-- 能够获取到列表块 视为此模板匹配成功 -->
+		<item name="main" mode="xpath" type="tmp">
+   			<![CDATA[//div[@id='main']/@id|//div[@class='main c_fr']/@class]]>
+		</item> 
+	</tmp_items>
+	<Contents>
+		<!--标题 -->
+		<item name="Title" mode="xpath">
+    	<![CDATA[//h1[@id='artibodytitle']/text()|//div[@class='related']/h1/text()]]>
+		</item>
+		<item name="tmp_From" mode="xpath" type="tmp" >
+    	     <![CDATA[//span[@id='source_baidu']/text()]]>   	     
+		</item>
+		<item name="From" mode="regular"  parent="tmp_From">
+    	     <![CDATA[来源：(.*?)$]]>   	     
+		</item>
+		<item name="pubDateTime" mode="regular" dateformat="yyyy-MM/dd"
+			parent="next_url">
+    	<![CDATA[^(.*?)$]]>
+		</item>
+		<!--作者-->		
+		<item name="pubAuthor" mode="xpath" type="tmp">
+    	     <![CDATA[//div[@class='fr fs14']/span/text()]]>   	     
+		</item> 
+		<item name="Author" mode="regular" parent="pubAuthor">
+    	     <![CDATA[编辑：(.*?)$]]>   	     
+		</item>		
+		
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="tmp_pubDateTime" mode="xpath" type="tmp">
+    	<![CDATA[//span[@id='pubtime_baidu']/text()]]>
+		</item>
+		<item name="pubDateTime" mode="regular" dateformat="yyyy-MM-dd HH:mm:ss"
+			parent="tmp_pubDateTime">
+    	<![CDATA[^(.*?)$]]>
+		</item>
+		<item name="Content" mode="xpath" ><!--内容 -->
+    	<![CDATA[//div[@id='artibody']/html()|//div[@class='mainBody']/html()]]>
+		</item>
+		<item name="Content" mode="xpath" ><!--内容 -->
+    	<![CDATA[//div[@class='content']/div[3]/html()]]>
+		</item>
+	</Contents>
+</html>

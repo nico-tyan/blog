@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html>
+     <!--上海海事大学http://www.shmtu.edu.cn/search/node/%E4%B8%8A%E6%B5%B7 -->
+     <forurlReg><![CDATA[http://www.shmtu.edu.cn/search[\S]+]]></forurlReg>
+     <!-- 临时集合 页面下载前获取-->
+     <load_on_items>
+          <item name="siteCode" mode="str"><![CDATA[N0000917]]></item>
+          <item name="siteName" mode="str"><![CDATA[上海海事大学]]></item>
+          <item name="type" mode="str">
+               <![CDATA[1]]>
+               <!-- 1 搜索列表  2 详情 -->
+          </item>
+          <item name="siteUrl" mode="str">
+               <![CDATA[http://www.shmtu.edu.cn/search/node/{Keyword}]]>
+               <!--搜索链接 -->
+          </item>
+          <item name="charset" mode="str"><![CDATA[utf-8]]></item>
+          <item name="url_charset" mode="str"><![CDATA[utf-8]]></item>
+          <item name="get_next_url" mode="str">
+               <![CDATA[1]]>
+               <!--  get_next_url =1 为获取下一页， 其它为替换 -->
+          </item>
+          <item name="load_referer" mode="str" type="tmp">
+               <!-- 检查是否需要referer -->
+               <![CDATA[#]]>
+          </item>
+          <item name="statusCode" mode="str">
+               <![CDATA[200]]>
+               <!--下载返回码为 200 视为成功 -->
+          </item>
+          <item name="cycle_retry_times" mode="str">
+               <![CDATA[1]]>
+               <!-- 重试次数 -->
+          </item>
+          <!--内容解析成功必须存在的几个 值  -->
+          <item name="exist_keys" mode="str">
+               <![CDATA[main]]>
+               <!-- 能够获取到列表块 视为此模板匹配成功 -->
+          </item>
+     </load_on_items>
+     <!-- 临时集合  页面下载后获取-->
+     <tmp_items>
+          <!-- 能够获取到列表块 视为此模板匹配成功 -->
+          <item name="main" mode="xpath" type="tmp"><![CDATA[//div[@id='main']/@id]]></item>
+     </tmp_items>
+     <list>
+          <item name="list_items" mode="xpath" type="tmp">
+               <!--相当于添加了一个父类 （标题url这些需要获取的共同路径）  下面的网站主题就可以写精简 -->
+               <![CDATA[//ol[@class='search-results node-results']/li[@class='search-result']]]>
+          </item>
+     </list>
+     <items>
+          <item name="Title" mode="xpath">
+               <!-- 标题 -->
+               <![CDATA[h3[@class='title']/a/text()]]>
+          </item>
+          <item name="Url" mode="xpath">
+               <!-- url链接 -->
+               <![CDATA[h3[@class='title']/a/@href]]>
+          </item>
+          <item name="tmp_pubDateTime" mode="xpath" type="tmp">
+               <!-- 时间 -->
+               <![CDATA[div[@class='search-snippet-info']/p[@class='search-info']/text()]]>
+          </item>
+          <item name="pubDateTime" mode="regular" parent="tmp_pubDateTime" dateformat="MM/dd/yyyy - HH:mm"><![CDATA[- (.*?)$]]></item>
+     </items>
+     <!-- 获取下一页地址 -->
+     <page>
+          <item name="page" mode="xpath" type="tmp"><![CDATA[//ul[@class='pager']/li[@class='pager-next']/a/@href]]></item>
+     </page>
+</html>
+

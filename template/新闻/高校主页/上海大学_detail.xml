@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>
+	<!-- 上海大学http://news.shu.edu.cn/Default.aspx?tabid=449&ctl=Details&mid=1059&ItemID=39637&SkinSrc=[L]Skins/SHUnews_o/SHUnews_1 -->
+	<forurlReg><![CDATA[http://news.shu.edu.cn/[\S]+]]></forurlReg>
+	<!-- 临时集合 页面下载前获取-->
+	<load_on_items>
+		<item name="siteName" mode="str">
+   	 		<![CDATA[上海大学]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[Form]]>
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<!-- 能够获取到列表块 视为此模板匹配成功 -->
+		<item name="Form" mode="xpath" type="tmp">
+   			<![CDATA[//form[@id='Form']/@id]]>
+		</item> 
+	</tmp_items>
+	<Contents>
+		<!--标题 -->
+		<item name="Title" mode="xpath">
+    	<![CDATA[//span[@class='shuHead']/text()]]>
+		</item>
+		<item name="Author" mode="xpath"><!--作者  -->
+    	<![CDATA[//a[@id='dnn_ctr1059_ArticleDetails_ctl00_hypUser']/text()]]>
+		</item>
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="tmp_pubDateTime" mode="xpath" type="tmp">
+    	<![CDATA[//span[@id='dnn_ctr1059_ArticleDetails_ctl00_lblDatePosted']/text()]]>
+		</item>
+		<item name="pubDateTime" mode="regular" dateformat="yyyy/MM/dd"
+			parent="tmp_pubDateTime">
+    	<![CDATA[^(.*?)$]]>
+		</item>
+		<item name="ClickCount" mode="xpath" regex="," replacement=""><!--点击量 -->
+    	<![CDATA[//span[@id='dnn_ctr1059_ArticleDetails_ctl00_lblViews']/text()]]>
+		</item>
+		<item name="Content" mode="xpath" ><!--内容 -->
+    	<![CDATA[//table[@class='shuArticle']/html()]]>
+		</item>
+	</Contents>
+</html>

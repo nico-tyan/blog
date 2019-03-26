@@ -1,0 +1,162 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<html>
+	<!--腾讯博客 https://user.qzone.qq.com/622007843/blog/1448887195 详细页 -->
+	<forurlReg><![CDATA[https://user.qzone.qq.com/[\S]+/blog/[\S]+]]></forurlReg>
+	<!-- 临时集合 页面下载前获取-->
+	<load_on_items>
+		<item name="siteName" mode="str">
+   	 		<![CDATA[腾讯博客]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+	<!-- 	<item name="blog_id" mode="regular" type="tmp" ref="url">引用  url匹配 
+    	<![CDATA[com/(.*)]]>
+		</item> -->
+		<item name="referer" mode="str"><!--引用  url匹配  -->
+    	<![CDATA[https://qzs.qq.com/qzone/newblog/blogcanvas.html]]>
+		</item>
+		<!-- cut 截取字符串方式 begin end _begin _end cut_length 截取长度--><!-- #占位 -->
+		<item name="blogid" mode="regular"  type="tmp" ref="url" ><!-- 时间戳 -->
+    	<![CDATA[blog/(\d+)]]>
+		</item>
+		<item name="uin" mode="regular"  type="tmp" ref="url"> <!-- 0至倒数 ? -->
+    	<![CDATA[com/(\d+)\/blog]]>
+		</item>
+		<!-- gen_str rule{1 时间戳 2 随机数（0.424242443 ）不需要长度  (3 数字  4 字母 5 数字加字母  )+length  } 生成字符串  length 生成长度 -->
+		<item mode="gen" name="gen_str" rule="1">
+    	<![CDATA[#]]>
+		</item>
+		<item mode="gen" name="blogseed" rule="2">
+    	<![CDATA[#]]>
+		</item>
+		<item mode="gen" name="entertime" rule="1">
+    	<![CDATA[#]]>
+		</item>
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[background-container]]>
+		</item>
+	</load_on_items>
+	
+	<tmp_items>
+		<!-- 能够获取到列表块 视为此模板匹配成功 -->
+		<item name="background-container" mode="xpath" type="tmp">
+   			<![CDATA[//div[@class='background-container']/@class]]>
+		</item> 
+	</tmp_items>
+
+	<tmp_items>
+		<!--翻页 下一页规则 -->
+		<item name="page" mode="xpath">
+   			<![CDATA[//div[@class='operate_toolbar']/div[@class='mod_links']/span[2]/a/@href]]>
+		</item>
+	</tmp_items>
+	<Contents>
+		<!--标题 -->
+		<item name="Title" mode="xpath">
+    	<![CDATA[]]>
+		</item>
+		<item name="Content" mode="xpath"><!--内容 -->
+    	<![CDATA[]]>
+		</item>
+		<item name="Author" mode="xpath">
+    	<![CDATA[//div[@class='auth-info']/div[@class='auth-title']/h2/text()]]>
+		</item>
+		
+		
+		<!-- <item name="pubDateTime" mode="regular" parent="tmp_pubDateTime" dateformat="timestamp">
+	    	<![CDATA[^(.*?)$]]> 转载
+		</item> -->
+	<!-- 	<item name="tmp_pubDateTime" mode="xpath" >
+    	<![CDATA[//div[@class='blog_app']/script/text()]]>
+		</item> -->
+		
+<!-- 		<item name="pubDateTime" mode="regular" parent="tmp_pubDateTime">
+    	<![CDATA[^(.*?)$]]>
+		</item> -->
+	
+		<item name="Summary" mode="xpath"> <!--摘要 -->
+		</item>
+		<item name="ClickCount" mode="xpath" regex="," replacement=""><!--点击量 -->
+    	<![CDATA[]]>
+		</item>
+		<item name="ReplyCount" mode="xpath"><!--回复数 -->
+    	<![CDATA[]]>
+		</item>
+	</Contents>
+	<Append_Contents>
+		<item name="Content" mode="xpath"><!--内容 累加-->
+    		<![CDATA[]]>
+		</item>
+	</Append_Contents>
+	<ajax>
+		<method><![CDATA[get]]></method>
+		<charset>
+   			<![CDATA[utf-8]]>
+		</charset>
+		<url_referer ref="referer"><![CDATA[#]]></url_referer>
+		<!-- 组装 请求连接  ref引用已获取或已处理数据  data_type 数据类型-->
+		<url_join ref="uin" data_type="String"><![CDATA[https://h5.qzone.qq.com/proxy/domain/b1.qzone.qq.com/cgi-bin/blognew/blog_output_data?uin=]]></url_join>
+		<url_join ref="blogid" data_type="String"><![CDATA[&blogid=]]></url_join>
+		<url_join ref="gen_str" data_type="String"><![CDATA[&styledm=qzonestyle.gtimg.cn&imgdm=qzs.qq.com&bdm=b.qzone.qq.com&mode=2&numperpage=15&timestamp=]]></url_join>
+		<url_join ref="blogseed" data_type="String"><![CDATA[&dprefix=&blogseed=]]></url_join>
+		<url_join ref="entertime" data_type="String"><![CDATA[&inCharset=utf-8&outCharset=utf-8&ref=qzone&entertime=]]></url_join>
+		<url_join ref="cdn" data_type="String"><![CDATA[&cdn_use_https=1]]></url_join>	
+		<!-- <filter replacement="xxxxxxx"><![CDATA[^[\s\S]*?jQuery.*?\(]]></filter>
+		<filter replacement=""><![CDATA[xxxxxxx]]></filter> -->
+		<item name="Title" mode="regular">
+	    	<![CDATA["title":"(.*?)"]]><!--  内容-->
+		</item>
+		 <item name="Content" mode="xpath">
+	    	<![CDATA[//div[@class='blog_details_20120222']/html()]]><!--  内容-->
+		</item>
+		<item name="pubDateTime" mode="regular" dateformat="timestamp">
+	    	<![CDATA[var pubtime = (\d+);]]>
+		</item> 
+			<item name="page" mode="regular">
+	    	<![CDATA[]]>
+		</item> 
+	</ajax>
+	<ajax>
+		<method><![CDATA[get]]></method>
+		<charset>
+   			<![CDATA[utf-8]]>
+		</charset>
+		<url_referer ref="referer"><![CDATA[#]]></url_referer>
+		<!-- 组装 请求连接  ref引用已获取或已处理数据  data_type 数据类型-->
+		<url_join ref="uin" data_type="String"><![CDATA[https://h5.qzone.qq.com/proxy/domain/r.qzone.qq.com/cgi-bin/user/qz_opcnt2?unikey=http%3A%2F%2Fuser.qzone.qq.com%2F]]></url_join>
+		<url_join ref="blogid" data_type="String"><![CDATA[%2Fblog%2F]]></url_join>
+		<url_join ref="g_tk" data_type="String"><![CDATA[&g_tk=5381&ref=qzone]]></url_join>
+		<!-- <filter replacement="xxxxxxx"><![CDATA[^[\s\S]*?jQuery.*?\(]]></filter>
+		<filter replacement=""><![CDATA[xxxxxxx]]></filter> -->
+		 <item name="ClickCount" mode="regular">
+	    	<![CDATA[RZRD:(\d+)]]><!--  访问量-->
+		</item>
+		<item name="ReplyCount" mode="regular">
+	    	<![CDATA[RZC:(\d+)]]><!--  访问量-->
+		</item>
+		<item name="CitedCount" mode="regular">
+	    	<![CDATA[ZZ:(\d+)]]><!--  转载-->
+		</item>	
+	</ajax>
+	
+	
+	
+	
+
+	
+	
+</html>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>	
+	<!--人民网    http://politics.people.com.cn/n1/2017/0731/c1024-29437542.html详细页
+	           http://ln.people.com.cn/n2/2018/1030/c378392-32221515.html
+	 -->
+	<forurlReg ><![CDATA[http://politics.people.com.cn[\S]+|http://ln.people.com.cn[\S]+]]></forurlReg>
+	<!-- 临时集合 页面下载前获取-->
+	<load_on_items>
+	   <item name="siteName" mode="str">
+   			<![CDATA[人民网]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[gb2312]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[Title|Content|pubDateTime]]>
+		</item>
+		<item name="first_keys" mode="str">
+   			<![CDATA[text_title]]>
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<item name="text_title" mode="xpath" type="tmp">
+   			<![CDATA[//div[@class="clearfix w1000_320 text_title"]/@class|//div[@class="p2j_con03 clearfix w1000"]/@class|div[@class='title']/@class|//div[@class='articleCont']/@class|//div[@class='left fl']/@class]]>
+		</item>
+	</tmp_items>
+	<!--内容块 -->
+	<Contents>
+		<!--标题 -->
+	  	<item name="Title" mode="xpath">
+    		<![CDATA[//div[@class='clearfix w1000_320 text_title']/h1/text()|//div[@class='text_c']/h1/text()|div[@class='title']/h1/text()|div[@class='title']/h2/text()|div[@class='text_c']/h1[@id='p_title']/text()]]>
+		</item>
+		<item name="tmp_Author" mode="xpath"  type="tmp">
+    		<![CDATA[//div[@class='edit clearfix']/text()|//div[@class='edit']/text()|//i[@class='p_editor']/text()|//div[@class='editor']/text()]]>
+		</item>
+		<item name="Author" mode="regular" parent="tmp_Author">
+    		<![CDATA[\(责编：(.+?)\)]]>
+		</item>  
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="tmp_pubDateTime" mode="xpath" type="tmp">
+    		<![CDATA[//div[@class='box01']/div[1]/text()|//p[@class='sou']/text()|div[@class='pic_content clearfix']/h5/text()|div[@class='artOri']/text()|span[@id='p_publishtime']/text()]]>
+		</item>
+		<item name="pubDateTime" mode="regular" dateformat="yyyy年MM月dd日HH:mm" parent="tmp_pubDateTime">
+    		<![CDATA[(\d+年\d+月\d+日\d+:\d+)]]>
+		</item> 
+		<item name="From" mode="xpath" >
+		<![CDATA[//div[@class='box01']/div[1]/a/text()|//p[@class='sou']/a/text()|div[@class='pic_content clearfix']/h5/a/text()|div[@class='artOri']/a/text()|span[@id='p_origin']/a/text()]]>
+		</item>
+		<item name="Content" mode="xpath"><!--内容 -->
+    	<![CDATA[//div[@class='show_text']/html()|//div[@class='box_con']/html()|div[@class='content clear clearfix']/html()|div[@class='artDet']/html()|div[@id='p_content']/html()]]>
+		</item>
+	</Contents>
+	<!--内容累加-->
+</html>

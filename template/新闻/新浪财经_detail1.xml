@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>	                  
+	 <!--新浪财经       http://finance.sina.com.cn/fawen/yx/2017-12-12/doc-ifypnsiq0835510.shtml    详细页-->
+	<forurlReg><![CDATA[https?://finance.sina.com.cn[\S]+]]></forurlReg>
+	<load_on_items>
+	    <item name="siteName" mode="str">
+   			<![CDATA[新浪网]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>	
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[class]]>
+		</item>
+		<item name="first_keys" mode="str">
+   			<![CDATA[class]]>
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<item name="class" mode="regular" type="tmp">
+   			<![CDATA[class]]>
+		</item>
+	</tmp_items>
+	<!--内容块 -->
+	<Contents>
+		<!--标题 -->	
+		<item name="Title" mode="xpath">
+    		<![CDATA[//div[@class="m-atc-header"]/h1/text()|//div[@class="page-header"]/h1/text()|
+    				//h1[@id='artibodyTitle']/text()|//h1[@class='main-title']/text()]]>
+		</item>
+		
+		<!--作者-->		
+		<item name="pubAuthor" mode="xpath" type="tmp">
+    	 	<![CDATA[//span[@class="atc-author"]/text()|span[@id='author_ename']/text()]]>
+		</item> 
+		<item name="Author" mode="regular" parent="pubAuthor">
+    	     <![CDATA[作者:(.*?)$]]>   	     
+		</item>		
+						
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="DateTime1" mode="xpath" type="tmp" >
+    		<![CDATA[//span[@class="time-source"]/text()|//span[@class="date"]/text()]]>
+		</item> 
+		<item name="pubDateTime" mode="regular" parent="DateTime1" dateformat="yyyy年MM月dd日 HH:mm">
+    		<![CDATA[^(.*?)$]]>   	     
+		</item>		
+		<item name="DateTime2" mode="xpath" type="tmp" >
+    		<![CDATA[//span[@class="atc-date"]/text()]]>
+		</item> 
+		<item name="pubDateTime" mode="regular" parent="DateTime2" dateformat="yyyy-MM-dd HH:mm:ss">
+    		<![CDATA[(\d+-\d+-\d+ \d+:\d+:\d+)]]>   	     
+		</item>	
+		<item name="DateTime3" mode="xpath" type="tmp" >
+    		<![CDATA[span[@id='pub_date']/text()]]>
+		</item> 
+		<item name="pubDateTime" mode="regular" parent="DateTime3" dateformat="yyyy年MM月dd日HH:mm">
+    		<![CDATA[(\d+年\d+月\d+日\d+:\d+)]]>   	     
+		</item>			
+		
+		<!--来源 -->	
+		<item name="From" mode="xpath" >
+    		<![CDATA[//span[@id='media_name']/span/a[1]/text()|//span[@id='navtimeSource']/span/span/a/text()|
+    	     		//a[@class='source']/text()]]>   	     
+		</item>			
+		
+		<!--摘要 -->	
+		<item name="Summary" mode="xpath"><!-- 摘要 -->
+			<![CDATA[]]>
+		</item>		
+		
+		<!--内容-->	
+		<item name="Content" mode="xpath"><!--内容 -->
+    		<![CDATA[//div[@class="m-atc-original"]/html()|//div[@id="artibody"]/html()]]>
+		</item>		
+		
+		<!-- 请求链接引用标签中的数据 -->
+		<item name="comment" mode="xpath" type="tmp">
+    	     <![CDATA[//meta[@name='comment']/@content]]>   	     
+		</item>
+		<item name="channel" mode="regular" type="tmp" parent="comment">
+    		<![CDATA[^(.*?):]]>
+		</item>
+		<item name="newsid" mode="regular" type="tmp" parent="comment">
+    		<![CDATA[:(.*?)$]]>
+		</item>
+	</Contents>		
+	
+	<!-- http://comment.sina.com.cn/page/info?version=1&format=json&channel=cj&newsid=comos-hkhfqns8212972 -->
+	<ajax>
+		<url_mode><![CDATA[get]]></url_mode>
+		<!-- 组装 请求连接  ref引用已获取或已处理数据  data_type 数据类型-->
+		<url_join><![CDATA[http://comment5.news.sina.com.cn/page/info?format=js]]></url_join>
+		<url_join ref="channel"><![CDATA[&channel=]]></url_join>
+		<url_join ref="newsid"><![CDATA[&newsid=]]></url_join>
+		<item name="ClickCount" mode="regular">
+	    	<![CDATA["total": (\d+)]]>
+		</item>	
+		<item name="ReplyCount" mode="regular">
+	    	<![CDATA["show": (\d+)]]>
+		</item>	
+	</ajax>
+	
+	<page>
+		<!--翻页 下一页规则 -->
+		<!-- 第一种方式 --> 
+		<item name="page" mode="regular" type="tmp">
+   			<![CDATA[]]> 
+		</item>
+		<!-- 第二种方式 -->
+		<item name="currentPage" mode="regular" type="tmp">
+   			<![CDATA[]]>
+		</item>
+		<item name="countPage" mode="regular" type="tmp">
+   			<![CDATA[]]>
+		</item>
+		<!-- append_page = 0 or 1   时 递增规则 0 或 1 开始 --> 
+		<url_join ref="next_url" append_page="1"><![CDATA[_]]></url_join>
+		<url_join ><![CDATA[]]></url_join>
+	</page>
+	<!-- 翻页 下一页内容 -->
+	<Next_Contents>
+		<item name="Content" mode="xpath"><!-- 内容 -->
+    		<![CDATA[]]>
+		</item>
+	</Next_Contents>
+</html>

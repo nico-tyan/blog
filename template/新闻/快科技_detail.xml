@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>
+	<!-- 快科技http://news.mydrivers.com/1/556/556076.htm-->
+	<forurlReg><![CDATA[http://news.mydrivers.com/[\S]+]]></forurlReg>
+	<!-- 临时集合 页面下载前获取-->
+	<load_on_items>
+		<item name="siteName" mode="str">
+   	 		<![CDATA[快科技]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[gbk]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[gbk]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[news_n]]>
+		</item>
+		<item name="id" mode="regular" type="tmp" ref="url"> <!-- 引用  url匹配   -->  
+    	<![CDATA[(\d+)\.htm]]>
+		</item>
+		<item mode="gen" name="gen_str" rule="1">
+    	<![CDATA[#]]>
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<!-- 能够获取到列表块 视为此模板匹配成功 -->
+		<item name="news_n" mode="xpath" type="tmp">
+   			<![CDATA[//div[@class='news_n']/@class]]>
+		</item> 
+	</tmp_items>
+	<Contents>
+		<!--标题 -->
+		<item name="Title" mode="xpath">
+    	<![CDATA[//div[@id='thread_subject']/text()]]>
+		</item>
+		<item name="tmp_Author" mode="xpath" type="tmp"><!--作者  -->
+    	<![CDATA[//div[@class='news_bt1']/div[@class='news_bt1_left']/allText()]]>
+		</item>
+		<item name="Author" mode="regular"  parent="tmp_Author">
+    	     <![CDATA[作者：(.*?)\s]]>   	     
+		</item>
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="tmp_pubDateTime" mode="xpath" type="tmp">
+    	<![CDATA[//div[@class='news_bt1']/div[@class='news_bt1_left']/allText()]]>
+		</item>
+		<item name="pubDateTime" mode="regular" dateformat="yyyy-MM-dd HH:mm:ss"
+			parent="tmp_pubDateTime">
+    	<![CDATA[^(.*?)\u00A0]]>
+		</item>
+		<item name="Content" mode="xpath" ><!--内容 -->
+    	<![CDATA[//div[@class='news_info']/html()]]>
+		</item>
+	</Contents>
+	<!-- ajax异步获取 -->
+	<ajax>
+		<method><![CDATA[get]]></method>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<!-- 组装 请求连接  ref引用已获取或已处理数据  data_type 数据类型 -->
+		<!-- http://count.mydrivers.com/Hits.aspx?Tid=556076 -->
+		<url_join ref="id" data_type="String"><![CDATA[http://count.mydrivers.com/Hits.aspx?Tid=]]></url_join>
+		<item name="ClickCount" mode="regular">
+	    	<![CDATA[hits =(\d+)]]>
+		</item>
+	</ajax> 
+	<ajax>
+		<method><![CDATA[get]]></method>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<!-- 组装 请求连接  ref引用已获取或已处理数据  data_type 数据类型 -->
+		<!-- http://comment8.mydrivers.com/ReviewAjax.aspx?Tid=556076&Cid=1&IsTopN=1&hot=1&timestamp=1513823496030 -->
+		<url_join ref="id" data_type="String"><![CDATA[http://comment8.mydrivers.com/ReviewAjax.aspx?Tid=]]></url_join>
+		<url_join ref="gen_str" data_type="String"><![CDATA[&Cid=1&IsTopN=1&hot=1&timestamp=]]></url_join>
+		<url_join ref="_" data_type="String"><![CDATA[030]]></url_join>
+		<item name="ReplyCount" mode="regular">
+	    	<![CDATA[ReviewCount":"(\d+)"]]>
+		</item>
+	</ajax> 
+</html>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>	
+	  <!--海南新闻网               http://www.hi.chinanews.com.cn/hnnew/2017-12-26/4_85422.html        详细页-->                        
+	<forurlReg><![CDATA[http://[\S]+.hi.chinanews.com.cn[\S]*]]></forurlReg>
+	<load_on_items>
+	    <item name="siteName" mode="str">
+   			<![CDATA[海南新闻网]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[gbk]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>	
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[Title|Content|pubDateTime]]>
+		</item>
+		<item name="first_keys" mode="str">
+   			<![CDATA[inmain]]>
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<item name="inmain" mode="xpath" type="tmp">
+   			<![CDATA[//div[@class="bigdiv3 bigbeijin"]/@class]]>
+		</item>
+	</tmp_items>
+	<tmp_items>
+		
+	</tmp_items>
+	<!--内容块 -->
+	<Contents>
+	
+		<!--标题 -->		
+	  	<item name="Title" mode="xpath">
+    		<![CDATA[//div[@class='biaoti']/text()]]>
+		</item>
+			
+		<item name="Author1" mode="xpath" type="tmp">
+    	     <![CDATA[//div[@class='suoying r liangbian']/text()]]>
+		</item> 
+		<item name="Author" mode="regular" parent="Author1">
+    	     <![CDATA[编辑：(.*?)$]]>
+		</item>	
+						
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="tmp_pubDateTime" mode="xpath" type="tmp" >
+    		<![CDATA[//div[@class='suoying']/text()]]>
+		</item>
+	       <item name="pubDateTime" mode="regular"  dateformat="yyyy年MM月dd日 HH:ss" parent="tmp_pubDateTime">
+    	     <![CDATA[\d{4}年\d{2}月\d{2}日\s*\d{2}:\d{2}]]>
+		</item>  
+		
+		<item name="tmp_From" mode="xpath" type="tmp" >
+	<![CDATA[//div[@class='suoying']/a/text()]]>
+		</item> 
+		<item name="From" mode="regular"   parent="tmp_From">
+    	     <![CDATA[^(.*?)$]]>
+		</item>	
+			
+  
+     	<item name="ClickCount" mode="xpath" regex="," replacement="" trim="1"><!--点击量 -->
+    	<![CDATA[]]>
+		</item>
+		<item name="ReplyCount" mode="xpath"><!--回复数 -->
+    	<![CDATA[]]>
+		</item>
+		<item name="Summary" mode="xpath"><!-- 摘要 -->
+		 <![CDATA[]]>
+		</item>		
+
+		<item name="Content" mode="xpath"><!--内容 -->
+    	<![CDATA[//div[@class='zhenwen_datupian c']/html()]]>
+		</item>
+	</Contents>	
+</html>

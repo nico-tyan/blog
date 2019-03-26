@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>	
+	<!--新华网http://news.xinhuanet.com/legal/2017-04/25/c_1120873302.htm详细页
+	         http://app.3news.cn/info/info/ft/2016/1221/49332.html
+	         http://news.ldnews.cn/news/kjww/201901/592572.shtml -->                               
+	<forurlReg ><![CDATA[http://news.xinhuanet.com/[\S]+|http://[\S]+.news.cn[\S]+|http://news.ldnews.cn/news[\S]+]]></forurlReg>
+	<!-- 临时集合 页面下载前获取-->
+	<load_on_items>
+	   <item name="siteName" mode="str">
+   			<![CDATA[新华网]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[class]]>
+		</item>
+		<item name="next_url" mode="regular" type="tmp" ref="url"><!--引用  url匹配  -->
+    	<![CDATA[class]]>
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<item name="class" mode="regular" type="tmp">
+   			<![CDATA[class]]>
+		</item>
+	</tmp_items>
+	<tmp_items>
+		
+	</tmp_items>
+	<!--内容块 -->
+	<Contents>
+	
+		<!--标题 -->
+		<item name="Title" mode="xpath">
+    		<![CDATA[//div[@class='h-news']/div[@class='h-title']/html()|//div[@id="title"]/text()|//p[@class="lkq"]/text()|//aside[@class='ymw-contxt-aside']/h1/text()|//div[@class="title"]/text()|//h1[@class="article-content-title"]/text()]]>
+		</item>
+		
+		<item name="Title" mode="xpath">
+    		<![CDATA[//h1[@class='article-title']/text()]]>
+		</item>
+		<!-- 作者 -->
+		<item name="tmp_Author" mode="xpath" type="tmp" >
+    		<![CDATA[//span[@class='p-jc']/text()]]>
+		</item>
+		<item name="Author" mode="regular" parent="tmp_Author" >
+    		<![CDATA[责任编辑：(.+?)$]]>
+		</item>
+		<item name="tmp_Author0" mode="xpath" type="tmp" >
+    		<![CDATA[//span[@class='editors']/text()]]>
+		</item>
+		<item name="Author" mode="regular"  parent="tmp_Author0">
+    	     <![CDATA[作者：(.*?)$]]>
+		</item>
+		
+		<!-- 作者2 -->
+		<item name="tmp_Author1" mode="xpath" type="tmp" >
+    		<![CDATA[//div[@class='sign']/span[5]/text()|//p[@class="fz14 cor444"]/text()]]>
+		</item>
+		<item name="Author" mode="regular" parent="tmp_Author1" >
+    		<![CDATA[编辑：(.+?)$]]>
+		</item>
+		
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="DateTime" mode="gen" rule="6">
+		<![CDATA[{empty}]]>
+		</item>
+		
+		<item name="pubDateTime" mode="regular" parent="DateTime" dateformat="yyyy-MM-dd HH:mm:ss">
+		<![CDATA[(\d+-\d+-\d+ \d+:\d+:\d+)]]>
+		</item>
+		
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="pubDateTime" mode="xpath" dateformat="yyyy-MM-dd HH:mm" >
+    		<![CDATA[//span[@class='date']/html()]]>
+		</item>
+		
+		<!-- 时间2 -->
+		<item name="pubDateTime" mode="xpath" dateformat="yyyy-MM-dd HH:mm:ss">
+		<![CDATA[//div[@class='sign']/span[1]/text()|//span[@class="h-time"]/text()]]>
+		</item>	
+		
+		<!-- 时间3 -->
+		<item name="pubDateTime" mode="regular" dateformat="yyyy-MM-dd HH:mm:ss">
+		<![CDATA[发布时间：(.*?)\s*\</span\>]]>
+		</item>	
+		
+		
+		
+		<item name="From" mode="xpath"  >
+		<![CDATA[//div[@class='h-info']/span/em/text()]]>
+		</item> 
+		
+        <item name="From" mode="xpath">
+		<![CDATA[//div[@class='sign']/span[3]/a/text()|//div[@class='source']/span/ins/text()]]>
+		</item> 
+		
+	    
+		<item name="From1" mode="xpath" type="tmp">
+		<![CDATA[//aside[@class='ymw-contxt-aside']/span/text()]]>
+		</item> 
+		 <item name="From" mode="regular" parent="From1">
+		<![CDATA[来源：(.*?)$]]>
+		</item> 
+		
+     	<item name="ClickCount" mode="xpath" regex="," replacement="" trim="1"><!--点击量 -->
+    	<![CDATA[]]>
+		</item>
+		<item name="ReplyCount" mode="xpath"><!--回复数 -->
+    	<![CDATA[]]>
+		</item>
+		<item name="Summary" mode="xpath"><!-- 摘要 -->
+		 <![CDATA[]]>
+		</item>
+		<item name="Content" mode="xpath"><!--内容 -->
+    	<![CDATA[//div[@id='p-detail']/html()|//div[@id="content"]/html()|//div[@class="left-content-content"]/html()|//section[@class="ymw-contxt"]/article/html()|//div[@class="text"]/html()|//div[@class='article-content fontSizeSmall BSHARE_POP']/html()|//div[@class="article-detail-inner article-relevance w660 ov"]/html()]]>
+		</item>	
+	</Contents>	
+</html>

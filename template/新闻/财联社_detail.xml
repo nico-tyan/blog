@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>	                  
+	 <!--财联社     https://www.cailianpress.com/theme/288472 详细页-->
+	<forurlReg><![CDATA[https?://www.cailianpress.com/[\S]+]]></forurlReg>
+	<load_on_items>
+	    <item name="siteName" mode="str">
+   			<![CDATA[财联社]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>	
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[Title|Content|pubDateTime]]>
+		</item>
+		<item name="first_keys" mode="str">
+   			<![CDATA[]]>
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<item name="inmain" mode="xpath" type="tmp">
+   			<![CDATA[]]>
+		</item>
+	</tmp_items>
+	<!--内容块 -->
+	<Contents>
+		<!--标题 -->	
+		<item name="Title" mode="xpath">
+    		<![CDATA[//div[@class='title fontBold']/text()]]>
+		</item>
+		
+		<!--作者-->		
+		<item name="pubAuthor" mode="xpath" type="tmp">
+    	     <![CDATA[//div[@class='writer']/text()]]>   	     
+		</item> 
+		<item name="Author" mode="regular" parent="pubAuthor">
+    	     <![CDATA[^(.*?)$]]>   	     
+		</item>		
+						
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="DateTime" mode="xpath" type="tmp" >
+    	     <![CDATA[//div[@class='ctime']/text()]]>   	     
+		</item> 
+		<item name="pubDateTime" mode="regular" parent="DateTime" dateformat="yyyy-MM-dd HH:mm:ss">
+    	    <![CDATA[\d+-\d+-\d+ \d+:\d+:\d+]]>   	     
+		</item>		
+		
+		<!--来源 -->	
+		<item name="pubFrom" mode="xpath" type="tmp">
+    	     <![CDATA[]]>   	    
+		</item>	
+		<item name="From" mode="regular" parent="pubFrom">
+    	     <![CDATA[]]>   	     
+		</item>		
+		
+		<!--摘要 -->	
+		<item name="Summary" mode="xpath"><!-- 摘要 -->
+		 <![CDATA[]]>
+		</item>
+			
+		<!--点击量 -->	
+		<item name="pubClickCount" mode="xpath" type="tmp">
+    		<![CDATA[//div[@class='readNum']/text()]]>
+		</item>
+		<item name="ClickCount" mode="regular" parent="pubClickCount">
+    		<![CDATA[\d+]]>
+		</item>
+		
+		<!--内容-->	
+		<item name="Content" mode="xpath" ><!--内容 -->
+    		<![CDATA[//div[@class="thisContent"]/html()]]>
+		</item>		
+	</Contents>		
+	<page>
+		<!--翻页 下一页规则 -->
+		<!-- 第一种方式 --> 
+		<item name="page" mode="regular" type="tmp">
+   			<![CDATA[]]> 
+		</item>
+		<!-- 第二种方式 -->
+		<item name="currentPage" mode="regular" type="tmp">
+   			<![CDATA[]]>
+		</item>
+		<item name="countPage" mode="regular" type="tmp">
+   			<![CDATA[]]>
+		</item>
+		<!-- append_page = 0 or 1   时 递增规则 0 或 1 开始 --> 
+		<url_join ref="next_url" append_page="1"><![CDATA[_]]></url_join>
+		<url_join ><![CDATA[]]></url_join>
+	</page>
+	<!-- 翻页 下一页内容 -->
+	<Next_Contents>
+		<item name="Content" mode="xpath"><!-- 内容 -->
+    		<![CDATA[]]>
+		</item>
+	</Next_Contents>
+</html>

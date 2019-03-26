@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>
+	<!-- 涂饰商情网http://app.tushi366.com/?app=search&controller=index&action=search&type=all&wd=%E5%B9%BF%E4%B8%9C&page=1&order=rel -->
+	<forurlReg><![CDATA[http://app.tushi366.com/\?[\S]+]]></forurlReg>
+	<!-- 临时集合 页面下载前获取-->
+	<load_on_items>
+	    <item name="siteCode" mode="str"><![CDATA[N0001766]]></item>
+		<item name="siteName" mode="str">
+   	 		<![CDATA[涂饰商情网]]>
+		</item>
+			<item name="type" mode="str">
+   			<![CDATA[1]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="siteUrl" mode="str">
+   			<![CDATA[http://app.tushi366.com/?app=search&controller=index&action=search&type=all&wd={Keyword}&page={Page}&order=rel]]> <!--搜索链接 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="get_next_url" mode="str">
+   			<![CDATA[1]]><!--  get_next_url =1 为获取下一页， 其它为替换 -->
+		</item>
+		<item name="load_referer" mode="str" type="tmp"><!-- 检查是否需要referer -->
+   			<![CDATA[#]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值  -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[search-result]]> <!-- 能够获取到列表块 视为此模板匹配成功 -->
+		</item>
+	</load_on_items>
+	<tmp_items>
+		<!-- 能够获取到列表块 视为此模板匹配成功 -->
+		<item name="search-result" mode="xpath" type="tmp">
+   			<![CDATA[//body[@class='search-result']/@class]]>
+		</item> 
+	</tmp_items>
+	<list>
+ 		<item name="list_items" mode="xpath" type="tmp"><!--相当于添加了一个父类 （标题url这些需要获取的共同路径）  下面的网站主题就可以写精简 -->
+ 			<![CDATA[//div[@class='column search-result-list']/ul/li[@class='article-picture-item']]]>
+		</item>
+	</list>
+	<items>
+		<item name="Title" mode="xpath"><!-- 标题 -->
+   			<![CDATA[h3/a/allText()]]>
+		</item>
+		<item name="Url" mode="xpath"><!-- url链接 -->
+   			<![CDATA[h3/a/@href]]>
+		</item>
+		<item name="tmp_pubDateTime" mode="xpath" type="tmp"><!-- 时间 -->
+    		<![CDATA[div[@class='m-imagetext']/div/span[@class='time']/text()]]>
+		</item>
+		<item name="pubDateTime" mode="regular" parent="tmp_pubDateTime" 
+		dateformat="yyyy-MM-dd HH:mm">
+		<![CDATA[^(.*?)$]]>
+		</item>
+	</items>
+	<!-- 获取下一页地址 -->
+	 <page>
+	 	<item name="page" mode="xpath" type="tmp">
+		<![CDATA[//div[@class='pagination ov']/a[@class='next']/@href]]>
+		</item>
+	</page> 
+</html>

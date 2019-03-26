@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>
+	<!-- 中国测绘网http://www.cehui8.com/news/yejie/20171113/9113.html -->
+	<forurlReg><![CDATA[http://www.cehui8.com/[\S]+]]></forurlReg>
+	<!-- 临时集合 页面下载前获取-->
+	<load_on_items>
+		<item name="siteName" mode="str">
+   	 		<![CDATA[中国测绘网]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[gbk]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[js-epContent]]>
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<!-- 能够获取到列表块 视为此模板匹配成功 -->
+		<item name="js-epContent" mode="xpath" type="tmp">
+   			<![CDATA[//div[@id='js-epContent']/@id]]>
+		</item> 
+	</tmp_items>
+	<Contents>
+		<!--标题 -->
+		<item name="Title" mode="xpath">
+    	<![CDATA[//h1[@id='h1title']/b/text()]]>
+		</item>
+		<item name="tmp_From" mode="xpath" type="tmp" >
+    	     <![CDATA[//div[@class='ep-info cDGray']/div[@class='left']/allText()]]>   	     
+		</item>
+		<item name="From" mode="regular"  parent="tmp_From">
+    	     <![CDATA[来源:(.*?)$]]>   	     
+		</item>
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="tmp_pubDateTime" mode="xpath" type="tmp">
+    	<![CDATA[//div[@class='ep-info cDGray']/div[@class='left']/allText()]]>
+		</item>
+		<item name="pubDateTime" mode="regular" dateformat="yyyy-MM-dd HH:mm:ss"
+			parent="tmp_pubDateTime">
+    	<![CDATA[(\d+-\d+-\d+ \d+:\d+:\d+)]]>
+		</item>
+		<item name="Content" mode="xpath" ><!--内容 -->
+    	<![CDATA[//div[@id='endText']/html()]]>
+		</item>
+	</Contents>
+</html>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html>
+     <!--中国新闻网 http://sou.chinanews.com.cn/search.do?q=%E4%BF%A1%E6%81%AF -->
+              <!-- http://sou.chinanews.com/search.do -->
+     <forurlReg><![CDATA[http://sou\.chinanews\.com/search\.do]]></forurlReg>
+     <!-- 临时集合 页面下载前获取-->
+     <load_on_items>
+          <item name="siteCode" mode="str"><![CDATA[N0000289]]></item>
+          <item name="siteName" mode="str"><![CDATA[中国新闻网]]></item>
+          <item name="type" mode="str">
+               <![CDATA[1]]>
+               <!-- 1 搜索列表  2 详情 -->
+          </item>
+          <item name="siteUrl" mode="str">
+               <![CDATA[http://sou.chinanews.com/search.do]]>
+               <!--搜索链接 -->
+          </item>
+          <item name="charset" mode="str"><![CDATA[utf-8]]></item>
+          <item name="url_charset" mode="str"><![CDATA[utf-8]]></item>
+          <item name="method" mode="str"><![CDATA[post]]></item>
+          <item name="get_next_url" mode="str">
+               <![CDATA[0]]>
+               <!--  get_next_url =1 为获取下一页， 其它为替换 -->
+          </item>
+          <item name="statusCode" mode="str">
+               <![CDATA[200]]>
+               <!--下载返回码为 200 视为成功 -->
+          </item>
+          <item name="cycle_retry_times" mode="str">
+               <![CDATA[1]]>
+               <!-- 重试次数 -->
+          </item>
+          <!-- gen_str rule{1 时间戳 2 随机数（0.424242443 ）不需要长度  (3 数字  4 字母 5 数字加字母  )+length  } 生成字符串  length 生成长度 -->
+          <!-- <item mode="gen" name="gen_str" rule="2">
+    	<![CDATA[#]]>
+		</item> -->
+          <!--内容解析成功必须存在的几个 值  -->
+          <item name="exist_keys" mode="str">
+               <![CDATA[news_list]]>
+               <!-- 能够获取到列表块 视为此模板匹配成功 -->
+          </item>
+     </load_on_items>
+     <!-- 
+q:%E4%BF%A1%E6%81%AF
+ps:10
+start:20
+type:
+sort:pubtime
+time_scope:0
+channel:all
+adv:1
+day1:
+day2:
+field:
+creator: 
+	-->
+     <form_data_join name="q"><![CDATA[{Keyword}]]></form_data_join>
+     <form_data_join name="ps"><![CDATA[10]]></form_data_join>
+     <form_data_join name="start"><![CDATA[{Page}]]></form_data_join>
+     <form_data_join name="type"><![CDATA[{empty}]]></form_data_join>
+     <form_data_join name="sort"><![CDATA[pubtime]]></form_data_join>
+     <form_data_join name="time_scope"><![CDATA[0]]></form_data_join>
+     <form_data_join name="channel"><![CDATA[all]]></form_data_join>
+     <form_data_join name="adv"><![CDATA[1]]></form_data_join>
+     <form_data_join name="day1"><![CDATA[{empty}]]></form_data_join>
+     <form_data_join name="field"><![CDATA[{empty}]]></form_data_join>
+     <form_data_join name="creator"><![CDATA[{empty}]]></form_data_join>
+     <!-- 临时集合  页面下载后获取-->
+     <tmp_items>
+          <!-- 能够获取到列表块 视为此模板匹配成功 -->
+          <item name="news_list" mode="xpath" type="tmp"><![CDATA[//div[@id="news_list"]/@id]]></item>
+     </tmp_items>
+     <!--翻页 下一页规则 -->
+     <page>
+          <item name="page" mode="str"><![CDATA[0]]></item>
+     </page>
+     <list>
+          <item name="list_items" mode="xpath" type="tmp"><![CDATA[//div[@id='news_list']/table]]></item>
+     </list>
+     <items>
+          <item name="Title" mode="xpath"><![CDATA[//li[@class='news_title']/a/text()]]></item>
+          <item name="Url" mode="xpath"><![CDATA[//li[@class='news_title']/a/@href]]></item>
+          <item name="tmp_pubDateTime" mode="xpath" type="tmp"><![CDATA[//li[@class='news_other']/text()]]></item>
+          <item name="pubDateTime" mode="regular" dateformat="yyyy-MM-dd HH:mm" parent="tmp_pubDateTime"><![CDATA[\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}]]></item>
+     </items>
+</html>
+

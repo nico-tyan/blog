@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>
+	<!--月光博客http://www.williamlong.info/archives/4914.html 详细页 -->
+	<forurlReg><![CDATA[http://www\.williamlong\.info/[\S]+\.html]]></forurlReg>
+	<!-- 临时集合 页面下载前获取-->
+	<load_on_items>
+		<item name="siteName" mode="str">
+   	 		<![CDATA[月光博客]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<item name="count" mode="regular" type="tmp" ref="url"><!--引用  url匹配  -->
+    	<![CDATA[archives/(.*)\.html]]>
+		</item>
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   		<![CDATA[divAll]]>
+		</item>
+	</load_on_items>
+	<tmp_items>
+		<!-- 能够获取到列表块 视为此模板匹配成功 -->
+		<item name="divAll" mode="xpath" type="tmp">
+   			<![CDATA[//div[@id='divAll']/@id]]>
+		</item> 
+	</tmp_items>
+	<Contents>
+		<!--标题 -->
+		<item name="Title" mode="xpath">
+    	<![CDATA[//div[@id='divMain']/div[1]/h1/text()]]>
+		</item>
+		<item name="tmp_Author" mode="xpath" type="tmp">
+    	<![CDATA[//div[@id='divMain']/div[3]/h6/text()]]>
+		</item>
+		<item name="Author"  mode="regular"  parent="tmp_Author" >
+		<![CDATA[作者:(\S+)]]>
+		</item>
+		<item name="Summary" mode="xpath"> <!--摘要 -->
+		</item>
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="tmp_pubDateTime" mode="xpath" type="tmp">
+    	<![CDATA[//div[@id='divMain']/div[1]/h4/text()]]>
+		</item>
+		<item name="pubDateTime" mode="regular" dateformat="yyyy-MM-dd HH:mm:s"
+			parent="tmp_pubDateTime">
+    	<![CDATA[^(.*?)$]]>
+		</item>
+		<item name="ClickCount" mode="xpath"><!--点击量 -->
+    	<![CDATA[]]>
+		</item>
+		<item name="tmp_ReplyCount" mode="xpath" type="tmp"><!--回复数 -->
+    	<![CDATA[//div[@id='divMain']/div[3]/h6/text()]]>
+		</item>
+		<item name="ReplyCount" mode="regular" parent="tmp_ReplyCount">
+		<![CDATA[评论:(\S+)]]>
+		</item>
+		<item name="Content" mode="xpath"><!--内容 -->
+    	<![CDATA[//div[@class='post-body']/div[@id='artibody']/html()]]>
+		</item>
+	</Contents>
+	
+	<ajax>
+		<!-- 组装 请求连接  ref引用已获取或已处理数据  data_type 数据类型 -->
+		<url_join ref="count" data_type="String"><![CDATA[http://www.williamlong.info/function/c_html_js.asp?act=batch&view=&inculde=ulToplist%3Dtoplist%2CulTopmonth%3Dtopmonth%2C&count=spn]]></url_join>
+		<url_join ref="count" data_type="String"><![CDATA[%3D]]></url_join>
+		<url_join ref="s" data_type="String"><![CDATA[%2C]]></url_join>
+		
+		<item name="ClickCount" mode="regular">
+	    	<![CDATA[innerHTML=\\"(\d+)\\"]]>
+		</item>
+	</ajax>  
+	
+
+	
+</html>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>
+	<!-- 纺织服装周刊http://www.taweekly.com/zx/xygz/201708/t20170828_3611079.html -->
+	<forurlReg><![CDATA[http://www.taweekly.com/[\S]+]]></forurlReg>
+	<!-- 临时集合 页面下载前获取-->
+	<load_on_items>
+		<item name="siteName" mode="str">
+   	 		<![CDATA[纺织服装周刊]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[Title|Content]]>
+		</item>
+	</load_on_items>
+	<Contents>
+		<!--标题 -->
+		<item name="Title" mode="xpath">
+    	<![CDATA[//td[@class='font22']/text()]]>
+		</item>
+		<item name="tmp_From" mode="xpath" type="tmp" >
+    	     <![CDATA[//div[@class='w700']/div[1]/text()]]>   	     
+		</item>
+		<item name="From" mode="regular"  parent="tmp_From">
+    	     <![CDATA[来源：(.*?)\s]]>   	     
+		</item>
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="tmp_pubDateTime" mode="xpath" type="tmp">
+    	<![CDATA[//div[@class='w700']/div[1]/text()]]>
+		</item>
+		<item name="pubDateTime" mode="regular" dateformat="yyyy-MM-dd"
+			parent="tmp_pubDateTime">
+    	<![CDATA[\s(.*?)$]]>
+		</item>
+		<item name="Content" mode="xpath" ><!--内容 -->
+    	<![CDATA[//div[@class='TRS_Editor']/html()]]>
+		</item>
+	</Contents>
+</html>

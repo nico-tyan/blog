@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html>
+     <!--海口网新闻http://search.hkwb.net/servlet/SearchServlet.do?contentKey=%E6%9D%A5&titleKey=&authorKey=&nodeNameResult=&subNodeResult=&dateFrom=&dateEnd=&sort=date&op=single&siteID=&pager.offset=20&pageNo=2详细页-->
+     <forurlReg><![CDATA[http://search.hkwb.net/[\S]+]]></forurlReg>
+     <load_on_items>
+          <item name="siteCode" mode="str"><![CDATA[N0000683]]></item>
+          <item name="siteName" mode="str"><![CDATA[海口网新闻]]></item>
+          <item name="type" mode="str">
+               <![CDATA[1]]>
+               <!-- 1 搜索列表  2 详情 -->
+          </item>
+          <item name="siteUrl" mode="str">
+               <![CDATA[http://search.hkwb.net/servlet/SearchServlet.do?contentKey={Keyword}&titleKey=&authorKey=&nodeNameResult=&subNodeResult=&dateFrom=&dateEnd=&sort=date&op=single&siteID=&pager.offset=20&pageNo={Page}]]>
+               <!--搜索链接 -->
+          </item>
+          <item name="charset" mode="str"><![CDATA[utf-8]]></item>
+          <item name="url_charset" mode="str"><![CDATA[utf-8]]></item>
+          <item name="statusCode" mode="str">
+               <![CDATA[200]]>
+               <!--下载返回码为 200 视为成功 -->
+          </item>
+          <item name="get_next_url" mode="str">
+               <![CDATA[1]]>
+               <!--  get_next_url =1 为获取下一页， 其它为替换 -->
+          </item>
+          <item name="cycle_retry_times" mode="str">
+               <![CDATA[1]]>
+               <!-- 重试次数 -->
+          </item>
+          <!--内容解析成功必须存在的几个 值  -->
+          <item name="exist_keys" mode="str">
+               <![CDATA[yefengtop]]>
+               <!-- 能够获取到列表块 视为此模板匹配成功 -->
+          </item>
+     </load_on_items>
+     <!-- 临时集合 -->
+     <tmp_items>
+          <item name="yefengtop" mode="xpath" type="tmp"><![CDATA[//div[@class="yefengtop"]/@class]]></item>
+     </tmp_items>
+     <!--翻页 下一页规则 -->
+     <page>
+          <item name="tmp_page" mode="xpath" type="tmp"><![CDATA[//div[@id='result_list']/table[3]/tbody/tr/td/html()]]></item>
+          <item name="page" mode="regular" parent="tmp_page"><![CDATA[<a href="([^>]+?)">下页</a>]]></item>
+     </page>
+     <list>
+          <item name="list_items" mode="xpath" type="tmp"><![CDATA[//div[@id="result_list"]/table[2]/tbody/tr/td/ul/li]]></item>
+     </list>
+     <items>
+          <item name="Title" mode="xpath"><![CDATA[a/text()]]></item>
+          <item name="Url" mode="xpath"><![CDATA[a/@href]]></item>
+          <!-- <item name="tmp_pubDateTime" mode="xpath" type="tmp">
+    	     <![CDATA[span[@class='c-showurl']/text()]]>
+		</item> -->
+          <item name="pubDateTime" mode="regular" dateformat="yyyy-MM/dd" ref="Url">
+               <![CDATA[\d{4}-\d{2}/\d{2}]]>
+               <!--另一种方法 获取时间 ： 发表于：(.*?)$  ^(.*?)$-->
+          </item>
+     </items>
+</html>
+

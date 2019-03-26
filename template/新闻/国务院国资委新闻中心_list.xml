@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html>
+     <!--国务院国资委新闻中心http://search.sasac.gov.cn:8080/searchweb/search -->
+     <forurlReg><![CDATA[http://search.sasac.gov.cn[\S]+]]></forurlReg>
+     <!-- 临时集合 页面下载前获取-->
+     <load_on_items>
+          <item name="siteCode" mode="str"><![CDATA[N0000471]]></item>
+          <item name="siteName" mode="str"><![CDATA[国务院国资委新闻中心]]></item>
+          <item name="type" mode="str">
+               <![CDATA[1]]>
+               <!-- 1 搜索列表  2 详情 -->
+          </item>
+          <item name="siteUrl" mode="str">
+               <![CDATA[http://search.sasac.gov.cn:8080/searchweb/search]]>
+               <!--搜索链接 -->
+          </item>
+          <item name="charset" mode="str"><![CDATA[utf-8]]></item>
+          <item name="url_charset" mode="str"><![CDATA[utf-8]]></item>
+          <item name="method" mode="str"><![CDATA[post]]></item>
+          <!-- gen_str rule{1 时间戳 2 随机数（0.424242443 ）不需要长度  (3 数字  4 字母 5 数字加字母  )+length  } 生成字符串  length 生成长度 -->
+          <item mode="gen" name="gen_str" rule="2"><![CDATA[#]]></item>
+          <item name="get_next_url" mode="str">
+               <![CDATA[0]]>
+               <!--  get_next_url =1 为获取下一页， 其它为替换 -->
+          </item>
+          <item name="load_referer" mode="str" type="tmp">
+               <!-- 检查是否需要referer -->
+               <![CDATA[#]]>
+          </item>
+          <item name="statusCode" mode="str">
+               <![CDATA[200]]>
+               <!--下载返回码为 200 视为成功 -->
+          </item>
+          <item name="cycle_retry_times" mode="str">
+               <![CDATA[1]]>
+               <!-- 重试次数 -->
+          </item>
+          <!--内容解析成功必须存在的几个 值  -->
+          <item name="exist_keys" mode="str">
+               <![CDATA[content]]>
+               <!-- 能够获取到列表块 视为此模板匹配成功 -->
+          </item>
+     </load_on_items>
+     <!-- 临时集合  页面下载后获取-->
+     <form_data_join name="fullText"><![CDATA[{Keyword}]]></form_data_join>
+     <form_data_join name="indexDB"><![CDATA[css]]></form_data_join>
+     <form_data_join name="sortType"><![CDATA[0]]></form_data_join>
+     <form_data_join name="sortKey"><![CDATA[showtime]]></form_data_join>
+   	 <form_data_join name="sortFlag"><![CDATA[-1]]></form_data_join>
+   	 <form_data_join name="pageSize"><![CDATA[10]]></form_data_join>
+   	 <form_data_join name="pageNow"><![CDATA[{Page}]]></form_data_join>
+   	 <form_data_join name="searchType"><![CDATA[0]]></form_data_join>
+   	 <form_data_join name="keywordNavigation"><![CDATA[1]]></form_data_join>
+   	 <form_data_join name="checkSearch"><![CDATA[1]]></form_data_join>
+   	 <form_data_join name="timeRange"><![CDATA[0]]></form_data_join>
+     <tmp_items>
+          <!-- 能够获取到列表块 视为此模板匹配成功 -->
+          <item name="content" mode="json" type="tmp"><![CDATA[$..content]]></item>
+     </tmp_items>
+     <list>
+          <item name="list_items" mode="json" type="tmp">
+               <!--相当于添加了一个父类 （标题url这些需要获取的共同路径）  下面的网站主题就可以写精简 -->
+               <![CDATA[$..array]]>
+          </item>
+     </list>
+     <items>
+          <item name="Title" mode="json">
+               <!-- 标题 -->
+               <![CDATA[$..name]]>
+          </item>
+          <item name="Url" mode="json" supplement="http://">
+               <!-- url链接 -->
+               <![CDATA[$..url]]>
+          </item>
+          <item name="pubDateTime" mode="json" dateformat="yyyyMMdd"><![CDATA[$..showTime]]></item>
+     </items>
+     <!-- 获取下一页地址 -->
+     <!--翻页 下一页规则 -->
+     <page>
+          <item name="page" mode="str"><![CDATA[0]]></item>
+     </page>
+</html>

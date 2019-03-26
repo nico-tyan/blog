@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>
+	<!--首都经济贸易大学论坛http://cueb.myubbs.com/thread-276240-1-1.html-->
+	<forurlReg><![CDATA[http://cueb.myubbs.com/[\S]+]]></forurlReg>
+	<!-- 临时集合 页面下载前获取-->
+	<load_on_items>
+		<item name="siteName" mode="str">
+   	 		<![CDATA[首都经济贸易大学论坛]]>
+		</item>	
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[gbk]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[gbk]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[wp]]>
+		</item>
+	
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<!-- 能够获取到列表块 视为此模板匹配成功 -->
+		<item name="wp" mode="xpath" type="tmp">
+   			<![CDATA[//div[@class='wp']/@class]]>
+		</item> 
+	</tmp_items>
+
+	<Contents>
+		<!--标题 -->
+		<item name="Title" mode="xpath">
+    	<![CDATA[//h1[@class='ts']/span/text()]]>
+		</item>
+		<item name="Author" mode="xpath"><!--作者  -->
+    	<![CDATA[//div[@class='pi']/div[@class='authi']/a/text()]]>
+		</item>
+		<item name="Summary" mode="xpath"> <!--摘要 -->
+		</item>
+		<item name="pubDateTime" mode="regular" dateformat="yyyy-MM-dd HH:mm:ss">
+    	<![CDATA[\d+-\d+-\d+ \d+:\d+:\d+]]>
+		</item>
+		<item name="ClickCount" mode="xpath" regex="," replacement=""><!--点击量 -->
+    	<![CDATA[//div[@class='hm ptn']/span[2]/text()]]>
+		</item>
+		<item name="ReplyCount" mode="xpath"><!--回复数 -->
+    	<![CDATA[//div[@class='hm ptn']/span[5]/text()]]>
+		</item>
+		<item name="Content" mode="xpath" ><!--内容 -->
+    	<![CDATA[//td[@class='t_f']/html()]]>
+		</item>
+	</Contents>
+</html>

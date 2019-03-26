@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>	
+   <!--金羊网http://life.ycwb.com/2013-01/15/content_4247190.htm
+            http://food.ycwb.com/2018-12/14/content_30153139.htm
+            http://lingnan.ycwb.com/index.php?mdl=essay&do=view&id=245&target=_blank  详细页-->
+	<forurlReg ><![CDATA[http://[\S]+.ycwb.com/[\S]+]]></forurlReg>
+	<load_on_items>
+	     <item name="siteName" mode="str">
+   			<![CDATA[金羊网]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>		
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[class]]>
+		</item>
+		<item name="first_keys" mode="str">
+   			<![CDATA[class]]>
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<item name="class" mode="regular" type="tmp">
+   			<![CDATA[class]]>
+		</item>
+	</tmp_items>
+	<!--内容块 -->
+	<Contents>	
+		<!--标题 -->	
+	  	<item name="Title" mode="xpath">
+    		<![CDATA[//div[@class='content']/h1/text()|//h1[@class="clearfix"]/text()|//h1[@class="h1"]/text()]]>
+		</item>
+		   <!--标题 -->	
+	  	<item name="Title" mode="xpath">
+    		<![CDATA[//div[@class='title']/h1/text()]]>
+		</item>
+			<item name="Title" mode="xpath">
+    		<![CDATA[//div[@class='title01']/h1/text()]]>
+		</item>
+			<item name="Title" mode="xpath">
+    		<![CDATA[//div[@class='article']/h1/text()]]>
+		</item>
+			<!-- 作者 -->
+		<item name="Author" mode="xpath">
+    	     <![CDATA[//span[@id='who']/text()]]>   	     
+		</item> 
+		<item name="tmp_Author1" mode="xpath" type="tmp" >
+    	     <![CDATA[//div[@class='con-txt']/div[@class='author']/text()]]>   	     
+		</item> 
+		<item name="Author" mode="regular" parent="tmp_Author1">
+    	     <![CDATA[编辑： (.*?)$]]>   	     
+		</item> 
+			<!-- 作者 -->
+		<item name="tmp_Author2" mode="xpath" type="tmp" >
+    	     <![CDATA[//span[@id='author_baidu']/text()]]>   	     
+		</item> 
+		<item name="Author" mode="regular" parent="tmp_Author2">
+    	     <![CDATA[作者：(.*?)$]]>   	     
+		</item>
+		
+		<!-- 作者 -->
+		<item name="tmp_Author3" mode="xpath" type="tmp" >
+    	     <![CDATA[//span[@id='editor_baidu']/text()]]>   	     
+		</item> 
+		<item name="Author" mode="regular" parent="tmp_Author3">
+    	     <![CDATA[编辑：(.*?)$]]>   	     
+		</item>
+		
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="DateTime" mode="gen" rule="6">
+    		<![CDATA[{empty}]]>
+		</item>
+	    <item name="pubDateTime" mode="regular" dateformat="yyyy-MM-dd HH:mm:ss" parent="DateTime">
+    	     <![CDATA[^(.*?)$]]>
+		</item>
+        <!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="tmp_pubDateTime1" mode="xpath" type="tmp" >
+    		<![CDATA[//span[@id='pubtime_baidu']/text()|//div[@class='content']/div[@class='time clearfix']/text()]]>
+		</item>
+	       <item name="pubDateTime" mode="regular"  dateformat="yyyy-MM-dd HH:mm" parent="tmp_pubDateTime1">
+    	     <![CDATA[\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}]]>
+		</item>
+							
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="tmp_pubDateTime2" mode="xpath" type="tmp" >
+    		<![CDATA[//div[@class='article']/div[@class='info']/span[2]/text()]]>
+		</item>
+	       <item name="pubDateTime" mode="regular"  dateformat="yyyy年MM月dd日" parent="tmp_pubDateTime2">
+    	     <![CDATA[\d{4}年\d{2}月\d{2}日]]>
+		</item>
+		<!-- 来源 -->
+		<item name="tmp_From" mode="xpath" type="tmp">
+    	     <![CDATA[//div[@class='content']/div[@class='time clearfix']/text()]]>
+		</item> 
+		<item name="From" mode="regular" parent="tmp_From">
+    	     <![CDATA[来源:(.*?)　　发表时间：]]>
+		</item> 
+		
+		<!-- 来源 -->
+		<item name="tmp_From1" mode="xpath" type="tmp">
+    	     <![CDATA[//span[@id='source_baidu']/text()]]>
+		</item> 
+		<item name="From" mode="regular" parent="tmp_From1">
+    	     <![CDATA[来源:(.*?)$]]>
+		</item> 	
+		<item name="From" mode="regular" parent="tmp_From1">
+    	     <![CDATA[来源：(.*?)$]]>
+		</item> 
+		<!-- 来源 -->
+		<item name="tmp_From2" mode="xpath" type="tmp">
+    	     <![CDATA[//div[@class='article']/div[@class='info']/span[1]/text()]]>
+		</item> 
+		<item name="From" mode="regular" parent="tmp_From2">
+    	     <![CDATA[来源：(.*?)$]]>
+		</item>		
+				
+     	<item name="tmp_ClickCount" mode="xpath" regex="," replacement="" trim="1" type="tmp" ><!--点击量 -->
+    	<![CDATA[]]>
+		</item>
+		<item name="ClickCount" mode="regular"  parent="tmp_ClickCount">
+    	     <![CDATA[]]>
+		</item> 
+		<item name="ReplyCount" mode="xpath"><!--回复数 -->
+    	<![CDATA[]]>
+		</item>
+		<item name="Summary" mode="xpath"><!-- 摘要 -->
+		 <![CDATA[]]>
+		</item>		
+
+		<item name="Content" mode="xpath" ><!--内容 -->
+    	<![CDATA[//div[@class='content']/div[@class='con-txt']/html()|//div[@class="news-content clearfix"]/html()|//div[@class="main_article"]/html()]]>
+		</item>	
+	    <item name="Content" mode="xpath" ><!--内容 -->
+    	<![CDATA[//div[@id='mycarousel']/html()|//div[@class="intxt"]/html()]]>
+		</item>				
+		<item name="Content" mode="xpath" ><!--内容 -->
+    	<![CDATA[//div[@class='article']/div[@class='text']/html()]]>
+		</item>
+	</Contents>	
+		<page>
+	<!--翻页 下一页规则 -->
+        <item name="tmp_page" mode="xpath" type="tmp">
+	       <![CDATA[//div[@id='displaypagenum']/center/html()]]>
+	    </item>
+	    <item name="page" mode="regular" parent="tmp_page" >
+	       <![CDATA[<a href="([^>]+?)">下一页</a>]]>
+		</item>
+	 </page> 		
+	<!--翻页 下一页内容-->
+	 <Next_Contents>
+		<item name="Content" mode="xpath" ><!--内容 -->
+    	<![CDATA[//div[@id='mycarousel']/html()]]>
+		</item>
+ 	</Next_Contents>
+</html>

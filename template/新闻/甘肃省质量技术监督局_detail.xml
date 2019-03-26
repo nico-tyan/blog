@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>	
+	 <!--甘肃省质量技术监督局http://www.gszl.gov.cn/newsma/zgzw/2017/03/28/1490689707609.html 详细页-->                     
+	<forurlReg><![CDATA[http://[\S]+.gszl.gov.cn/[\S]+]]></forurlReg>
+	<load_on_items>
+	   <item name="siteName" mode="str">
+   			<![CDATA[甘肃省质量技术监督局]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[gb2312]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[Title|Content|pubDateTime]]>
+		</item>
+		<item name="next_url" mode="regular" type="tmp" ref="url"><!--引用  url匹配  -->
+    	<![CDATA[^(.*?)\.htm]]>
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<item name="coat" mode="xpath" type="tmp">
+   			<![CDATA[//div[@class="coat"]/@class]]>
+		</item>
+	</tmp_items>
+	<tmp_items>
+		
+	</tmp_items>
+	<!--内容块 -->
+	<Contents>
+	
+		<!--标题 -->		
+	  	<item name="Title" mode="xpath">
+    		<![CDATA[//div[@id='conTitle']/h1/text()]]>
+		</item>
+			
+		<item name="Author" mode="xpath">
+    	     <![CDATA[//div[@class='pageInfo']/span[2]/text()]]>   	     
+		</item> 		
+						
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="tmp_pubDateTime" mode="xpath" type="tmp" >
+    		<![CDATA[//div[@class='infoBox']/html()]]>
+		</item>
+	       <item name="pubDateTime" mode="regular"  dateformat="yyyy-MM-dd" parent="tmp_pubDateTime">
+    	     <![CDATA[\d{4}-\d{2}-\d{2}]]>
+		</item>  
+		
+		<item name="tmp_From" mode="xpath" type="tmp" >
+    	     <![CDATA[//div[@class='infoBox']/html()]]>
+		</item> 
+		<item name="From" mode="regular"   parent="tmp_From">
+    	     <![CDATA[信息来源：(.*?)&nbsp;]]>
+		</item>
+		
+     	<item name="ClickCount" mode="xpath" regex="," replacement="" trim="1"><!--点击量 -->
+    	<![CDATA[]]>
+		</item>
+		<item name="ReplyCount" mode="xpath"><!--回复数 -->
+    	<![CDATA[]]>
+		</item>
+		<item name="Summary" mode="xpath"><!-- 摘要 -->
+		 <![CDATA[]]>
+		</item>		
+
+		<item name="Content" mode="xpath" ><!--内容 -->
+    	<![CDATA[//div[@id='content']/html()]]>
+		</item>
+	   <item name="id" mode="regular" type="tmp" ref="url"><!--引用  url匹配  -->
+    	<![CDATA[/([^/]+)\.htm]]>
+		</item>
+		<!-- http://www.gszl.gov.cn/content/hitview.do?id=1490689707609 -->
+		
+	</Contents>	
+   	<ajax>
+		<url_mode><![CDATA[get]]></url_mode>
+		<!-- 组装 请求连接  ref引用已获取或已处理数据  data_type 数据类型-->
+		<url_join><![CDATA[http://www.gszl.gov.cn/content/hitview.do?]]></url_join>
+		<url_join  ref="id"><![CDATA[id=]]></url_join>
+		<item name="ClickCount" mode="regular">
+	    	<![CDATA[\d+]]>
+		</item>
+	</ajax>
+	
+</html>

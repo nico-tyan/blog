@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html>
+     <!-- 天津中医药大学新闻网http://news13.tjutcm.edu.cn/ssjg.jsp?a42409t=45&a42409p=1&a42409c=20&a42409i=%E5%A4%A9%E6%B4%A5&wbtreeid=1660&Find=find&entrymode=1&INTEXT2=5aSp5rSl&news_search_code=&condition=0-->
+     <forurlReg><![CDATA[http://news13.tjutcm.edu.cn/ssjg.jsp\?[\S]+]]></forurlReg>
+     <!-- 临时集合 页面下载前获取-->
+     <load_on_items>
+          <item name="siteCode" mode="str"><![CDATA[N0001140]]></item>
+          <item name="siteName" mode="str"><![CDATA[天津中医药大学新闻网]]></item>
+          <item name="type" mode="str">
+               <![CDATA[1]]>
+               <!-- 1 搜索列表  2 详情 -->
+          </item>
+          <item name="siteUrl" mode="str">
+               <![CDATA[http://news13.tjutcm.edu.cn/ssjg.jsp?a42409t=45&a42409p={Page}&a42409c=20&a42409i={Keyword}&wbtreeid=1660&Find=find&entrymode=1&INTEXT2=5aSp5rSl&news_search_code=&condition=0]]>
+               <!--搜索链接 -->
+          </item>
+          <item name="charset" mode="str"><![CDATA[utf-8]]></item>
+          <item name="url_charset" mode="str"><![CDATA[utf-8]]></item>
+          <item name="get_next_url" mode="str">
+               <![CDATA[1]]>
+               <!--  get_next_url =1 为获取下一页， 其它为替换 -->
+          </item>
+          <item name="load_referer" mode="str" type="tmp">
+               <!-- 检查是否需要referer -->
+               <![CDATA[#]]>
+          </item>
+          <item name="statusCode" mode="str">
+               <![CDATA[200]]>
+               <!--下载返回码为 200 视为成功 -->
+          </item>
+          <item name="cycle_retry_times" mode="str">
+               <![CDATA[1]]>
+               <!-- 重试次数 -->
+          </item>
+          <!--内容解析成功必须存在的几个 值  -->
+          <item name="exist_keys" mode="str">
+               <![CDATA[center]]>
+               <!-- 能够获取到列表块 视为此模板匹配成功 -->
+          </item>
+     </load_on_items>
+     <!-- 临时集合  页面下载后获取-->
+     <tmp_items>
+          <!-- 能够获取到列表块 视为此模板匹配成功 -->
+          <item name="center" mode="xpath" type="tmp"><![CDATA[//table[@align='center']/@align]]></item>
+     </tmp_items>
+     <list>
+          <item name="list_items" mode="xpath" type="tmp">
+               <!--相当于添加了一个父类 （标题url这些需要获取的共同路径）  下面的网站主题就可以写精简 -->
+               <![CDATA[/html/body/table/tbody/tr[3]/td/table/tbody/tr/td[3]/table/tbody/tr[3]/td/table/tbody/tr/td/table/tbody/tr/td/form/table[2]/tbody/tr]]>
+          </item>
+     </list>
+     <items>
+          <item name="Title" mode="xpath">
+               <!-- 标题 -->
+               <![CDATA[a/span[1]/text()]]>
+          </item>
+          <item name="Url" mode="xpath">
+               <!-- url链接 -->
+               <![CDATA[a/@href]]>
+          </item>
+          <item name="pubDateTime" mode="regular" dateformat="yyyy/MM/dd"><![CDATA[\d+/\d+/\d+]]></item>
+     </items>
+     <!-- 获取下一页地址 -->
+     <page>
+          <item name="page" mode="xpath" type="tmp"><![CDATA[//a[@class='Next']/@href]]></item>
+     </page>
+</html>
+

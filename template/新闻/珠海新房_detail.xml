@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>
+	<!-- 珠海新房http://house.zh51home.com/Article/ArticalShow_50903.html -->
+	<forurlReg><![CDATA[http://house.zh51home.com/[\S]+]]></forurlReg>
+	<!-- 临时集合 页面下载前获取-->
+	<load_on_items>
+		<item name="siteName" mode="str">
+   	 		<![CDATA[珠海新房]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[p1]]>
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<!-- 能够获取到列表块 视为此模板匹配成功 -->
+		<item name="p1" mode="xpath" type="tmp">
+   			<![CDATA[//div[@class='p1']/@class]]>
+		</item> 
+	</tmp_items>
+	<Contents>
+		<!--标题 -->
+		<item name="Title" mode="xpath">
+    	<![CDATA[//h1[@class='txtTitle']/text()]]>
+		</item>
+		<item name="tmp_Author" mode="xpath" type="tmp"><!--作者  -->
+    	<![CDATA[//div[@class='txtInfo ']/span[2]/text()]]>
+		</item>
+		<item name="Author" mode="regular"  parent="tmp_Author">
+    	     <![CDATA[作者:\s+(\S+)$]]>   	     
+		</item>
+		<item name="Summary" mode="xpath"> <!--摘要 -->
+		<![CDATA[//div[@class='con']/span/text()]]>
+		</item>
+		<item name="tmp_From" mode="xpath" type="tmp" >
+    	     <![CDATA[//div[@class='txtInfo ']/span[3]/text()]]>   	     
+		</item>
+		<item name="From" mode="regular"  parent="tmp_From">
+    	     <![CDATA[来源:\s+(\S+)$]]>   	     
+		</item>
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="tmp_pubDateTime" mode="xpath" type="tmp">
+    	<![CDATA[//div[@class='txtInfo ']/span[1]/text()]]>
+		</item>
+		<item name="pubDateTime" mode="regular" dateformat="yyyy-MM-dd HH:mm"
+			parent="tmp_pubDateTime">
+    	<![CDATA[(\d+-\d+-\d+ \d+:\d+)]]>
+		</item>
+		<item name="Content" mode="xpath" ><!--内容 -->
+    	<![CDATA[//div[@id='zoom']/html()]]>
+		</item>
+	</Contents>
+</html>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>
+	<!--上海体育学院http://rsc.sus.edu.cn/info/1269/1819.htm -->
+	<forurlReg><![CDATA[http://[\S]+.sus.edu.cn/[\S]+]]></forurlReg>
+	<!-- 临时集合 页面下载前获取-->
+	<load_on_items>
+		<item name="siteName" mode="str">
+   	 		<![CDATA[上海体育学院]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[center]]>
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<!-- 能够获取到列表块 视为此模板匹配成功 -->
+		<item name="center" mode="xpath" type="tmp">
+   			<![CDATA[//table[@align='center']/@align]]>
+		</item> 
+	</tmp_items>
+	<Contents>
+		<!--标题 -->
+		<item name="Title" mode="regular">
+    	<![CDATA[<td class="titlestyle[\s\S]+?>([\s\S]+?)</td>]]>
+		</item>
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="pubDateTime" mode="regular" dateformat="yyyy年MM月dd日">
+    	<![CDATA["text-align: right">(\d+年\d+月\d+日)</p>]]>
+		</item>
+		<item name="pubDateTime" mode="regular" dateformat="yyyy-MM-dd HH:mm">
+    	<![CDATA[<span class="timestyle[\s\S]+?>([\s\S]+?)</span>]]>
+		</item>
+		<item name="Content" mode="xpath" ><!--内容 -->
+    	<![CDATA[//div[@id='vsb_newscontent']/html()]]>
+		</item>
+	</Contents>
+</html>

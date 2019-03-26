@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>
+	<!-- 广州工商学院http://www.gzgs.org.cn/index.aspx?lanmuid=61&sublanmuid=703&id=1551-->
+	<forurlReg><![CDATA[http://www.gzgs.org.cn/index.aspx\?[\S]+id[\S]+]]></forurlReg>
+	<!-- 临时集合 页面下载前获取-->
+	<load_on_items>
+		<item name="siteName" mode="str">
+   	 		<![CDATA[广州工商学院]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[sublanmu_box]]>
+		</item>
+		<item name="id" mode="regular" type="tmp" ref="url"><!-- 引用  url匹配    -->  
+    	<![CDATA[&id=(\d+)]]>
+		</item>
+		<!-- gen_str rule{1 时间戳 2 随机数（0.424242443 ）不需要长度  (3 数字  4 字母 5 数字加字母  )+length  } 生成字符串  length 生成长度 -->
+		<item mode="gen" name="gen_str" rule="2">
+    	<![CDATA[#]]>
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<!-- 能够获取到列表块 视为此模板匹配成功 -->
+		<item name="sublanmu_box" mode="xpath" type="tmp">
+   			<![CDATA[//div[@id='sublanmu_box']/@id]]>
+		</item> 
+	</tmp_items>
+	<Contents>
+		<!--标题 -->
+		<item name="Title" mode="xpath">
+    	<![CDATA[//li[@class='title']/h1/text()]]>
+		</item>
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="tmp_pubDateTime" mode="xpath" type="tmp">
+    	<![CDATA[//li[@class='info']/text()]]>
+		</item>
+		<item name="pubDateTime" mode="regular" dateformat="yyyy-MM-dd"
+			parent="tmp_pubDateTime">
+    	<![CDATA[\d+-\d+-\d+]]>
+		</item>
+		<item name="Content" mode="xpath" ><!--内容 -->
+    	<![CDATA[//div[@class='content']/html()]]>
+		</item>
+	</Contents>
+	<!-- ajax异步获取 -->
+	 <ajax>
+		<method><![CDATA[get]]></method>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<!-- 组装 请求连接  ref引用已获取或已处理数据  data_type 数据类型 -->
+<!-- http://www.gzgs.org.cn/e/aspx/get_info.aspx?table=article&id=1551&r=0.8864149075406904 -->
+		<url_join ref="id" data_type="String"><![CDATA[http://www.gzgs.org.cn/e/aspx/get_info.aspx?table=article&id=]]></url_join>
+		<url_join ref="gen_str" data_type="String"><![CDATA[&r=]]></url_join>
+		<item name="ClickCount" mode="regular">
+	    	<![CDATA[clicks=(\d+)]]>
+		</item>
+	</ajax> 
+</html>

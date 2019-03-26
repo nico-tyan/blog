@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>
+	<!-- 淮阴工学院http://xinwen.hyit.edu.cn/news/show.asp?id=15212-->
+	<forurlReg><![CDATA[http://xinwen.hyit.edu.cn/[\S]+]]></forurlReg>
+	<!-- 临时集合 页面下载前获取-->
+	<load_on_items>
+		<item name="siteName" mode="str">
+   	 		<![CDATA[淮阴工学院]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[gbk]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[gbk]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[Title|Content]]>
+		</item>
+		<item name="id" mode="regular" type="tmp" ref="url"> <!-- 引用  url匹配 -->    
+    	<![CDATA[(\d+)\.htm]]>
+		</item>
+	</load_on_items>
+	<Contents>
+		<!--标题 -->
+		<item name="Title" mode="xpath">
+    	<![CDATA[//div[@class='centen1']/font/text()]]>
+		</item>
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="tmp_pubDateTime" mode="xpath" type="tmp">
+    	<![CDATA[//div[@class='centen1']/text()]]>
+		</item>
+		<item name="pubDateTime" mode="regular" dateformat="yyyy-MM-dd HH:mm:ss"
+			parent="tmp_pubDateTime">
+    	<![CDATA[时间：(.*?)\u00A0]]>
+		</item>
+		<item name="tmp_ClickCount" mode="xpath" type="tmp"><!--点击量 -->
+    	<![CDATA[//div[@class='centen1']/text()]]>
+		</item>
+		<item name="ClickCount" mode="regular" parent="tmp_ClickCount">
+    	<![CDATA[浏览次数：(\d+)]]>
+		</item>
+		<item name="Content" mode="xpath" ><!--内容 -->
+    	<![CDATA[//div[@class='centen2']/html()]]>
+		</item>
+	</Contents>
+</html>

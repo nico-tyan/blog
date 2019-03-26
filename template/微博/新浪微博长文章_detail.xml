@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>
+	<!-- 新浪微博长文章http://weibo.com/ttarticle/p/show?id=2309404093489213246503 -->
+	<forurlReg><![CDATA[https?://weibo.com/ttarticle[\S]+]]></forurlReg>	<!-- 临时集合 页面下载前获取-->
+	<load_on_items>
+	<item name="siteName" mode="str">
+   	 		<![CDATA[新浪微博长文章]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[gbk]]>
+		</item>
+		<item name="is_unicode" mode="str">
+   			<![CDATA[1]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[WB_miniblog]]>
+		</item>
+		<!-- gen_str rule{1 时间戳 2 随机数（0.424242443 ）不需要长度  (3 数字  4 字母 5 数字加字母  )+length  } 生成字符串  length 生成长度 -->
+		 <item mode="gen" name="cook" rule="5" length="8" type="tmp">
+    	<![CDATA[#]]>
+		</item>
+		</load_on_items>
+		<tmp_items>
+		<!-- 能够获取到列表块 视为此模板匹配成功 -->
+			<item name="WB_miniblog" mode="xpath" type="tmp">
+   			<![CDATA[//div[@class='WB_miniblog']/@class]]>
+			</item> 
+		</tmp_items>
+		
+	
+		 <cookie_data_join name="SUB" mode="str" ref="cook"  type="tmp"> <!-- Cookie可以使用随机数时  可以使用此方法 例如：凯迪社区_list.xml -->
+   			<![CDATA[_2AkMvtnABf8NxqwJRmP4WyW7mb491zwjEieKZ6oHaJRMxHRl-yT83qmkOtRBNWOL7IyhK-aoN5_5id49E]]>
+		</cookie_data_join> 
+	<Contents>
+		<!--标题 -->
+		<item name="Title" mode="xpath">
+    	<![CDATA[//div[@class='title']/text()]]>
+		</item>
+		<item name="Author" mode="xpath"><!--作者  -->
+    	<![CDATA[//div[@class='W_fl']/span[@class='author1 W_autocut']/a/text()]]>
+		</item>
+		<item name="joinss" mode="join_str" join_item="Title|Title|Author">
+   			<![CDATA[{empty}]]>
+		</item>
+		<item name="joinssxx" mode="regular" parent="joinss">
+   			<![CDATA[^(.*?)$]]>
+		</item>
+		<item name="Summary" mode="xpath"> <!--摘要 -->
+		</item>
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="tmp_pubDateTime" mode="xpath" type="tmp">
+    	<![CDATA[//div[@class='W_fl']/span[@class='time']/text()]]>
+		</item>
+		<item name="pubDateTime" mode="regular" dateformat="yyyy-MM-dd HH:mm:ss"
+			parent="tmp_pubDateTime">
+    	<![CDATA[^(.*?)$]]>
+		</item>
+		<item name="tmp_ClickCount" mode="xpath" type="tmp" regex="," replacement=""><!--点击量 -->
+    	<![CDATA[//div[@class='W_fr']/span/text()]]>
+		</item>
+		<item name="ClickCount" mode="regular" parent="tmp_ClickCount">
+    	<![CDATA[阅读数：(.*?)$]]>
+		</item>
+		<item name="tmp_CitedCount" mode="xpath" type="tmp" regex="," replacement=""><!--点击量 -->
+    	<![CDATA[//ul[@class='WB_row_line WB_row_r3 clearfix S_line2']/li[1]/a/span/span/text()]]>
+		</item>
+		<item name="CitedCount" mode="regular" parent="tmp_CitedCount">
+    	<![CDATA[转发 (.*?)$]]>
+		</item>
+		<item name="tmp_ReplyCount" mode="xpath"  type="tmp"><!--回复数 -->
+    	<![CDATA[//ul[@class='WB_row_line WB_row_r3 clearfix S_line2']/li[2]/a/span/span/text()]]>
+		</item>
+		<item name="ReplyCount" mode="regular" parent="tmp_ReplyCount">
+    	<![CDATA[评论 (.*?)$]]>
+		</item>
+		<item name="Content" mode="xpath" ><!--内容 -->
+    	<![CDATA[//div[@class='WB_editor_iframe']/html()]]>
+		</item>
+	</Contents>
+	<Append_Contents>
+	</Append_Contents>
+
+	
+	
+	<!--最终获取到的内容过滤  如广告-->
+	<!-- 
+	<regex_filter ><![CDATA[<a[^>]*?>[\s\S]+?</a>]]></regex_filter> 如替换掉所有a标签
+	<css_filter><![CDATA[a[href]]]></css_filter>//带有href属性的a元素 删除
+	<css_filter><![CDATA[img[src$=.png]]]></css_filter>//扩展名为.png的图片   删除
+	<css_filter><![CDATA[h3.r > a]]></css_filter>//在h3元素之后的a元素   删除 
+	-->
+</html>
+<!--
+a. 转义序列各字符间不能有空格； 
+b. 转义序列必须以"；"结束； 
+c. 单独的&不被认为是转义开始； 
+d. 区分大小写。
+
+以下是XML中需要的转义字符:
+&(逻辑与)  &amp;        
+<(小于)    &lt;        
+>(大于)    &gt;        
+"(双引号)  &quot;      
+'(单引号)  &apos;  
+-->

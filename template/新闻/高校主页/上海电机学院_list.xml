@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html>
+     <!--上海电机学院 http://www.sdju.edu.cn/_web/search/doSearch.do?locale=zh_CN&request_locale=zh_CN&_p=YXM9MyZ0PTEwMSZkPTI5MCZwPTEmbT1TTiY_ -->
+     <forurlReg><![CDATA[http://www.sdju.edu.cn/_web/search/doSearch.do\?locale=zh_CN&request_locale=zh_CN&_p=YXM9MyZ0PTEwMSZkPTI5MCZwPTEmbT1TTiY_[\S]*?$]]></forurlReg>
+     <!-- 临时集合 页面下载前获取-->
+     <load_on_items>
+          <item name="siteCode" mode="str"><![CDATA[N0000925]]></item>
+          <item name="siteName" mode="str"><![CDATA[上海电机学院]]></item>
+          <item name="type" mode="str">
+               <![CDATA[1]]>
+               <!-- 1 搜索列表  2 详情 -->
+          </item>
+          <item name="siteUrl" mode="str">
+               <![CDATA[http://www.sdju.edu.cn/_web/search/doSearch.do?locale=zh_CN&request_locale=zh_CN&_p=YXM9MyZ0PTEwMSZkPTI5MCZwPTEmbT1TTiY_]]>
+               <!--搜索链接 -->
+          </item>
+          <item name="charset" mode="str"><![CDATA[utf-8]]></item>
+          <item name="url_charset" mode="str"><![CDATA[utf-8]]></item>
+          <item name="method" mode="str"><![CDATA[post]]></item>
+          <item name="get_next_url" mode="str">
+               <![CDATA[0]]>
+               <!--  get_next_url =1 为获取下一页， 其它为替换 -->
+          </item>
+          <item name="statusCode" mode="str">
+               <![CDATA[200]]>
+               <!--下载返回码为 200 视为成功 -->
+          </item>
+          <item name="cycle_retry_times" mode="str">
+               <![CDATA[1]]>
+               <!-- 重试次数 -->
+          </item>
+          <!--内容解析成功必须存在的几个 值  -->
+          <item name="exist_keys" mode="str">
+               <![CDATA[wp_search]]>
+               <!-- 能够获取到列表块 视为此模板匹配成功 -->
+          </item>
+     </load_on_items>
+     <form_data_join name="pageIndex"><![CDATA[{Page}]]></form_data_join>
+     <form_data_join name="catalog"><![CDATA[0]]></form_data_join>
+     <form_data_join name="searchType"><![CDATA[all]]></form_data_join>
+     <!-- 当前页 -->
+     <form_data_join name="advanced"><![CDATA[false]]></form_data_join>
+     <!--每页总数  -->
+     <form_data_join name="searchFilter"><![CDATA[1]]></form_data_join>
+     <form_data_join name="orderType"><![CDATA[publishTime]]></form_data_join>
+     <form_data_join name="orderTip"><![CDATA[1]]></form_data_join>
+     <form_data_join name="columnPath"><![CDATA[false]]></form_data_join>
+     <form_data_join name="filter_text"><![CDATA[1]]></form_data_join>
+     <form_data_join name="keyword"><![CDATA[{Keyword}]]></form_data_join>
+     <form_data_join name="isShow"><![CDATA[1]]></form_data_join>
+     <!-- 临时集合  页面下载后获取-->
+     <tmp_items>
+          <!-- 能够获取到列表块 视为此模板匹配成功 -->
+          <item name="wp_search" mode="xpath" type="tmp"><![CDATA[//div[@class='wp_search']/@class]]></item>
+     </tmp_items>
+     <!--翻页 下一页规则 -->
+     <page>
+          <item name="page" mode="css" attr="onclick"><![CDATA[div.search_pages.clearfix>a:last-child]]></item>
+     </page>
+     <list>
+          <item name="list_items" mode="xpath" type="tmp"><![CDATA[//div[@class='results_list']/div[@class='result_item clearfix']]]></item>
+     </list>
+     <items>
+          <item name="Url" mode="xpath"><![CDATA[h3[@class='item_title']/a/@href]]></item>
+          <item name="tmp_pubDateTime" mode="xpath" type="tmp"><![CDATA[span[@class='meta_time']/text()]]></item>
+          <item name="pubDateTime" mode="regular" parnet="tmp_pubDateTime" dateformat="yyyy-MM-dd HH:mm"><![CDATA[发布时间：(.*?)$]]></item>
+          <item name="Title" mode="xpath"><![CDATA[h3[@class='item_title']/a/div/allText()]]></item>
+     </items>
+</html>
+

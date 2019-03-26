@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html>
+	<!--百度网页 http://www.baidu.com/s?q1={Keyword}&tn=baiduadv 百度网页 列表页 -->
+	<!-- https://www.baidu.com/s?wd=%E5%A4%A7%E6%95%B0%E6%8D%AE&pn=0&oq=%E5%A4%A7%E6%95%B0%E6%8D%AE&tn=baiduadv&ie=utf-8&usm=3&rsv_pq=cbbf76730004d883&rsv_t=a6e5k7NW7XErNTkadE2XL1mZTXkFf2VjVuAhyMf%2BMysEZTMPYOdDxIX179Iz4zg -->
+	<forurlReg><![CDATA[https://zt.voc.com.cn/Topic/youchuyinhangshoujiyinhang/mobile/.*?]]></forurlReg>
+	<load_on_items>
+		<item name="siteCode" mode="str"><![CDATA[N0020759]]></item>
+		<item name="siteName" mode="str"><![CDATA[潇湘晨报]]></item>
+		<item name="type" mode="str">
+               <![CDATA[1]]>
+			<!-- 1 搜索列表 2 详情 -->
+		</item>
+		<item name="siteUrl" mode="str">
+               <![CDATA[https://cgi.voc.com.cn/app/wxhn/xhn_topic.php?id=27305&a={Keyword}]]>
+			<!--搜索链接 -->
+		</item>
+		<item name="curPage" mode="str">
+               <![CDATA[0]]>
+			<!-- 列表第几页开始 默认为1 为1时不需要设置此属性 -->
+		</item>
+		<item name="charset" mode="str"><![CDATA[utf-8]]></item>
+		<item name="url_charset" mode="str"><![CDATA[utf-8]]></item>
+		<item name="statusCode" mode="str">
+               <![CDATA[200]]>
+			<!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+               <![CDATA[1]]>
+			<!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+               <![CDATA[]]>
+			<!-- 能够获取到列表块 视为此模板匹配成功 -->
+		</item>
+	</load_on_items>
+	<!--翻页 下一页规则 -->
+	<list>
+		<item name="list_items" mode="xpath" type="tmp"><![CDATA[//div[@class='content_more_list']]]></item>
+	</list>
+	<items>
+		<item name="Title" mode="xpath"><![CDATA[p/allText()]]></item>
+		<item name="Url" mode="xpath"><![CDATA[a/@href]]></item>
+		<!--发布时间 -->
+		<item name="DateTime" mode="gen" rule="6" >
+    	  <![CDATA[{empty}]]>
+		</item> 
+		<item name="pubDateTime" mode="regular" parent="DateTime" dateformat="yyyy-MM-dd">
+    	     <![CDATA[(\d+-\d+-\d+)]]>   	     
+		</item>
+	</items>
+</html>

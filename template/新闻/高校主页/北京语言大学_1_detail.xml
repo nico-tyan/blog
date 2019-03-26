@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>
+	<!-- 北京语言大学http://news.blcu.edu.cn/c/2017-07-11/486253.shtml -->
+	<forurlReg><![CDATA[http://news.blcu.edu.cn/c[\S]+]]></forurlReg>
+	<!-- 临时集合 页面下载前获取-->
+	<load_on_items>
+		<item name="siteName" mode="str">
+   	 		<![CDATA[北京语言大学]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[con]]>
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<!-- 能够获取到列表块 视为此模板匹配成功 -->
+		<item name="con" mode="xpath" type="tmp">
+   			<![CDATA[//div[@class='con']/@class]]>
+		</item> 
+	</tmp_items>
+	<Contents>
+		<!--标题 -->
+		<item name="Title" mode="xpath">
+    	<![CDATA[//div[@class='detailinfo']/h2/text()]]>
+		</item>
+		<item name="tmp_Author" mode="xpath" type="tmp"><!--作者  -->
+    	<![CDATA[//div[@class='detailinfo']/div[@class='arinfo']/text()]]>
+		</item>
+		<item name="Author" mode="regular" parent="tmp_Author">
+    	<![CDATA[作者：(.*?)\u00A0]]>
+		</item>
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="tmp_pubDateTime" mode="xpath" type="tmp">
+    	<![CDATA[//div[@class='detailinfo']/div[@class='arinfo']/text()]]>
+		</item>
+		<item name="pubDateTime" mode="regular" dateformat="yyyy年MM月dd日"
+			parent="tmp_pubDateTime">
+    	<![CDATA[发布日期:(.*?)$]]>
+		</item>
+		<item name="Content" mode="xpath" ><!--内容 -->
+    	<![CDATA[//div[@class='detailinfo']/div[@class='detail']/html()]]>
+		</item>
+	</Contents>
+</html>

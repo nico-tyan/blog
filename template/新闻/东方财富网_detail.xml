@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>	
+	<!--东方财富网http://finance.eastmoney.com/news/1359,20170717757209549.html 详细页-->  
+	<forurlReg><![CDATA[http://[\S]+.eastmoney.com/[\S]+]]></forurlReg>
+	<load_on_items>
+	   <item name="siteName" mode="str">
+   			<![CDATA[东方财富网yy]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[page]]>
+		</item>
+		<item name="next_url" mode="regular" type="tmp" ref="url"><!--引用  url匹配  -->
+    	<![CDATA[^(.*?)\.html]]>
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<item name="page" mode="xpath" type="tmp">
+   			<![CDATA[//div[@class="page"]/@class]]>
+		</item>		
+	</tmp_items>
+	<tmp_items>
+		
+	</tmp_items>
+	<!--内容块 -->
+	<Contents>
+	
+		<!--标题 -->		
+	  	<item name="Title" mode="xpath">
+    		<![CDATA[//div[@class='newsContent']/h1/text()]]>
+		</item> 
+		 <item name="tmp_Author" mode="xpath" type="tmp" >
+    	     <![CDATA[//p[@class='res-edit']/text()]]>
+		</item>
+		<item name="Author" mode="regular" parent="tmp_Author">
+    	     <![CDATA[\(责任编辑：(.*?)\)]]>
+		</item> 
+		 <item name="tmp_Author1" mode="xpath" type="tmp" >
+    	     <![CDATA[//div[@class="time-source"]/div[2]/text()]]>
+		</item>
+		<item name="Author" mode="regular" parent="tmp_Author1">
+    	     <![CDATA[作者：(.*?)$]]>
+		</item> 
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="pubDateTime" mode="xpath"  dateformat="yyyy年MM月dd日 HH:mm">
+    		<![CDATA[//div[@class='time-source']/div[1]/text()]]>
+		</item>
+		
+		<item name="From" mode="xpath"  >
+		<![CDATA[//div[@class='time-source']/div[2]/img/@alt]]> 
+		</item> 
+		 <item name="From1" mode="xpath" type="tmp" >
+    	     <![CDATA[//div[@class="source data-source"]/text()]]>
+		</item>
+		<item name="From" mode="regular"  parent="From1">
+		<![CDATA[^(.*?)$]]> 
+		</item> 
+     	<item name="ClickCount" mode="xpath" regex="," replacement="" trim="1"><!--点击量 -->
+    	<![CDATA[]]>
+		</item>
+		<item name="ReplyCount" mode="xpath"><!--回复数 -->
+    	<![CDATA[//div[@class='BodyEnd']/a[1]/b/text()]]>
+		</item>
+		<item name="Summary" mode="xpath"><!-- 摘要 -->
+		 <![CDATA[]]>
+		</item>
+		
+		<item name="Content" mode="xpath"><!--内容 -->
+    	<![CDATA[//div[@id='ContentBody']/html()]]>
+		</item>
+	</Contents>	
+	
+</html>

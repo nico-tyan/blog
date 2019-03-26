@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html>
+     <!--南京信息工程大学新闻网 http://news.nuist.edu.cn/Search.aspx -->
+     <forurlReg><![CDATA[http://news.nuist.edu.cn/Search.aspx[\S]*?$]]></forurlReg>
+     <!-- 临时集合 页面下载前获取-->
+     <load_on_items>
+          <item name="siteCode" mode="str"><![CDATA[N0001083]]></item>
+          <item name="siteName" mode="str"><![CDATA[南京信息工程大学新闻网]]></item>
+          <item name="type" mode="str">
+               <![CDATA[1]]>
+               <!-- 1 搜索列表  2 详情 -->
+          </item>
+          <item name="siteUrl" mode="str">
+               <![CDATA[http://news.nuist.edu.cn/Search.aspx]]>
+               <!--搜索链接 -->
+          </item>
+          <item name="charset" mode="str"><![CDATA[utf-8]]></item>
+          <item name="url_charset" mode="str"><![CDATA[utf-8]]></item>
+          <item name="method" mode="str"><![CDATA[post]]></item>
+          <item name="get_next_url" mode="str">
+               <![CDATA[0]]>
+               <!--  get_next_url =1 为获取下一页， 其它为替换 -->
+          </item>
+          <item name="statusCode" mode="str">
+               <![CDATA[200]]>
+               <!--下载返回码为 200 视为成功 -->
+          </item>
+          <item name="cycle_retry_times" mode="str">
+               <![CDATA[1]]>
+               <!-- 重试次数 -->
+          </item>
+          <!--内容解析成功必须存在的几个 值  -->
+          <item name="exist_keys" mode="str">
+               <![CDATA[jglist]]>
+               <!-- 能够获取到列表块 视为此模板匹配成功 -->
+          </item>
+     </load_on_items>
+     <form_data_join name="__VIEWSTATE"><![CDATA[/wEPDwUKLTQ2MzY5NTkyMQ9kFgICAw9kFgICBA9kFgJmD2QWCAIFDxAPFgIeB0NoZWNrZWRnZGRkZAIHDxBkZBYAZAILDzwrAAkAZAINDw8WAh4EVGV4dAUBMWRkGAEFHl9fQ29udHJvbHNSZXF1aXJlUG9zdEJhY2tLZXlfXxYSBQVhbGxsbQUEbG0kMAUEbG0kMQUEbG0kMgUEbG0kMwUEbG0kNAUEbG0kNQUEbG0kNgUEbG0kNwUEbG0kOAUEbG0kOQUFbG0kMTAFBWxtJDExBQVsbSQxMgUFbG0kMTMFBWxtJDE0BQVsbSQxNQUFbG0kMTX7nP/hnHPQzHdx3yWA7Cv3Mhj7VSln0001TDcBn/rOFQ==]]></form_data_join>
+     <form_data_join name="__VIEWSTATEGENERATOR"><![CDATA[BBBC20B8]]></form_data_join>
+     <form_data_join name="__EVENTVALIDATION"><![CDATA[/wEdACMU0uwnRL/gaRhTSy8w7A+Lk/7CIOe7MKQWS2IGttGItaXUzwEk6wEpoAazLRRDKkQK16hZrvv/zWv9kZ4N2wy0fzqw/25CBFD2kRCZ9bEOfouiqJfb4uR+VdcFxPvu+HsIjuD3ssX/QTrXD6+YsGSyvUDrHapyhIT/06P/uQF2Of2i1NiIUpe4WmlRwSEFWZj0UwHtb6DTlZdQf812m6iHf0SpGH32Kpk1pthpB+RgeolDWdhsi39Wupwz6Ky6hR3y69h5eZkamYVyVtCqrl7z82hFoQFSFkKQvrhlYtfgD5EpWuwxOlj6XBlgTPWWJJ3QLZnugXtiBAdVOWzQl+r0eCKSvKcUB0aP7Nf6SdabF89u3wp1PpATHSgqe4HRpshgeg0jeAyRzKNc3gCDzweFYrJ7NZTNO4u3wpceJSWP5LlxYu42dqbMeQmm/6aqh4/+KaeUHDH3V+Xsf1SRFGIiFUYp9amdWOStYNat9THksOmEosLxkrRc7nDXQlAlPXJ5EWIlQwGJ070+uIVbtyKmzAq3Z2RpcDloeKwx+dtFt7XLI7ifnMT6T/6ZJo3liBaX5/Uw80XU4UBn3VeyNZes4ceC30QgpSxbu/wtjIqlKaSvEFvkXyyZO/Cu5ThYgxXKlP3W5FG3fD8Ibc1g5pLJRE0XAGZCUBnw60ztHtmjehBTnvLp+0+S/SPTvwFKCIqw4RbUnncDjX9gkqZOJyLnJ/YYtoGzd94QQf+nUm796g5uVrrYFwNthqZE9Z3xNCCWHhiOPMADj/NGXkLwwGhG]]></form_data_join>
+     <!-- 当前页 -->
+     <form_data_join name="kw"><![CDATA[{Keyword}]]></form_data_join>
+     <!--每页总数  -->
+     <form_data_join name="searchbt"><![CDATA[站内搜索]]></form_data_join>
+     <form_data_join name="fw"><![CDATA[标题]]></form_data_join>
+     <form_data_join name="sj"><![CDATA[不限]]></form_data_join>
+     <form_data_join name="alllm"><![CDATA[on]]></form_data_join>
+     <!-- 临时集合  页面下载后获取-->
+     <tmp_items>
+          <!-- 能够获取到列表块 视为此模板匹配成功 -->
+          <item name="jglist" mode="xpath" type="tmp"><![CDATA[//ul[@class='jglist']/@class]]></item>
+     </tmp_items>
+     <!--翻页 下一页规则 -->
+     <page>
+          <item name="page" mode="xpath" type="tmp"><![CDATA[//div[@class='piclistpagecode']/html()]]></item>
+     </page>
+     <list>
+          <item name="list_items" mode="xpath" type="tmp"><![CDATA[//ul[@class='jglist']/table[@id='PicList']/tbody/tr]]></item>
+     </list>
+     <items>
+          <item name="Url" mode="xpath"><![CDATA[div[@class='jgtitle']/a/@href]]></item>
+          <item name="tmp_pubDateTime" mode="xpath" type="tmp"><![CDATA[div[@class='jgtime fr']/text()]]></item>
+          <item name="pubDateTime" mode="regular" parnet="tmp_pubDateTime" dateformat="yyyy年MM月dd日"><![CDATA[【(.*?)】]]></item>
+          <item name="Title" mode="xpath"><![CDATA[div[@class='jgtitle']/a/allText()]]></item>
+     </items>
+</html>
+

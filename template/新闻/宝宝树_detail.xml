@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>	
+	<!--宝宝树 http://www.babytree.com/learn/article/9929 详细页-->   
+	<!--      http://www.babytree.com/community/xinqing/topic_87136850.html -->                            
+	<forurlReg><![CDATA[http://www.babytree.com/[\S]+]]></forurlReg>
+	<!-- 临时集合 页面下载前获取-->
+	<load_on_items>
+	    <item name="siteName" mode="str">
+   			<![CDATA[宝宝树 ]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[UTF-8]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[Title|Content|pubDateTime]]>
+		</item>
+		<item name="next_url" mode="regular" type="tmp" ref="url"><!--引用  url匹配  -->
+    	<![CDATA[^(.*?)\.htm]]>
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<item name="bdshare_s" mode="xpath" type="tmp">
+   			<![CDATA[//div[@id="bdshare_s"]/@id|//div[@class="clubTopicSingle"]/@class]]>
+		</item>
+	</tmp_items>
+	<!--内容块 -->
+	<Contents>	
+		<!--标题 -->
+	  	<item name="Title" mode="xpath">
+    		<![CDATA[//div[@class='detail-main wisdom-body-wrapper-ask-single']/h1/text()|//td[@nowrap="nowrap"]/h1/text()]]>
+		</item>				
+			
+		<item name="Author" mode="regular">
+    		<![CDATA[http://home\.babytree\.com/u55588778518[\s\S]+?title="(.*?)"\s+height]]>
+		</item>		
+				
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="tmp_pubDateTime" mode="xpath" type="tmp">
+    		<![CDATA[//div[@class='detail-main wisdom-body-wrapper-ask-single']/h6/span[1]/text()]]>
+		</item>
+	    <item name="pubDateTime" mode="regular"  dateformat="yyyy-MM-dd HH:mm" parent="tmp_pubDateTime">
+    	     <![CDATA[\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}]]><!--另一种方法 获取时间 ： 发表于：(.*?)$ -->
+		</item>
+		
+		<item name="pubDateTime" mode="regular" dateformat="yyyy-MM-dd HH:mm:ss">
+    	     <![CDATA[class="postTime"\>[\s\S]+?(\d+-\d+-\d+ \d+:\d+:\d+) \|]]><!--另一种方法 获取时间 ： 发表于：(.*?)$ -->
+		</item>  
+	
+		<item name="tmp_From" mode="xpath" type="tmp" >
+		<![CDATA[//div[@class='detail-main wisdom-body-wrapper-ask-single']/h6/span[2]/text()]]>
+		</item> 
+		<item name="From" mode="regular" parent="tmp_From" >
+		<![CDATA[出处 (.*?)$]]>
+		</item> 
+	
+  
+     	<item name="tmp_ClickCount" mode="xpath" regex="," replacement="" trim="1"  type="tmp" ><!--点击量 -->
+    	<![CDATA[//div[@class='detail-main wisdom-body-wrapper-ask-single']/h6/span[3]/text()]]>
+		</item>
+		<item name="ClickCount" mode="regular" parent="tmp_ClickCount" >
+		<![CDATA[浏览 (.*?)$]]>
+		</item>
+		<item name="ReplyCount" mode="xpath"><!--回复数 -->
+    	<![CDATA[]]>
+		</item>
+		<item name="Summary" mode="xpath"><!-- 摘要 -->
+		 <![CDATA[]]>
+		</item>
+		
+		<item name="Content" mode="xpath"><!--内容 -->
+    	<![CDATA[//div[@class='article']/html()|//p[@id="topic_content"]/html()]]>
+		</item>
+	
+	</Contents>	
+</html>

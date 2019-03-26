@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html>
+     <!--广佛都市网http://search.foshannews.net/search2016.jsp 详细页-->
+     <forurlReg sys="1" method="get"><![CDATA[http://search.foshannews.net/search[\S]+]]></forurlReg>
+     <load_on_items>
+          <item name="siteCode" mode="str"><![CDATA[N0000549]]></item>
+          <item name="siteName" mode="str"><![CDATA[广佛都市网]]></item>
+          <item name="charset" mode="str"><![CDATA[UTF-8]]></item>
+          <item name="type" mode="str">
+               <![CDATA[1]]>
+               <!-- 1 搜索列表  2 详情 -->
+          </item>
+          <item name="siteUrl" mode="str">
+               <![CDATA[http://search.foshannews.net/search2016.jsp]]>
+               <!--搜索链接 -->
+          </item>
+          <item name="url_charset" mode="str"><![CDATA[utf-8]]></item>
+          <item name="statusCode" mode="str">
+               <![CDATA[200]]>
+               <!--下载返回码为 200 视为成功 -->
+          </item>
+          <item name="method" mode="str"><![CDATA[post]]></item>
+          <item name="cycle_retry_times" mode="str">
+               <![CDATA[1]]>
+               <!-- 重试次数 -->
+          </item>
+          <!--内容解析成功必须存在的几个 值  -->
+          <item name="exist_keys" mode="str">
+               <![CDATA[mod]]>
+               <!-- 能够获取到列表块 视为此模板匹配成功 -->
+          </item>
+     </load_on_items>
+     <!-- 临时集合 -->
+     <!-- pagesql:select URL, abstract(title), author, DATE, abstract(text), abstract(KEYWS) from hlftidb  where contains(fulltext, '来') order by DATE desc
+page:1
+op:new
+searchText:来
+Submit2:搜  索
+op:new
+
+searchText:来
+Submit2:搜  索
+op:new
+ -->
+     <!--  <form_data_join name="searchText"><![CDATA[{Keyword}]]></form_data_join>
+	<form_data_join name="Submit2"><![CDATA[搜  索]]></form_data_join>
+	<form_data_join name="op"><![CDATA[new]]></form_data_join> -->
+     <form_data_join name="pagesql"><![CDATA[select URL, abstract(title), author, DATE, abstract(text), abstract(KEYWS) from hlftidb where contains(fulltext, '{Keyword}') order by DATE desc]]></form_data_join>
+     <form_data_join name="page"><![CDATA[{Page}]]></form_data_join>
+     <form_data_join name="op"><![CDATA[new]]></form_data_join>
+     <form_data_join name="searchText"><![CDATA[{Keyword}]]></form_data_join>
+     <form_data_join name="searchText"><![CDATA[{Keyword}]]></form_data_join>
+     <form_data_join name="op"><![CDATA[new]]></form_data_join>
+     <!-- 临时集合 -->
+     <tmp_items>
+          <item name="mod" mode="xpath" type="tmp"><![CDATA[//div[@class="mod"]/@class]]></item>
+     </tmp_items>
+     <!--翻页 下一页规则 -->
+     <page>
+          <item name="page" mode="regular" type="tmp"><![CDATA[<div class="page fw f14">([\s\S]+?)下一页</a>]]></item>
+     </page>
+     <list>
+          <item name="list_items" mode="xpath" type="tmp"><![CDATA[//div[@class='list']/div[@class='item']]]></item>
+     </list>
+     <items>
+          <item name="Title" mode="xpath"><![CDATA[p/a/text()]]></item>
+          <item name="Url" mode="xpath" regex="&amp;highlight=[^&amp;]+" replacement=""><![CDATA[p/a/@href]]></item>
+          <item name="tmp_pubDateTime" mode="xpath" type="tmp"><![CDATA[p[@class='info']/i/text()]]></item>
+          <item name="pubDateTime" mode="regular" dateformat="yyyy-MM-dd HH:mm" parent="tmp_pubDateTime">
+               <![CDATA[\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}]]>
+               <!--另一种方法 获取时间 ： 发表于：(.*?)$  ^(.*?)$-->
+          </item>
+     </items>
+</html>
+

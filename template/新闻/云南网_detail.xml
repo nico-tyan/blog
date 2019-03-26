@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>	
+   <!--云南网 http://www.yunnan.cn/html/2015-02/16/content_3606721.htm 详细页-->
+	<forurlReg ><![CDATA[http://[\S]+.yunnan.cn/[\S]+]]></forurlReg>
+	<load_on_items>
+	     <item name="siteName" mode="str">
+   			<![CDATA[云南网]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!-- <item name="load_referer" mode="str">
+   			<![CDATA[#]]> 
+		</item> -->
+		
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[layer213]]>
+		</item>
+		<item name="next_url" mode="regular" type="tmp" ref="url"><!--引用  url匹配  -->
+    	<![CDATA[^(.*?)\.htm]]>
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<item name="layer213" mode="xpath" type="tmp">
+   			<![CDATA[//span[@id="layer213"]/@id|//div[@class='middiv1']/@class]]>
+		</item>
+	</tmp_items>
+	<!--内容块 -->
+	<Contents>	
+		<!--标题 -->		
+	  	<item name="Title" mode="xpath">
+    		<![CDATA[//div[@class='xcont ohd clear']/span[@id='layer213']/text()]]>
+		</item>
+		
+		<!-- 作者 -->
+		<item name="tmp_Author" mode="xpath" type="tmp" >
+    	     <![CDATA[//div[@class='xcc font14 yh ohd clear']/div[@class='fr']/html()]]>   	     
+		</item> 
+		<item name="Author" mode="regular" parent="tmp_Author">
+    	     <![CDATA[责任编辑: (.*?)$]]>   	     
+		</item> 
+		<item name="Author" mode="xpath">
+    	     <![CDATA[//div[@class="xcc font14 yh ohd clear"]/div[@class='fr']/span/text()]]>   	     
+		</item> 
+										
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="tmp_pubDateTime" mode="xpath" type="tmp" >
+    		<![CDATA[//div[@class='xcont ohd clear']/span[@class='xt2 yh fl']/text()]]>
+		</item>
+	    <item name="pubDateTime" mode="regular"  dateformat="yyyy-MM-dd HH:mm" parent="tmp_pubDateTime">
+    	     <![CDATA[\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}]]>
+		</item> 
+		<item name="tmp_pubDateTime1" mode="xpath" type="tmp">
+    		<![CDATA[//div[@class='xcont ohd clear']/span[@class='xt2 yh fl']/span/text()]]>
+		</item>
+		<item name="pubDateTime" mode="regular"  dateformat="yyyy年MM月dd日 HH:mm:ss" parent="tmp_pubDateTime1">
+    	     <![CDATA[\d+年\d+月\d+日 \d+:\d+:\d+]]>
+		</item> 
+
+		<!-- 来源 -->
+		<item name="tmp_From" mode="xpath" type="tmp">
+    	     <![CDATA[//div[@class='xcont ohd clear']/span[@class='xt2 yh fl']/text()]]>
+		</item> 
+		<item name="From" mode="regular" parent="tmp_From">
+    	     <![CDATA[来源：(.*?)$]]>
+		</item> 	
+		<item name="From" mode="xpath">
+    	     <![CDATA[//div[@class='xcont ohd clear']/span[@class='xt2 yh fl']/span[2]/text()]]>
+		</item> 
+					
+     	<item name="tmp_ClickCount" mode="xpath" regex="," replacement="" trim="1" type="tmp" ><!--点击量 -->
+    	<![CDATA[]]>
+		</item>
+		<item name="ClickCount" mode="regular"  parent="tmp_ClickCount">
+    	     <![CDATA[]]>
+		</item> 
+		<item name="ReplyCount" mode="xpath"><!--回复数 -->
+    	<![CDATA[]]>
+		</item>
+		<item name="Summary" mode="xpath"><!-- 摘要 -->
+		 <![CDATA[]]>
+		</item>		
+		<item name="Content" mode="xpath" ><!--内容 -->
+    	<![CDATA[//div[@class='xcc font14 yh ohd clear']/div[@id='layer216']/html()]]>
+		</item>		
+	               	
+	               	<!-- http://society.yunnan.cn/html/2017-04/12/content_4789595.htm -->
+		 <!--标题 -->		
+	  	<item name="Title" mode="xpath">
+    		<![CDATA[//div[@class='middiv2']/div[@id='title']/html()]]>
+		</item>
+			<!-- 作者 -->
+		<item name="tmp_Author" mode="xpath" type="tmp" >
+    	     <![CDATA[//div[@id='container']/div/div[@class='fr']/html()]]>   	     
+		</item> 
+		<item name="Author" mode="regular" parent="tmp_Author">
+    	     <![CDATA[责任编辑： (.*?)&nbsp;]]>   	     
+		</item> 
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="tmp_pubDateTime" mode="xpath" type="tmp" >
+    		<![CDATA[//div[@class='middiv2']/div[@class='layer31']/text()]]>
+		</item>
+	       <item name="pubDateTime" mode="regular"  dateformat="yyyy-MM-dd HH:mm" parent="tmp_pubDateTime">
+    	     <![CDATA[\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}]]>
+		</item> 
+		<!-- 来源 -->
+		<item name="tmp_From" mode="xpath" type="tmp">
+    	     <![CDATA[//div[@class='middiv2']/div[@class='layer31']/text()]]>
+		</item> 
+		<item name="From" mode="regular" parent="tmp_From">
+    	     <![CDATA[来源：(.*?)$]]>
+		</item> 
+		<item name="Content" mode="xpath" ><!--内容 -->
+    	<![CDATA[//div[@id='imgContent']/html()]]>
+		</item>		
+		
+			        <!-- http://society.yunnan.cn/html/2017-04/12/content_4789581.htm -->
+		 <!--标题 -->		
+	  	<item name="Title" mode="xpath">
+    		<![CDATA[//div[@id='title']/div[@id='layer213']/html()]]>
+		</item>
+	    <!--  -->
+		<!-- 作者 -->
+		<item name="tmp_Author" mode="xpath" type="tmp" >
+    	     <![CDATA[//div[@class='layer4']/div[@class='fr']/html()]]>   	     
+		</item> 
+		<item name="Author" mode="regular" parent="tmp_Author">
+    	     <![CDATA[责任编辑： (.*?)&nbsp;]]>   	     
+		</item>
+		<item name="Content" mode="xpath" ><!--内容 -->
+    	<![CDATA[//div[@id='cmessagevideo']/html()]]>
+		</item>	
+			         
+	</Contents>	
+	  <page>
+	<!--翻页 下一页规则 -->
+	<item name="tmp_page" mode="xpath" type="tmp">
+	 <![CDATA[//div[@id='displaypagenum']/center/html()]]>
+	 </item>
+	  <item name="page" mode="regular" parent="tmp_page" >
+	  <![CDATA[<a href="([^>]+?)" class="fy">下一页</a>]]>
+	  </item>	          
+	</page> 
+	<!--翻页 下一页内容-->
+	<Next_Contents>
+		<item name="Content" mode="xpath"><!--内容 -->
+    	<![CDATA[//div[@id='imgContent']/html()]]>
+		</item>
+	</Next_Contents>
+</html>

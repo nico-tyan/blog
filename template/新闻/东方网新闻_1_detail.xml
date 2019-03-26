@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>	
+	 <!--东方网新闻_1 http://mini.eastday.com/a/181123182944344.html
+	                 https://money.eastday.com/2018/11/21932.html详细页-->                      
+	<forurlReg><![CDATA[http://mini.eastday.com/a[\S]+|https://money.eastday.com[\S]+]]></forurlReg>
+	<load_on_items>
+	   <item name="siteName" mode="str">
+   			<![CDATA[东方网新闻]]>
+		</item>
+		 <item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[Title|Content|pubDateTime]]>
+		</item>
+		<item name="next_url" mode="regular" type="tmp" ref="url"><!--引用  url匹配  -->
+    	<![CDATA[^(.*?)\.htm]]>
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<item name="gjhome" mode="xpath" type="tmp">
+   			<![CDATA[//div[@class='section']/@class|//div[@class="mycontent "]/@class]]>
+		</item>
+	</tmp_items>
+
+	<!--内容块 -->
+	<Contents>
+		<!--标题 -->	
+	  	<item name="Title" mode="xpath">
+    		<![CDATA[//div[@class='J-title_detail title_detail']/h1/span/text()|//p[@class="news-title"]/text()]]>
+		</item>
+	    <item name="tmp_Author" mode="xpath" type="tmp">
+    		<![CDATA[]]>
+		</item>	 
+		<item name="Author" mode="regular" parent="tmp_Author">
+    	     <![CDATA[]]>   	     
+		</item>  
+		<item name="DateTime1" mode="xpath" type="tmp">
+    		<![CDATA[//p[@class="news-datetime fl"]/text()|//div[@class='fl']/i[1]/text()]]>
+		</item>
+		<item name="pubDateTime" mode="regular"  dateformat="yyyy年MM月dd日 HH:mm:ss|yyyy-MM-dd HH:mm" parent="DateTime1">
+    	     <![CDATA[\d{4}年\d{1,2}月\d{1,2}日\s+\d{2}:\d{2}:\d{2}|\d{4}-\d{1,2}-\d{1,2}\s+\d{2}:\d{2}]]>
+		</item> 
+
+		<item name="From" mode="regular" parent="tmp_pubDateTime">
+		<![CDATA[来源：(.*?)$]]>
+		</item> 
+		
+		<item name="Content" mode="xpath"><!--内容 -->
+    	<![CDATA[//div[@class='J-contain_detail_cnt']/html()|//div[@class="of article-content"]/html()]]>
+		</item>
+	</Contents>		
+</html>

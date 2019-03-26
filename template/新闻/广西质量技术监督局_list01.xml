@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html>
+     <!--广西质量技术监督局http://www.gxqts.gov.cn/comm/search.ashx?type=news&tags=%E5%A4%A7%E5%AD%A6&page=1&callback=data_callback&_=1506738883409 详细页-->
+     <forurlReg><![CDATA[http://www.gxqts.gov.cn/comm/search.ashx\?/[\S]+]]></forurlReg>
+     <load_on_items>
+          <item name="siteCode" mode="str"><![CDATA[N0000563]]></item>
+          <item name="siteName" mode="str"><![CDATA[广西质量技术监督局]]></item>
+          <item name="type" mode="str">
+               <![CDATA[1]]>
+               <!-- 1 搜索列表  2 详情 -->
+          </item>
+          <item name="siteUrl" mode="str">
+               <![CDATA[http://www.gxqts.gov.cn/comm/search.ashx?type=news&tags={Keyword}&page={Page}&callback=data_callback&_=1506738883409]]>
+               <!--搜索链接 -->
+          </item>
+          <item name="charset" mode="str"><![CDATA[UTF-8]]></item>
+          <item name="url_charset" mode="str">
+   			<![CDATA[UTF-8]]>
+		  </item>
+          <item name="statusCode" mode="str">
+               <![CDATA[200]]>
+               <!--下载返回码为 200 视为成功 -->
+          </item>
+          <item name="get_next_url" mode="str">
+               <![CDATA[1]]>
+               <!--  get_next_url =1 为获取下一页， 其它为替换 -->
+          </item>
+          <item name="cycle_retry_times" mode="str">
+               <![CDATA[1]]>
+               <!-- 重试次数 -->
+          </item>
+          <!--内容解析成功必须存在的几个 值  -->
+          <item name="exist_keys" mode="str">
+               <![CDATA[searchtext]]>
+               <!-- 能够获取到列表块 视为此模板匹配成功 -->
+          </item>
+     </load_on_items>
+     <filter replacement="&lt;"><![CDATA[&lt;]]></filter>
+     <filter replacement="&gt;"><![CDATA[&gt;]]></filter>
+     <filter replacement="&quot;"><![CDATA[&quot;]]></filter>
+     <filter replacement=" "><![CDATA[&nbsp;]]></filter>
+     <!-- 临时集合 -->
+     <tmp_items>
+          <item name="searchtext" mode="json" type="tmp"><![CDATA[$..searchtext]]></item>
+     </tmp_items>
+     <!--翻页 下一页规则 -->
+     <page>
+          <item name="tmp_page" mode="json" type="tmp"><![CDATA[$..div[2]]]></item>
+          <item name="page" mode="regular" type="tmp" parent="tmp_page"><![CDATA[<a href="([^>]+?)" title="下一页">下一页</a>]]></item>
+     </page>
+     <list>
+          <item name="list_items" mode="json" type="tmp"><![CDATA[$..div.table.tr]]></item>
+     </list>
+     <items>
+          <item name="Title" mode="json"><![CDATA[$.tr.td.li.a.span]]></item>
+          <item name="Url" mode="json"><![CDATA[$.tr.td.li.a.@href]]></item>
+          <item name="tmp_pubDateTime" mode="josn" type="tmp"><![CDATA[$.td.li]]></item>
+          <item name="pubDateTime" mode="regular" dateformat="yyyy/MM/dd HH:mm" parent="tmp_pubDateTime">
+               <![CDATA[\d{4}/\d{1,2}/\d{1,2}\s+\d{2}:\d{2}]]>
+               <!--另一种方法 获取时间 ： 发表于：(.*?)$  ^(.*?)$-->
+          </item>
+     </items>
+</html>
+

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>	
+	 <!--广东省工商局 http://www.gd.gov.cn/ywdt/szfdt/201703/t20170328_249416.htm     广东省人民政府
+	                http://www.gdga.gov.cn/jwzx/jsyw/201812/t20181205_865548.html   广东省公安厅
+	                http://www.gdstats.gov.cn/gzdt/gdys/201812/t20181213_419049.html 广东统计信息网
+	                http://www.gdjct.gd.gov.cn/ttxw/67307.jhtml  南粤清风
+	                http://www.gdbb.gov.cn/gdbb/gdtzgg/201807/9194977fff074a278d28108bf1c132e0.shtml 南粤清风 通知广告-->              
+	<forurlReg ><![CDATA[http://www+.gd[\S]+.gov.cn/[\S]+]]></forurlReg>
+	<load_on_items>
+	 	<item name="siteName" mode="str">
+   			<![CDATA[广东省工商局]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<!-- <item name="charset" mode="str">
+   			<![CDATA[gbk]]>
+		</item> -->
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[class]]>
+		</item>
+		
+		<item name="next_url" mode="regular" type="tmp" ref="url"><!--引用  url匹配  -->
+    	<![CDATA[^(.*?)\.htm]]>
+		</item>
+		<item name="first_keys" mode="str">
+   			<![CDATA[class]]>
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<item name="class" mode="regular" type="tmp">
+   			<![CDATA[class]]>
+		</item>
+	</tmp_items>
+	<!--内容块 -->
+	<Contents>
+	
+		<!--标题 -->		
+	  	<item name="Title" mode="xpath">
+    	<![CDATA[//div[@class='content_title']/html()|//div[@class='artext']/h3/text()|//td[@class='sdbt']/text()|//td[@class="wzbt"]/text()|//h1[@id="title"]/text()|//div[@class="conHeader"]/h1/text()|//div[@class="main"]/h4/text()|//div[@class="title "]/text()|//html/body/div[2]/div[2]/div[1]/text()]]>
+		</item>
+		<item name="Author1" mode="xpath" type="tmp">
+    	     <![CDATA[//div[@class="dely"]/span[3]/text()]]>   	     
+		</item>
+		<item name="Author"  mode="regular" parent="Author1">
+    	     <![CDATA[作者：(.*?)$]]>   	     
+		</item> 		
+			<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="tmp_pubDateTime" mode="xpath" type="tmp">
+    		<![CDATA[//div[@class='content_subtitle']/html()|//td[@class="b12"]/text()|//div[@class="main"]/h6/label[1]/text()|//html/body/div[2]/div[2]/div[2]/span[2]/text()|//div[@class="dely"]/span[1]/text()]]>
+		</item>
+		<item name="pubDateTime" mode="regular"  dateformat="yyyy-MM-dd" parent="tmp_pubDateTime">
+    	     <![CDATA[\d{4}-\d{2}-\d{2}]]>
+		</item>  
+		<item name="tmp_pubDateTime1" mode="xpath" type="tmp" >
+    		<![CDATA[//div[@class='tip']/div[@class='l']/html()|//div[@class="conHeader"]/h3/text()|//div[@class="desc"]/text()]]>
+		</item>
+	    <item name="pubDateTime" mode="regular"  dateformat="yyyy-MM-dd HH:mm" parent="tmp_pubDateTime1">
+    	     <![CDATA[\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}]]>
+		</item>
+		 <item name="pubDateTime" mode="regular"  dateformat="yyyy-MM-dd HH:mm:ss" parent="tmp_pubDateTime1">
+    	     <![CDATA[\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2}]]>
+		</item>
+		<item name="tmp_pubDateTime2" mode="xpath" type="tmp" >
+    		<![CDATA[/html/body/table[4]/tbody/tr/td[1]/table[3]/html()]]>
+		</item>
+	       <item name="pubDateTime" mode="regular"  dateformat="yyyy-MM-dd" parent="tmp_pubDateTime2">
+    	     <![CDATA[时间：(\d{4}-\d{2}-\d{2})]]>
+		</item>
+		
+		<item name="From1" mode="xpath"  type="tmp">
+    	  <![CDATA[//td[@class="b12"]/text()|//span[@id="source"]/text()|//div[@class="main"]/h6/label[2]/text()|//div[@class="dely"]/span[2]/text()]]>
+		</item> 
+		<item name="From" mode="regular"  parent="From1">
+    	  <![CDATA[来源：([\S]+)【]]>
+		</item> 
+		<item name="From" mode="regular" parent="From1">
+    	  <![CDATA[来源：(.*?)$]]>
+		</item> 
+		<item name="From" mode="regular" parent="tmp_pubDateTime1">
+    	  <![CDATA[来源：(.*?)日期]]>
+		</item> 
+		
+     	<item name="ClickCount" mode="xpath" regex="," replacement="" trim="1"><!--点击量 -->
+    	<![CDATA[]]>
+		</item>
+		<item name="ReplyCount" mode="xpath"><!--回复数 -->
+    	<![CDATA[]]>
+		</item>
+		<item name="Summary" mode="xpath"><!-- 摘要 -->
+		 <![CDATA[//div[@class="conSummary"]/text()|//div[@class="hxzy"]/text()]]>
+		</item>		
+
+		<item name="Content" mode="xpath" ><!--内容 -->
+    	<![CDATA[//font[@id='zoom']/html()|//div[@class='content']/html()|//div[@class='TRS_Editor']/html()]]>
+		</item>
+		<item name="Content" mode="xpath" ><!--内容 -->
+    	<![CDATA[//td[@id='fontzoom']/html()|//div[@id="ScDetailContent"]/html()|//html/body/div[2]/div[2]/div[3]/html()]]>
+		</item>
+		<item name="url" mode="regular" type="tmp" ref="url"><!--引用  url匹配  -->
+    	<![CDATA[^(.*?)$]]>
+		</item>
+		<!-- http://www.gdgs.gov.cn/sofpro/otherproject/info_count/info_count.jsp?
+		url=http://www.gdgs.gov.cn/publicfiles/business/htmlfiles/gdgsj/s700/201703/61682.html -->
+	<!-- 	http://www.gdgs.gov.cn/sofpro/otherproject/info_count/info_count.jsp?
+		url=http://www.gdgs.gov.cn/publicfiles/business/htmlfiles/gdgsj/tjzc/201611/60794.html -->
+	</Contents>	
+		 <ajax>
+		<url_mode><![CDATA[get]]></url_mode>
+		<!-- 组装 请求连接  ref引用已获取或已处理数据  data_type 数据类型 -->
+		<url_join><![CDATA[http://www.gdgs.gov.cn/sofpro/otherproject/info_count/info_count.jsp?]]></url_join>
+		<url_join name="url" ref="url"><![CDATA[url=]]></url_join>
+		
+		<item name="ClickCount" mode="regular">
+	    	<![CDATA[(\d+)</span>]]>
+		</item>
+	</ajax> 
+</html>

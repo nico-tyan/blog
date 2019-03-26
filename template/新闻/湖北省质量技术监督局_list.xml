@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html>
+     <!--湖北省质量技术监督局http://www.hbzljd.gov.cn/search/searchResultGJ.jsp?t_id=7&site_id=all&length=170&q=%E6%9D%A5&p=2 详细页-->
+     <forurlReg><![CDATA[http://www.hbzljd.gov.cn/search/searchResultGJ.jsp[\S]+]]></forurlReg>
+     <!-- 临时集合 页面下载前获取-->
+     <load_on_items>
+          <item name="siteCode" mode="str"><![CDATA[N0000720]]></item>
+          <item name="siteName" mode="str"><![CDATA[湖北省质量技术监督局]]></item>
+          <item name="type" mode="str">
+               <![CDATA[1]]>
+               <!-- 1 搜索列表  2 详情 -->
+          </item>
+          <item name="siteUrl" mode="str">
+               <![CDATA[http://www.hbzljd.gov.cn/search/searchResultGJ.jsp?t_id=7&site_id=all&length=170&q={Keyword}&p={Page}]]>
+               <!--搜索链接 -->
+          </item>
+          <item name="charset" mode="str"><![CDATA[utf-8]]></item>
+          <item name="url_charset" mode="str"><![CDATA[utf-8]]></item>
+          <item name="get_next_url" mode="str">
+               <![CDATA[0]]>
+               <!--  get_next_url =1 为获取下一页， 其它为替换 -->
+          </item>
+          <item name="statusCode" mode="str">
+               <![CDATA[200]]>
+               <!--下载返回码为 200 视为成功 -->
+          </item>
+          <item name="cycle_retry_times" mode="str">
+               <![CDATA[1]]>
+               <!-- 重试次数 -->
+          </item>
+          <!--内容解析成功必须存在的几个 值  -->
+          <item name="exist_keys" mode="str">
+               <![CDATA[wrap]]>
+               <!-- 能够获取到列表块 视为此模板匹配成功 -->
+          </item>
+     </load_on_items>
+     <!-- 临时集合  页面下载后获取-->
+     <tmp_items>
+          <!-- 能够获取到列表块 视为此模板匹配成功 -->
+          <item name="wrap" mode="xpath" type="tmp"><![CDATA[//div[@class='wrap']/@class]]></item>
+     </tmp_items>
+     <page>
+          <item name="page" mode="regular" type="tmp"><![CDATA[<div class="search_page"([\s\S]+?)>下一页</a>]]></item>
+     </page>
+     <list>
+          <item name="list_items" mode="regular_subset" type="tmp"><![CDATA[<div>[\s\S]+?</div>\s+<div style="font-size:12px;">[\s\S]+?</div>\s+<div style="color:green;">[\S\s]+?</div>\s+<br/>]]></item>
+     </list>
+     <items>
+          <item name="Title" mode="regular"><![CDATA[<a style="font-size:medium;color:blue;" href='[^>]+?' target="_blank">([\s\S]+?)</a>]]></item>
+          <item name="Url" mode="regular" regex="&amp;highlight=[^&amp;]+" replacement=""><![CDATA[<a style="font-size:medium;color:blue;" href='([^>]+?)' target="_blank">[\s\S]+?</a>]]></item>
+          <item name="pubDateTime" mode="regular" dateformat="yyyy-MM-dd HH:mm:ss"><![CDATA[时间：(\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2})\s+</div>]]></item>
+     </items>
+</html>
+

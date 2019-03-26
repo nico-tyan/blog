@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html>
+     <!--泉州论坛http://bbs.qz.xmfish.com/searcher.php?keyword=6&type=thread&threadrange=1&username=&starttime=&endtime=&fid=&sortby=postdate&page=1-->
+     <forurlReg><![CDATA[http://bbs.qz.xmfish.com/searcher.php\?[\S]+]]></forurlReg>
+     <!-- 临时集合 页面下载前获取-->
+     <load_on_items>
+          <item name="siteCode" mode="str"><![CDATA[N0001487]]></item>
+          <item name="siteName" mode="str"><![CDATA[泉州论坛]]></item>
+          <item name="type" mode="str">
+               <![CDATA[1]]>
+               <!-- 1 搜索列表  2 详情 -->
+          </item>
+          <item name="siteUrl" mode="str">
+               <![CDATA[http://bbs.qz.xmfish.com/searcher.php?keyword={Keyword}&type=thread&threadrange=1&username=&starttime=&endtime=&fid=&sortby=postdate&page={Page}]]>
+               <!--搜索链接 -->
+          </item>
+          <item name="charset" mode="str"><![CDATA[gbk]]></item>
+          <item name="url_charset" mode="str"><![CDATA[gbk]]></item>
+          <item name="get_next_url" mode="str">
+               <![CDATA[1]]>
+               <!--  get_next_url =1 为获取下一页， 其它为替换 -->
+          </item>
+          <item name="load_referer" mode="str" type="tmp">
+               <!-- 检查是否需要referer -->
+               <![CDATA[#]]>
+          </item>
+          <item name="statusCode" mode="str">
+               <![CDATA[200]]>
+               <!--下载返回码为 200 视为成功 -->
+          </item>
+          <item name="cycle_retry_times" mode="str">
+               <![CDATA[1]]>
+               <!-- 重试次数 -->
+          </item>
+          <!--内容解析成功必须存在的几个 值  -->
+          <item name="exist_keys" mode="str">
+               <![CDATA[wrap]]>
+               <!-- 能够获取到列表块 视为此模板匹配成功 -->
+          </item>
+     </load_on_items>
+     <!-- 临时集合  页面下载后获取-->
+     <tmp_items>
+          <!-- 能够获取到列表块 视为此模板匹配成功 -->
+          <item name="wrap" mode="xpath" type="tmp"><![CDATA[//div[@class='wrap']/@class]]></item>
+     </tmp_items>
+     <list>
+          <item name="list_items" mode="xpath" type="tmp">
+               <!--相当于添加了一个父类 （标题url这些需要获取的共同路径）  下面的网站主题就可以写精简 -->
+               <![CDATA[//div[@class='dlA']/div[@class='main_min']/dl]]>
+          </item>
+     </list>
+     <items>
+          <item name="Title" mode="xpath">
+               <!-- 标题 -->
+               <![CDATA[dt/a/allText()]]>
+          </item>
+          <item name="Url" mode="xpath" regex="&amp;highlight=[^&amp;]+" replacement="">
+               <!-- url链接 -->
+               <![CDATA[dt/a/@href]]>
+          </item>
+          <item name="Author" mode="xpath">
+               <!-- 作者 -->
+               <![CDATA[dd/div[@class='author']/a[1]/text()]]>
+          </item>
+          <item name="Section" mode="xpath">
+               <!-- 区域吧 -->
+               <![CDATA[dd/div[@class='author']/a[2]/text()]]>
+          </item>
+          <item name="pubDateTime" mode="xpath" dateformat="yyyy-MM-dd HH:mm">
+               <!-- 时间 -->
+               <![CDATA[dd/div[@class='author']/cite/text()]]>
+          </item>
+          <item name="tmp_ClickCount" mode="xpath" type="tmp">
+               <!--点击量 -->
+               <![CDATA[dd/div[@class='num']/text()]]>
+          </item>
+          <item name="ClickCount" mode="regular" parent="tmp_ClickCount"><![CDATA[(\d+)次浏览]]></item>
+          <item name="tmp_ReplyCount" mode="xpath" type="tmp">
+               <!--回复量 -->
+               <![CDATA[dd/div[@class='num']/text()]]>
+          </item>
+          <item name="ReplyCount" mode="regular" parent="tmp_ReplyCount"><![CDATA[(\d+)条回复]]></item>
+     </items>
+     <!-- 获取下一页地址 -->
+     <page>
+          <item name="page" mode="xpath" type="tmp"><![CDATA[//div[@class='pages']/a[@class='pages_next']/@href]]></item>
+     </page>
+</html>
+

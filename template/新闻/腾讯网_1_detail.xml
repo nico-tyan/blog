@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>	                  
+	 <!--腾讯网 http://tech.qq.com/a/20140811/014715.htm 详细页
+	           https://cs.house.qq.com/a/20181102/011600.htm
+	           http://kuaibao.qq.com/s/20181105A09GHB00
+	           https://xw.qq.com/c/hn/20181106012970 -->
+	<forurlReg><![CDATA[http://tech.qq.com[\S]+|https://cs.house.qq.com[\S]+|http://kuaibao.qq.com[\S]+]]></forurlReg>
+	<!-- <filter get_data="1"><![CDATA[contents: \[([\s\S]+?);\s+</script\>]]></filter> -->
+	<load_on_items>
+	    <item name="siteName" mode="str">
+   			<![CDATA[腾讯网]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<!-- <item name="charset" mode="str">
+   			<![CDATA[gb2312]]>
+		</item> -->
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>	
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[Title|Content]]>
+		</item>
+		<item name="day" mode="gen" rule="6"><![CDATA[{empty}]]></item>
+		<item name="day" mode="cut" type="tmp" parent="day" cut="end" cut_length="5"><![CDATA[{empty}]]></item>
+		<item name="next_url" mode="regular" type="tmp" ref="url"><!--引用  url匹配  -->
+    	<![CDATA[^(.*?)\.htm]]>
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<item name="C-Main-Article-QQ" mode="xpath" type="tmp">
+   			<![CDATA[//div[@id="C-Main-Article-QQ"]/@id|//div[@class="qq_conent clearfix"]/@class|//div[@class="container"]/@class]]>
+		</item>
+	</tmp_items>
+	<!--内容块 -->
+	<Contents>
+		<!--标题 -->	
+		<item name="Title" mode="xpath">
+    		<![CDATA[//div[@class='hd']/h1/text()|//div[@class="LEFT"]/h1/text()|//p[@class="title"]/text()]]>
+		</item>
+
+        <item name="date" mode="xpath"> 
+            <![CDATA[//div[@id="subtime"]/text()]]>
+        </item>
+        
+        <item name="tmp_pubDateTime" mode="join_str" join_item="day|date"> 
+            <![CDATA[//div[@id="subtime"]/text()]]>
+        </item>
+        
+        <item name="pubDateTime" mode="regular"  dateformat="yyyy-MM-dd HH:mm">
+    		<![CDATA[(\d+-\d+-\d+ \d+:\d+)]]>
+		</item> 
+		
+		<item name="pubDateTime" mode="regular"  dateformat="yyyy-MM-dd HH:mm:ss">
+    		<![CDATA[pubtime": "(\d+-\d+-\d+ \d+:\d+:\d+)",\s*"comment_id]]>
+		</item> 
+		
+		<item name="tmp_Author" mode="xpath" type="tmp" >
+    	     <![CDATA[//div[@class='ft']/div[@class='QQeditor']/html()]]>   	     
+		</item> 
+		<item name="Author" mode="regular" parent="tmp_Author">
+    	     <![CDATA[\[责任编辑：(。*?)\]]]>   	     
+		</item>				
+						
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		 <item name="tmp_pubDateTime" mode="xpath" type="tmp" >
+    		<![CDATA[//div[@class='info']/span[@class='pubTime']/text()]]>
+		</item> 
+	       <item name="pubDateTime" mode="regular"  dateformat="yyyy年MM月dd日HH:mm"  parent="tmp_pubDateTime">
+    	     <![CDATA[(.*?)$]]>
+		</item>  		
+		
+		<item name="pubDateTime" mode="xpath"  dateformat="yyyy-MM-dd HH:mm">
+    	     <![CDATA[//span[@class="a_time"]/text()|//span[@class="time"]/text()]]>
+		</item>  
+		<item name="From" mode="xpath" >
+    	     <![CDATA[]]>   	     
+		</item>
+		
+     	<item name="tmp_ClickCount" mode="xpath" regex="," replacement="" trim="1" type="tmp" ><!--点击量 -->
+    	<![CDATA[]]>
+		</item>
+		<item name="ClickCount" mode="regular" parent="tmp_ClickCount">
+    	     <![CDATA[]]>   	     
+		</item>
+		<item name="ReplyCount" mode="xpath"><!--回复数 -->
+    	<![CDATA[]]>
+		</item>
+		<item name="Summary" mode="xpath"><!-- 摘要 -->
+		 <![CDATA[//div[@class='bd']/p[@class='Introduction']/html()]]>
+		</item>		
+		<item name="Content" mode="xpath" ><!--内容 -->
+    	<![CDATA[//div[@id='Cnt-Main-Article-QQ']/html()|//div[@class="content-article"]/html()|//div[@class="content-box"]/html()|//div[@id="article_body"]/html()]]>
+		</item>		
+	</Contents>	
+	
+	 <Contents>
+	<!--  <item name="Title" mode="json">
+    	<![CDATA[$..title]]>
+	</item>
+	<item name="pubDateTime" mode="json" dateformat="yyyy-MM-dd HH:mm" >
+    	<![CDATA[$..pubtime]]>
+	</item>
+	<item name="Content" mode="json">
+    	<![CDATA[$..contents]]>
+	</item>-->
+	</Contents>	 
+</html>

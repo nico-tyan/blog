@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>
+<!-- 	http://hbrb.hebeidaily.com.cn/tiyu/zuqiu/2017-11-10/14521.html -->
+	<forurlReg><![CDATA[http://hbrb.hebeidaily.com.cn[\S]+]]></forurlReg>
+	<!-- 临时集合 页面下载前获取-->
+	<load_on_items>
+		<item name="siteName" mode="str">
+   	 		<![CDATA[巴西华人网]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[GBK]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[GBK]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[container]]>
+		</item>
+		<item name="id" mode="regular" type="tmp" ref="url"><!--  引用  url匹配     -->
+    	<![CDATA[(\d+)\.htm]]>
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<!-- 能够获取到列表块 视为此模板匹配成功 -->
+		<item name="container" mode="xpath" type="tmp">
+   			<![CDATA[//div[@class='info_text']/@class]]>
+		</item> 
+	</tmp_items>
+	<Contents>
+		<!--标题 -->
+		<item name="Title" mode="xpath" trim="1">
+    	<![CDATA[//div[@class='info_text']/ul/p[@class='a_title']/text()]]>
+		</item>
+		
+		<!--作者 -->
+		<item name="tmp_Author" mode="xpath" type="tmp">
+    	<![CDATA[//div[@class='info_text']/ul/p[@class='box_p']/span[2]/text()]]>
+		</item> 
+		<item name="Author" mode="regular" parent="tmp_Author" >
+    	     <![CDATA[作者 ：(.*?)$]]>   	     
+		</item>
+		
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="tmp_pubDateTime"  mode="xpath" type="tmp">
+    	<![CDATA[//div[@class='info_text']/ul/p[@class='box_p']/span[1]/text()]]>
+		</item> 
+		<item name="pubDateTime" dateformat="yyyy-MM-dd" mode="regular" parent="tmp_pubDateTime">
+    	<![CDATA[发布时间：(.*?)$]]>
+		</item> 
+		
+		<!--来源 -->
+		<item name="tmp_From" mode="xpath" type="tmp">
+    	<![CDATA[//div[@class='info_text']/ul/p[@class='box_p']/span[3]/text()]]>
+		</item> 
+		<item name="From" mode="regular" parent="tmp_From" >
+    	     <![CDATA[来源：(.*?)$]]>   	     
+		</item>
+
+		
+		
+		<item name="Content" mode="xpath" ><!--内容 -->
+    	<![CDATA[//div[@class='info_text']/ul/ul/html()]]>
+		</item>
+		
+	</Contents>
+	
+	<!-- ajax异步获取 -->
+	 <ajax>
+		<method><![CDATA[get]]></method>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+<!-- 		组装 请求连接  ref引用已获取或已处理数据  data_type 数据类型 -->
+		<url_join ref="id" data_type="String"><![CDATA[http://hbrb.hebeidaily.com.cn/e/public/ViewClick/?classid=10&addclick=1&id=]]></url_join>
+		<item name="ClickCount" mode="regular">
+	    	<![CDATA[(\d+)]]>
+		</item>
+	</ajax> 
+	
+</html>

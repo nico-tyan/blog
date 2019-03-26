@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html>
+     <!--中山大学http://zhannei.baidu.com/cse/search?q=66&p=0&s=650151312044682629 -->
+     <forurlReg><![CDATA[http://zhannei.baidu.com/cse/search\?[\S]+s=650151312044682629]]></forurlReg>
+     <!-- 临时集合 页面下载前获取-->
+     <load_on_items>
+          <item name="siteCode" mode="str"><![CDATA[N0000989]]></item>
+          <item name="siteName" mode="str"><![CDATA[中山大学]]></item>
+          <item name="type" mode="str">
+               <![CDATA[1]]>
+               <!-- 1 搜索列表  2 详情 -->
+          </item>
+          <item name="siteUrl" mode="str">
+               <![CDATA[http://zhannei.baidu.com/cse/search?q={Keyword}&p={Page}&s=650151312044682629]]>
+               <!--搜索链接 -->
+          </item>
+          <item name="charset" mode="str"><![CDATA[utf-8]]></item>
+          <item name="url_charset" mode="str"><![CDATA[utf-8]]></item>
+          <item name="load_referer" mode="str" type="tmp">
+               <!-- 检查是否需要referer -->
+               <![CDATA[#]]>
+          </item>
+          <item name="get_next_url" mode="str">
+               <![CDATA[1]]>
+               <!--  get_next_url =1 为获取下一页， 其它为替换 -->
+          </item>
+          <item name="statusCode" mode="str">
+               <![CDATA[200]]>
+               <!--下载返回码为 200 视为成功 -->
+          </item>
+          <item name="cycle_retry_times" mode="str">
+               <![CDATA[1]]>
+               <!-- 重试次数 -->
+          </item>
+          <!--内容解析成功必须存在的几个 值  -->
+          <item name="exist_keys" mode="str">
+               <![CDATA[wrap]]>
+               <!-- 能够获取到列表块 视为此模板匹配成功 -->
+          </item>
+     </load_on_items>
+     <!-- 临时集合  页面下载后获取-->
+     <tmp_items>
+          <!-- 能够获取到列表块 视为此模板匹配成功 -->
+          <item name="wrap" mode="xpath" type="tmp"><![CDATA[//div[@id='wrap']/@id]]></item>
+     </tmp_items>
+     <list>
+          <item name="list_items" mode="xpath" type="tmp"><![CDATA[//div[@class='content-main']/div[@class='result f s0']]]></item>
+     </list>
+     <items>
+          <item name="Title" mode="xpath"><![CDATA[h3/a/text()]]></item>
+          <item name="Url" mode="xpath" regex="&amp;highlight=[^&amp;]+" replacement=""><![CDATA[h3/a/@href]]></item>
+          <item name="Author" mode="xpath" />
+          <item name="Section" mode="xpath" />
+          <item name="pubDateTime" mode="regular" dateformat="yyyy-MM-dd"><![CDATA[\s(\S+)(?=</span>)]]></item>
+          <item name="ClickCount" mode="xpath">
+               <!--点击量 -->
+          </item>
+          <item name="ReplyCount" mode="xpath">
+               <!--点击量 -->
+          </item>
+     </items>
+     <!-- 获取下一页地址 -->
+     <page>
+          <item name="page" mode="xpath" type="tmp"><![CDATA[//div[@class='pager clearfix']/a[@class='pager-next-foot n']/@href]]></item>
+     </page>
+</html>
+

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>	
+    <!--今日惠州网 http://www.huizhou.cn/news/gatxw/201304/t20130421_820557.htm 详细页-->
+	<forurlReg ><![CDATA[http://www.huizhou.cn/[\S]+\.htm]]></forurlReg>
+	<load_on_items>
+	     <item name="siteName" mode="str">
+   			<![CDATA[今日惠州网]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[gb2312]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!-- <item name="load_referer" mode="str">
+   			<![CDATA[#]]> 
+		</item> -->
+		
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[Title|Content|pubDateTime]]>
+		</item>
+		<item name="next_url" mode="regular" type="tmp" ref="url"><!--引用  url匹配  -->
+    	<![CDATA[^(.*?)\.htm]]>
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<item name="alyout" mode="xpath" type="tmp">
+   			<![CDATA[//div[@class="alyout"]/@class]]>
+		</item>
+	</tmp_items>
+	<tmp_items>
+		
+	</tmp_items>
+	<!--内容块 -->
+	<Contents>	
+	         <!-- http://www.huizhou.cn/news/gatxw/201304/t20130421_820557.htm 模板 -->
+		<!--标题 -->		
+	  	<item name="Title" mode="xpath">
+    		<![CDATA[//div[@class='content']/h2/text()]]>
+		</item>
+		<!-- 作者 -->
+		<item name="tmp_Author" mode="xpath" type="tmp" >
+    	     <![CDATA[//div[@class='zrbj']/sapn/text()]]>   	     
+		</item>	
+		<item name="Author" mode="regular" parent="tmp_Author">
+    	     <![CDATA[\（编辑：(.*?)\）]]>   	     
+		</item> 	
+							
+	    <!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="tmp_pubDateTime" mode="xpath" type="tmp" >
+    		<![CDATA[//div[@class='info']/html()]]>
+		</item>
+	       <item name="pubDateTime" mode="regular"  dateformat="yyyy-MM-dd HH:mm" parent="tmp_pubDateTime">
+    	     <![CDATA[\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}]]>
+		</item> 
+	
+		<!-- 来源 -->
+		<item name="From" mode="xpath">
+    	     <![CDATA[//div[@class='info']/span[@class='infoCol']/text()]]>
+		</item> 
+				
+     	<item name="tmp_ClickCount" mode="xpath" regex="," replacement="" trim="1" type="tmp" ><!--点击量 -->
+    	<![CDATA[]]>
+		</item>
+		<item name="ClickCount" mode="regular"  parent="tmp_ClickCount">
+    	     <![CDATA[]]>
+		</item> 
+		<item name="ReplyCount" mode="xpath"><!--回复数 -->
+    	<![CDATA[]]>
+		</item>
+		<item name="Summary" mode="xpath"><!-- 摘要 -->
+		 <![CDATA[]]>
+		</item>		
+
+		<item name="Content" mode="xpath" ><!--内容 -->
+    	<![CDATA[//div[@class=' round']/div[@class='nr cnt-main']/html()]]>
+		</item>	
+
+     <!-- http://www.huizhou.cn/news/newsc_counties/newsc_hz/201704/t20170411_1151811.htm 模板 -->
+		  	<!--标题 -->
+		  <item name="Title" mode="xpath">
+     		<![CDATA[//div[@class='article_head clearfix']/h1[@class='article_title']/text()]]>
+		 </item>
+		   <!-- 作者 -->
+		<item name="tmp_Author" mode="xpath" type="tmp" >
+    	     <![CDATA[//div[@class='area  border_xx m_t15 bj']/div[@class='fl  w150']/html()]]>   	     
+		</item>	
+		<item name="Author" mode="regular" parent="tmp_Author">
+    	     <![CDATA[ 编辑：(.*?)$]]>   	     
+		</item> 	
+		<!--时间同上  -->
+		<!-- 来源 -->
+		<item name="tmp_From" mode="xpath" type="tmp">
+    	     <![CDATA[//div[@class='msg article_info']/div[@class='info']/html()]]>
+		</item> 
+		<item name="From" mode="regular" parent="tmp_From">
+    	     <![CDATA[^(.*?)\s]]>   	     
+		</item> 
+		<item name="Content" mode="xpath" ><!--内容 -->
+    	<![CDATA[//div[@class='article_text clearfix  ']/div[@id='ajax_text']/html()]]>
+		</item>	
+			
+	</Contents>	
+	<!-- <css_filter><![CDATA[div.nrpage]]></css_filter>
+	<css_filter><![CDATA[div.area]]></css_filter>
+	<css_filter><![CDATA[div.zrbj]]></css_filter> -->
+	<!-- <regex_filter><![CDATA[中共中央总书记]]></regex_filter>
+	<regex_filter><![CDATA[<p[^>]*?>[\s\S]+?</p>]]></regex_filter>
+	<css_filter><![CDATA[a[href]]]></css_filter>
+	<css_filter><![CDATA[img[src$=0337546.jpg]]]></css_filter>
+	<css_filter><![CDATA[p[align$=center2]]]></css_filter>
+	<css_filter><![CDATA[h3.r > a]]></css_filter> -->
+</html>

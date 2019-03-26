@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>	                  
+	 <!--百家号https://baijiahao.baidu.com/s?id=1585200945431623182&wfr=spider&for=pc   详细页-->
+	<forurlReg><![CDATA[https://baijiahao.baidu.com[\S]*]]></forurlReg>
+	<load_on_items>
+	    <item name="siteName" mode="str">
+   			<![CDATA[百家号]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>	
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[Title|Content|pubDateTime]]>
+		</item>
+		
+		<item name="first_keys" mode="str">
+   			<![CDATA[inmain]]>
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<item name="inmain" mode="xpath" type="tmp">
+   			<![CDATA[//div[@id="detail-page"]/@id]]>
+		</item>
+	</tmp_items>
+	<!--内容块 -->
+	<Contents>
+		<!--标题 -->	
+		<item name="Title" mode="xpath">
+    		<![CDATA[//div[@class="article-title"]/h2/text()]]>
+		</item>
+		<!--|拼接时间 ： 发表于：(.*?)$  ^(.*?)$-->
+		<item name="pubDateTime" mode="regular">
+    	    <![CDATA[content="(\d+-\d+-\d+ \d+:\d+)]]>
+	    </item> 
+		<item name="year1" mode="gen" rule="6">	<!--获取年 -->
+   			<![CDATA[{empty}]]>
+		</item>
+		<item name="year" mode="regular" parent="year1" type="tmp">
+    	     <![CDATA[(\d{4}-)]]>
+		</item>
+		<item name="day" mode="xpath" type="tmp"><!-- 月日 -->
+    	     <![CDATA[//span[@class="date"]/text()]]>
+		</item>
+		<item name="hour" mode="xpath" type="tmp"><!-- 时 -->
+    	     <![CDATA[//span[@class="time"]/text()]]>
+		</item>
+		<item name="tmp_pubDateTime" mode="join_str" join_item="year|day|hour">
+   			<![CDATA[{empty}]]>
+		</item>
+		
+		<item name="pubDateTime" mode="regular" regex="-| |:" replacement="" dateformat="yyyyMMddHHmm" parent="tmp_pubDateTime">
+   			<![CDATA[^(.*)$]]>
+		</item>
+		<item name="pubDateTime" mode="regular" dateformat="yyyy-MM-dd HH:mm:ss">
+   			<![CDATA[content="(\d+-\d+-\d+ \d+:\d+:\d+)]]>
+		</item>
+		 
+		<!--来源 -->	
+		<item name="pubFrom" mode="xpath" type="tmp">
+		     <![CDATA[]]>   
+		</item>	
+		<item name="From" mode="regular" parent="pubFrom">
+		     <![CDATA[]]>   
+		</item>		
+		<item name="ClickCount11" mode="xpath" type="tmp">
+   	    	 <![CDATA[]]>   	     
+		</item>
+		<item name="ClickCount" mode="regular" parent="ClickCount11">
+    	       <![CDATA[(\d+)]]>   	     
+		</item>	
+		<item name="ReplyCount11" mode="xpath" type="tmp">
+    	     <![CDATA[]]>   	     
+		</item>
+		<item name="ReplyCount" mode="regular" parent="ReplyCount11">
+    	        <![CDATA[(\d+)]]>   	 
+		</item>	
+		
+		<!--摘要 -->	
+		<item name="Summary" mode="xpath"><!-- 摘要 -->
+		</item>		
+		
+		<!--内容-->	
+		<item name="Content" mode="xpath"><!--内容 -->
+    		<![CDATA[//div[@class="article-content"]/html()]]>
+		</item>		
+	</Contents>		
+	<page>
+		<!--翻页 下一页规则 -->
+		<!-- 第一种方式 --> 
+		<item name="page" mode="regular" type="tmp">
+   			<![CDATA[]]> 
+		</item>
+		<!-- 第二种方式 -->
+		<item name="currentPage" mode="regular" type="tmp">
+   			<![CDATA[]]>
+		</item>
+		<item name="countPage" mode="regular" type="tmp">
+   			<![CDATA[]]>
+		</item>
+		<!-- append_page = 0 or 1   时 递增规则 0 或 1 开始 --> 
+		<url_join ref="next_url" append_page="1"><![CDATA[_]]></url_join>
+		<url_join ><![CDATA[]]></url_join>
+	</page>
+	<!-- 翻页 下一页内容 -->
+	<Next_Contents>
+		<item name="Content" mode="xpath"><!-- 内容 -->
+    		<![CDATA[]]>
+		</item>
+	</Next_Contents>
+</html>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html>
+     <!--中山市消费者委员会http://www.gdzs315.gov.cn/index.php?m=search&c=index&a=init&typeid=1&siteid=1&q=%E5%9C%A8&page=2详细页-->
+     <forurlReg><![CDATA[http://www.gdzs315.gov.cn/index.php?m=search[\S]+]]></forurlReg>
+     <load_on_items>
+          <item name="siteCode" mode="str"><![CDATA[N0000345]]></item>
+          <item name="siteName" mode="str"><![CDATA[中山市消费者委员会]]></item>
+          <item name="type" mode="str">
+               <![CDATA[1]]>
+               <!-- 1 搜索列表  2 详情 -->
+          </item>
+          <item name="siteUrl" mode="str">
+               <![CDATA[http://www.gdzs315.gov.cn/index.php?m=search&c=index&a=init&typeid=1&siteid=1&q={Keyword}&page={Page}]]>
+               <!--搜索链接 -->
+          </item>
+          <item name="charset" mode="str"><![CDATA[utf-8]]></item>
+          <item name="url_charset" mode="str"><![CDATA[gbk]]></item>
+          <item name="statusCode" mode="str">
+               <![CDATA[200]]>
+               <!--下载返回码为 200 视为成功 -->
+          </item>
+          <item name="get_next_url" mode="str">
+               <![CDATA[0]]>
+               <!--  get_next_url =1 为获取下一页， 其它为替换 -->
+          </item>
+          <item name="cycle_retry_times" mode="str">
+               <![CDATA[1]]>
+               <!-- 重试次数 -->
+          </item>
+          <!--内容解析成功必须存在的几个 值  -->
+          <item name="exist_keys" mode="str">
+               <![CDATA[wrap]]>
+               <!-- 能够获取到列表块 视为此模板匹配成功 -->
+          </item>
+     </load_on_items>
+     <!-- 临时集合 -->
+     <tmp_items>
+          <item name="wrap" mode="xpath" type="tmp"><![CDATA[//ul[@class="wrap"]/@class]]></item>
+     </tmp_items>
+     <!--翻页 下一页规则 -->
+     <page>
+          <item name="page" mode="str"><![CDATA[0]]></item>
+     </page>
+     <list>
+          <item name="list_items" mode="xpath" type="tmp"><![CDATA[//div[@class='c wrap']/ul[@class='wrap']/li[@class='wrap']]]></item>
+     </list>
+     <items>
+          <item name="Title" mode="xpath"><![CDATA[//h5/a/text()]]></item>
+          <item name="Url" mode="xpath"><![CDATA[//h5/a/@href]]></item>
+          <item name="tmp_pubDateTime" mode="xpath" type="tmp"><![CDATA[div[@class='adds']/text()]]></item>
+          <item name="pubDateTime" mode="regular" dateformat="yyyy-MM-dd HH:mm" parent="tmp_pubDateTime">
+               <![CDATA[\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}]]>
+               <!--另一种方法 获取时间 ： 发表于：(.*?)$  ^(.*?)$-->
+          </item>
+     </items>
+</html>
+

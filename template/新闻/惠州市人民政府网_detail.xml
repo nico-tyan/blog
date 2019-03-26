@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>	                  
+	 <!--惠州市人民政府网        http://www1.huizhou.gov.cn/pages/cms/huizhou/html/xqyw/3814b05d26724c62b7500e3178e77230.html?cataId=402880920f76a069010f76a487800001   详细页-->
+	<forurlReg><![CDATA[http://www[\S]*.huizhou.gov.cn[\S]*]]></forurlReg>
+	<load_on_items>
+	    <item name="siteName" mode="str">
+   			<![CDATA[惠州市人民政府网]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   				<![CDATA[utf-8]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>	
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[Title|Content|pubDateTime]]>
+		</item>
+		<item name="first_keys" mode="str">
+   			<![CDATA[inmain]]>
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<item name="inmain" mode="xpath" type="tmp">
+   			<![CDATA[//div[@class="s_container"]/@class]]>
+		</item>
+	</tmp_items>
+	<!--内容块 -->
+	<Contents>
+		<!--标题 -->	
+		<item name="Title" mode="xpath">
+    		<![CDATA[//div[@class="news-info"]/h1/text()]]>
+		</item>
+		
+		<!--作者-->		
+		<item name="pubAuthor" mode="xpath" type="tmp">
+		</item> 
+		<item name="Author" mode="regular" parent="pubAuthor">
+		</item>		
+						
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="DateTime" mode="xpath" type="tmp" >
+    	   <![CDATA[//span[@class="time"]/text()]]>
+		</item> 
+		
+		<item name="pubDateTime" mode="regular" parent="DateTime" dateformat="yyyy-MM-dd">
+    	     <![CDATA[(\d+-\d+-\d+)]]>   	     
+		</item>		
+		
+		<!--来源 -->	
+		<item name="pubFrom" mode="xpath" type="tmp">
+    	    <![CDATA[//span[@class="ly"]/text()]]>
+		</item>	
+		<item name="From" mode="regular" parent="pubFrom">
+    	    <![CDATA[来源：(.*?)$]]>   	        
+		</item>		
+		
+		<item name="ClickCount11" mode="xpath" type="tmp">
+   	    	 <![CDATA[]]>   	     
+		</item>
+		<item name="ClickCount" mode="regular" parent="ClickCount11">
+    	       <![CDATA[(\d+)]]>   	     
+		</item>	
+		
+		<item name="ReplyCount11" mode="xpath" type="tmp">
+    	     <![CDATA[]]>   	     
+		</item>
+		<item name="ReplyCount" mode="regular" parent="ReplyCount11">
+    	        <![CDATA[(\d+)]]>   	 
+		</item>	
+		
+		<!--摘要 -->	
+		<item name="Summary" mode="xpath"><!-- 摘要 -->
+		</item>		
+		
+		<!--内容-->	
+		<item name="Content" mode="xpath"><!--内容 -->
+    		<![CDATA[//div[@id="divZoom"]/html()]]>
+		</item>		
+	</Contents>		
+	<page>
+		<!--翻页 下一页规则 -->
+		<!-- 第一种方式 --> 
+		<item name="page" mode="regular" type="tmp">
+   			<![CDATA[]]> 
+		</item>
+		<!-- 第二种方式 -->
+		<item name="currentPage" mode="regular" type="tmp">
+   			<![CDATA[]]>
+		</item>
+		<item name="countPage" mode="regular" type="tmp">
+   			<![CDATA[]]>
+		</item>
+		<!-- append_page = 0 or 1   时 递增规则 0 或 1 开始 --> 
+		<url_join ref="next_url" append_page="1"><![CDATA[_]]></url_join>
+		<url_join ><![CDATA[]]></url_join>
+	</page>
+	<!-- 翻页 下一页内容 -->
+	<Next_Contents>
+		<item name="Content" mode="xpath"><!-- 内容 -->
+    		<![CDATA[]]>
+		</item>
+	</Next_Contents>
+</html>

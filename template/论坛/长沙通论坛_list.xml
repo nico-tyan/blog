@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html>
+     <!-- 长沙通论坛http://bbs.cstong.net/index.php?m=opensearch&page=1&type=thread&q=6&fid=0&created_username=&created_time_start=&created_time_end= -->
+     <forurlReg><![CDATA[http://bbs.cstong.net/index.php\?[\S]+]]></forurlReg>
+     <!-- 临时集合 页面下载前获取-->
+     <load_on_items>
+          <item name="siteCode" mode="str"><![CDATA[N0001587]]></item>
+          <item name="siteName" mode="str"><![CDATA[长沙通论坛]]></item>
+          <item name="type" mode="str">
+               <![CDATA[1]]>
+               <!-- 1 搜索列表  2 详情 -->
+          </item>
+          <item name="siteUrl" mode="str">
+               <![CDATA[http://bbs.cstong.net/index.php?m=opensearch&page={Page}&type=thread&q={Keyword}&fid=0&created_username=&created_time_start=&created_time_end=]]>
+               <!--搜索链接 -->
+          </item>
+          <item name="charset" mode="str"><![CDATA[gbk]]></item>
+          <item name="url_charset" mode="str"><![CDATA[gbk]]></item>
+          <item name="get_next_url" mode="str">
+               <![CDATA[1]]>
+               <!--  get_next_url =1 为获取下一页， 其它为替换 -->
+          </item>
+          <item name="load_referer" mode="str" type="tmp">
+               <!-- 检查是否需要referer -->
+               <![CDATA[#]]>
+          </item>
+          <item name="statusCode" mode="str">
+               <![CDATA[200]]>
+               <!--下载返回码为 200 视为成功 -->
+          </item>
+          <item name="cycle_retry_times" mode="str">
+               <![CDATA[1]]>
+               <!-- 重试次数 -->
+          </item>
+          <!--内容解析成功必须存在的几个 值  -->
+          <item name="exist_keys" mode="str">
+               <![CDATA[wrap]]>
+               <!-- 能够获取到列表块 视为此模板匹配成功 -->
+          </item>
+     </load_on_items>
+     <!-- 临时集合  页面下载后获取-->
+     <tmp_items>
+          <!-- 能够获取到列表块 视为此模板匹配成功 -->
+          <item name="wrap" mode="xpath" type="tmp"><![CDATA[//div[@class='wrap']/@class]]></item>
+     </tmp_items>
+     <list>
+          <item name="list_items" mode="xpath" type="tmp">
+               <!--相当于添加了一个父类 （标题url这些需要获取的共同路径）  下面的网站主题就可以写精简 -->
+               <![CDATA[//div[@id='cst_serach_tz_content']/div[@class='cst_cearch_onec']/div[@class='cst_cearch_onec_right']]]>
+          </item>
+     </list>
+     <items>
+          <item name="Title" mode="xpath">
+               <!-- 标题 -->
+               <![CDATA[div[@class='right_title']/a/text()]]>
+          </item>
+          <item name="Url" mode="xpath">
+               <!-- url链接 -->
+               <![CDATA[div[@class='right_title']/a/@href]]>
+          </item>
+          <item name="Author" mode="xpath">
+               <!-- 作者 -->
+               <![CDATA[div[@class='right_info']/ul/li[1]/a/text()]]>
+          </item>
+          <item name="Section" mode="xpath">
+               <!-- 区域吧 -->
+          </item>
+          <item name="tmp_pubDateTime" mode="xpath" type="tmp">
+               <!-- 时间 -->
+               <![CDATA[div[@class='right_info']/ul/li[2]/text()]]>
+          </item>
+          <item name="pubDateTime" mode="regular" parent="tmp_pubDateTime" dateformat="yyyy-MM-dd HH:mm"><![CDATA[^(.*?)$]]></item>
+     </items>
+     <!-- 获取下一页地址 -->
+     <page>
+          <item name="page" mode="xpath" type="tmp"><![CDATA[//div[@class='pages_cst']/a[@class='pages_next J_pages_next']/@href]]></item>
+     </page>
+     <!--  临时集合
+	json方式获取  例如：新华网时政_list.xml
+	<tmp_items>
+		<item name="search-result" mode="xpath" type="tmp">
+   			<![CDATA[//div[@class="search-result"]/@class]]>
+		</item>
+	</tmp_items>
+	翻页 下一页规则
+	<page>
+		<item name="page" mode="str" >
+   			<![CDATA[0]]>
+		</item>
+	</page>
+	<list>
+		<item name="list_items" mode="json" type="tmp">
+    	<![CDATA[$..results]]>
+		</item>
+	</list>
+	<items>
+		<item name="Url" mode="json">
+    	<![CDATA[$..url]]>
+		</item>
+		<item name="Title" mode="json">
+    	<![CDATA[$..title]]>
+		</item>
+		<item name="pubDateTime" mode="json" dateformat="yyyy-MM-dd HH:mm">
+    	<![CDATA[$..pubtime]]>
+		</item>
+	</items>	
+	 -->
+</html>
+

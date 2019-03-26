@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html>
+     <!--大河论坛  http://bbs.dahe.cn/search.php?mod=forum&srchtxt=66&searchsubmit=yes  列表页 -->
+     <!-- 	  http://bbs.dahe.cn/search.php?mod=forum&searchid=5122&orderby=sphinx&ascdesc=desc&searchsubmit=yes -->
+     <forurlReg><![CDATA[http://bbs.dahe.cn/search.php\?mod=forum&searchid=[\S]+&orderby=sphinx&ascdesc=desc&searchsubmit=yes[\S]+]]></forurlReg>
+     <!-- 临时集合 页面下载前获取-->
+     <load_on_items>
+          <item name="siteCode" mode="str"><![CDATA[N0001402]]></item>
+          <item name="siteName" mode="str"><![CDATA[大河论坛]]></item>
+          <item name="type" mode="str">
+               <![CDATA[1]]>
+               <!-- 1 搜索列表  2 详情 -->
+          </item>
+          <item name="siteUrl" mode="str">
+               <![CDATA[http://bbs.dahe.cn/search.php?mod=forum&srchtxt={Keyword}&searchsubmit=yes]]>
+               <!--搜索链接 -->
+          </item>
+          <item name="charset" mode="str"><![CDATA[gbk]]></item>
+          <item name="url_charset" mode="str"><![CDATA[utf-8]]></item>
+          <item name="get_next_url" mode="str">
+               <![CDATA[1]]>
+               <!--  get_next_url =1 为获取下一页， 其它为替换 -->
+          </item>
+          <item name="statusCode" mode="str">
+               <![CDATA[200]]>
+               <!--下载返回码为 200 视为成功 -->
+          </item>
+          <item name="cycle_retry_times" mode="str">
+               <![CDATA[1]]>
+               <!-- 重试次数 -->
+          </item>
+          <item name="load_referer" mode="str" type="tmp"><![CDATA[#]]></item>
+          <!--内容解析成功必须存在的几个 值  -->
+          <item name="exist_keys" mode="str">
+               <![CDATA[ct]]>
+               <!-- 能够获取到列表块 视为此模板匹配成功 -->
+          </item>
+     </load_on_items>
+     <!-- 临时集合  页面下载后获取-->
+     <tmp_items>
+          <!-- 能够获取到列表块 视为此模板匹配成功 -->
+          <item name="ct" mode="xpath"><![CDATA[//div[@id='ct']/@id]]></item>
+     </tmp_items>
+     <list>
+          <item name="list_items" mode="xpath" type="tmp"><![CDATA[//li[@class='pbw']]]></item>
+     </list>
+     <items>
+          <item name="Title" mode="xpath"><![CDATA[h3/a/html()]]></item>
+          <item name="Url" mode="xpath" regex="&amp;highlight=[^&amp;]+" replacement=""><![CDATA[h3/a/@href]]></item>
+          <item name="Author" mode="xpath"><![CDATA[p/span[2]/a/text()]]></item>
+          <item name="Section" mode="xpath" />
+          <item name="tmp_pubDateTime" mode="xpath" type="tmp"><![CDATA[p/span[1]/text()]]></item>
+          <item name="pubDateTime" mode="regular" parent="tmp_pubDateTime" dateformat="yyyy-MM-dd HH:mm"><![CDATA[^(.*?)$]]></item>
+          <item name="tmp_ClickCount" mode="xpath" type="tmp">
+               <!--点击量 -->
+               <![CDATA[p[@class='xg1']/text()]]>
+          </item>
+          <item name="ClickCount" mode="regular" parent="tmp_ClickCount">
+               <!--点击量 -->
+               <![CDATA[-(.*?)次查看]]>
+          </item>
+          <item name="tmp_ReplyCount" mode="xpath" type="tmp">
+               <!--点击量 -->
+               <![CDATA[p[@class='xg1']/text()]]>
+          </item>
+          <item name="ReplyCount" mode="regular" parent="tmp_ReplyCount">
+               <!--点击量 -->
+               <![CDATA[(.*?)个回复]]>
+          </item>
+     </items>
+     <!-- 获取下一页地址   获取到了无法进行下一页的加载-->
+     <page>
+          <item name="page" mode="xpath" type="tmp"><![CDATA[//div[@class='pg']/a[@class='nxt']/@href]]></item>
+     </page>
+     <!-- 	<ajax>
+		<method><![CDATA[get]]></method>
+		<charset>
+   			<![CDATA[utf-8]]>
+		</charset>
+		<url_referer ref="cookie"><![CDATA[#]]></url_referer>
+		组装 请求连接  ref引用已获取或已处理数据  data_type 数据类型
+		<url_join ref="cook" data_type="String"><![CDATA[{empty}]]></url_join>
+	
+	
+	
+	</ajax> -->
+</html>
+

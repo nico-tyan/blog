@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>
+	<!-- 强国论坛http://bbs1.people.com.cn/post/1/1/2/162076375.html -->
+	<forurlReg><![CDATA[http://bbs1.people.com.cn/[\S]+]]></forurlReg>
+	<!-- 临时集合 页面下载前获取-->
+	<load_on_items>
+		<item name="siteName" mode="str">
+   	 		<![CDATA[强国论坛]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值 -->
+		<!-- <item name="exist_keys" mode="str">
+   			<![CDATA[rel]]>
+		</item> -->
+		<item name="first_keys" mode="str">
+   			<![CDATA[rel|article]]>
+		</item>
+	</load_on_items>
+	<tmp_items>
+		<!-- 能够获取到列表块 视为此模板匹配成功 -->
+		<item name="rel" mode="xpath" type="tmp">
+   			<![CDATA[//div[@class='rel']/@class]]>
+		</item> 
+		<item name="article" mode="xpath" type="tmp">
+   			<![CDATA[//article/div[@class='article scrollFlag']/@class]]>
+		</item> 
+	</tmp_items>
+	
+	<Contents>
+		<!--标题 -->
+		<item name="Title" mode="xpath">
+    	<![CDATA[//div[@class='outer']/div[@class='navBar']/h2/text()]]>
+		</item>
+		<item name="Author" mode="xpath"><!--作者  -->
+    	<![CDATA[//div[@class='clearfix']/a/font/text()]]>
+		</item>
+	<!-- 	<item name="joinss" mode="join_str" join_item="Title|Title|Author">
+   			<![CDATA[{empty}]]>
+		</item>
+		<item name="joinssxx" mode="regular" parent="joinss">
+   			<![CDATA[^(.*?)$]]>
+		</item> -->
+		<item name="Summary" mode="xpath"> <!--摘要 -->
+		<![CDATA[//article/div[@class='article scrollFlag']/p[1]/font/text()]]>
+		</item>
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="tmp_pubDateTime" mode="xpath" type="tmp">
+    	<![CDATA[//p[@class='replayInfo']/span[@class='float_l mT10']/text()]]>
+		</item>
+		<item name="pubDateTime" mode="regular" dateformat="yyyy-MM-dd HH:mm:ss"
+			parent="tmp_pubDateTime">
+    	<![CDATA[\d+-\d+-\d+ \d+:\d+:\d+]]>
+		</item>
+		<item name="ClickCount" mode="xpath" regex="," replacement=""><!--点击量 -->
+    	<![CDATA[//p[@class='replayInfo']/span[@class='float_l mT10']/span[@class='readNum']/text()]]>
+		</item>
+		<item name="ReplyCount" mode="xpath"><!--回复数 -->
+    	<![CDATA[//p[@class='replayInfo']/span[@class='float_l mT10']/span[@class='replayNum']/text()]]>
+		</item>
+		<item name="tmp_Content" mode="xpath" type="tmp"><!--内容 -->
+    	<![CDATA[//div[@class='outer']/html()]]>
+		</item>
+		<item name="Content" mode="regular"	parent="tmp_Content" type="tmp">
+    	<![CDATA[content_path="(.*?)">]]>
+		</item>
+	</Contents>
+	
+	<!-- ajax异步获取 -->
+	<ajax>
+	 	<method><![CDATA[get]]></method>
+		<item name="charset" mode="str">
+   			<![CDATA[iso8859-1]]>
+		</item>
+		<!-- 装 请求连接  ref引用已获取或已处理数据  data_type 数据类型 -->
+		<url_join ref="Content" data_type="String"><![CDATA[{empty}]]></url_join>
+		<item name="Content" mode="xpath">
+	    	<![CDATA[//body/html()]]>
+		</item>
+	</ajax> 
+	
+	
+	<!--最终获取到的内容过滤  如广告-->
+	<!-- 
+	<regex_filter ><![CDATA[<a[^>]*?>[\s\S]+?</a>]]></regex_filter> 如替换掉所有a标签
+	<css_filter><![CDATA[a[href]]]></css_filter>//带有href属性的a元素 删除
+	<css_filter><![CDATA[img[src$=.png]]]></css_filter>//扩展名为.png的图片   删除
+	<css_filter><![CDATA[h3.r > a]]></css_filter>//在h3元素之后的a元素   删除 
+	-->
+</html>
+<!--
+a. 转义序列各字符间不能有空格； 
+b. 转义序列必须以"；"结束； 
+c. 单独的&不被认为是转义开始； 
+d. 区分大小写。
+
+以下是XML中需要的转义字符:
+&(逻辑与)  &amp;        
+<(小于)    &lt;        
+>(大于)    &gt;        
+"(双引号)  &quot;      
+'(单引号)  &apos;  
+-->

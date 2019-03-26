@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html>
+     <!--中国军网 http://search.chinamil.com.cn/search/milsearch/stouch.jsp# -->
+     <forurlReg><![CDATA[http://search.chinamil.com.cn/search/action/searchspecialht.jsp[\S]*?$]]></forurlReg>
+     <!-- 临时集合 页面下载前获取-->
+     <load_on_items>
+          <item name="siteCode" mode="str"><![CDATA[N0000258]]></item>
+          <item name="siteName" mode="str"><![CDATA[中国军网]]></item>
+          <item name="type" mode="str">
+               <![CDATA[1]]>
+               <!-- 1 搜索列表  2 详情 -->
+          </item>
+          <item name="siteUrl" mode="str">
+               <![CDATA[http://search.chinamil.com.cn/search/action/searchspecialht.jsp]]>
+               <!--搜索链接 -->
+          </item>
+          <item name="charset" mode="str"><![CDATA[utf-8]]></item>
+          <item name="url_charset" mode="str"><![CDATA[utf-8]]></item>
+          <item name="method" mode="str"><![CDATA[post]]></item>
+          <item name="get_next_url" mode="str">
+               <![CDATA[0]]>
+               <!--  get_next_url =1 为获取下一页， 其它为替换 -->
+          </item>
+          <item name="statusCode" mode="str">
+               <![CDATA[200]]>
+               <!--下载返回码为 200 视为成功 -->
+          </item>
+          <item name="cycle_retry_times" mode="str">
+               <![CDATA[1]]>
+               <!-- 重试次数 -->
+          </item>
+          <!-- gen_str rule{1 时间戳 2 随机数（0.424242443 ）不需要长度  (3 数字  4 字母 5 数字加字母  )+length  } 生成字符串  length 生成长度 -->
+          <item mode="gen" name="gen_str" rule="2"><![CDATA[#]]></item>
+          <!--内容解析成功必须存在的几个 值  -->
+          <item name="exist_keys" mode="str">
+               <![CDATA[PAGES]]>
+               <!-- 能够获取到列表块 视为此模板匹配成功 -->
+          </item>
+     </load_on_items>
+     <!-- 
+	<cookie_data_join name="basenames" ref="gen_str"><![CDATA[mil_sck_gdk_view{data}]]></cookie_data_join>
+	<cookie_data_join name="id" ref="gen_str" ><![CDATA[{empty}]]></cookie_data_join> 
+	-->
+     <form_data_join name="basenames"><![CDATA[mil_sck_gdk_view]]></form_data_join>
+     <form_data_join name="s_where"><![CDATA[NODESEARCHNAME=专题 and LANGUAGES=1 and publishstate=2]]></form_data_join>
+     <form_data_join name="spe_num"><![CDATA[20]]></form_data_join>
+     <form_data_join name="keyword"><![CDATA[{Keyword}]]></form_data_join>
+     <form_data_join name="fantiorjianti"><![CDATA[0]]></form_data_join>
+     <form_data_join name="random" ref="gen_str"><![CDATA[{empty}]]></form_data_join>
+     <form_data_join name="_"><![CDATA[{empty}]]></form_data_join>
+     <!-- 临时集合  页面下载后获取-->
+     <tmp_items>
+          <!-- 能够获取到列表块 视为此模板匹配成功 -->
+          <item name="PAGES" mode="xpath" type="tmp"><![CDATA[//MILSEARCH/PAGES/text()]]></item>
+     </tmp_items>
+     <!--翻页 下一页规则 -->
+     <page>
+          <item name="currentPage" mode="xpath" type="tmp"><![CDATA[//MILSEARCH/CURPAGE/text()]]></item>
+          <item name="countPage" mode="xpath" type="tmp"><![CDATA[//MILSEARCH/PAGES/text()]]></item>
+     </page>
+     <list>
+          <item name="list_items" mode="xpath" type="tmp"><![CDATA[//MILSEARCH/RESULT]]></item>
+     </list>
+     <items>
+          <item name="Url" mode="xpath"><![CDATA[URL/text()]]></item>
+          <item name="pubDateTime" mode="xpath" dateformat="yyyy.M.d"><![CDATA[PUBLISHTIME/text()]]></item>
+          <item name="tmp_Title" mode="xpath" type="tmp"><![CDATA[TITLE/text()]]></item>
+          <item name="Title" mode="regular" parent="tmp_Title"><![CDATA[<!\[CDATA\[(.*?)\]\]>$]]></item>
+          <item name="Author" mode="xpath"><![CDATA[AUTHOR/text()]]></item>
+     </items>
+</html>
+<!-- 
+a. 转义序列各字符间不能有空格； 
+b. 转义序列必须以"；"结束； 
+c. 单独的&不被认为是转义开始； 
+d. 区分大小写。
+
+以下是XML中需要的转义字符:
+&(逻辑与)  &amp;        
+<(小于)    &lt;        
+>(大于)    &gt;        
+"(双引号)  &quot;      
+'(单引号)  &apos;  
+-->
+

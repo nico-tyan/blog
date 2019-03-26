@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>
+	<!-- 重庆科技学院http://www.cqust.edu.cn/info/1042/34269.htm -->
+	<forurlReg><![CDATA[http://www.cqust.edu.cn/[\S]+]]></forurlReg>
+	<!-- 临时集合 页面下载前获取-->
+	<load_on_items>
+		<item name="siteName" mode="str">
+   	 		<![CDATA[重庆科技学院]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[ztwzlmg]]>
+		</item>
+		<item name="wbnewsid" mode="regular" type="tmp" ref="url"><!--  引用  url匹配     -->
+    	<![CDATA[(\d+)\.htm]]>
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<!-- 能够获取到列表块 视为此模板匹配成功 -->
+		<item name="ztwzlmg" mode="xpath" type="tmp">
+   			<![CDATA[//div[@class='ztwzlmg']/@class]]>
+		</item> 
+	</tmp_items>
+	<Contents>
+		<!--标题 -->
+		<item name="Title" mode="xpath">
+    	<![CDATA[//td[@class='titlestyle57637']/text()]]>
+		</item>
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="tmp_pubDateTime" mode="xpath" type="tmp">
+    	<![CDATA[//span[@class='timestyle57637']/text()]]>
+		</item>
+		<item name="pubDateTime" mode="regular" dateformat="yyyy-MM-dd HH:mm"
+			parent="tmp_pubDateTime">
+    	<![CDATA[^(.*?)$]]>
+		</item>
+		<item name="Content" mode="xpath" ><!--内容 -->
+    	<![CDATA[//div[@id='vsb_newscontent']/html()]]>
+		</item>
+	</Contents>	
+	<!-- ajax异步获取 -->
+	<ajax>
+		<!-- 组装 请求连接  ref引用已获取或已处理数据  data_type 数据类型 -->
+		<!-- http://www.cqust.edu.cn/system/resource/code/news/click/clicktimes.jsp -->
+		<method><![CDATA[post]]></method>
+		<url_join ref="ajax" data_type="String"><![CDATA[http://www.cqust.edu.cn/system/resource/code/news/click/clicktimes.jsp]]></url_join>
+		<form_data_join name="wbnewsid" ref="wbnewsid"><![CDATA[{empty}]]></form_data_join>
+		<form_data_join name="owner"><![CDATA[1066293084]]></form_data_join>
+		<form_data_join name="type"><![CDATA[wbnews]]></form_data_join>
+		<form_data_join name="randomid"><![CDATA[n]]></form_data_join>
+		<item name="ClickCount" mode="regular">
+	    	<![CDATA["wbshowtimes":(\d+)]]>
+		</item>
+	</ajax>  
+</html>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html>
+     <!--华夏经纬网 http://search.huaxia.com/?sText=%B4%F3%CA%FD%BE%DD&page={Page}&sButton=1&sIndex=xw&sDate=19990101&eDate=19990101&iPosition=title&iPosition=content&iPosition=content&iSize=20&iSort=1&iPage=0&iShow=1&iSlop=0&indexType=0详细页-->
+     <!-- http://search.huaxia.com/?sText=%C0%B4&page=1&sButton=1&sIndex=xw&sDate=19990101&eDate=19990101&iPosition=title&iPosition=content&iPosition=content&iSize=20&iSort=1&iPage=0&iShow=1&iSlop=0&indexType=0 -->
+     <forurlReg><![CDATA[http://search.huaxia.com/\?[\S]+]]></forurlReg>
+     <load_on_items>
+          <item name="siteCode" mode="str"><![CDATA[N0000432]]></item>
+          <item name="siteName" mode="str"><![CDATA[华夏经纬网]]></item>
+          <item name="type" mode="str">
+               <![CDATA[1]]>
+               <!-- 1 搜索列表  2 详情 -->
+          </item>
+          <item name="siteUrl" mode="str">
+               <![CDATA[http://search.huaxia.com/?sText={Keyword}&page={Page}&sButton=1&sIndex=xw&sDate=19990101&eDate=19990101&iPosition=title&iPosition=content&iPosition=content&iSize=20&iSort=1&iPage=0&iShow=1&iSlop=0&indexType=0]]>
+               <!--搜索链接 -->
+          </item>
+          <item name="curPage" mode="str">
+               <![CDATA[0]]>
+               <!-- 列表第几页开始 默认为1  为1时不需要设置此属性  -->
+          </item>
+          <item name="charset" mode="str"><![CDATA[GBK]]></item>
+          <item name="url_charset" mode="str"><![CDATA[gb2312]]></item>
+          <item name="statusCode" mode="str">
+               <![CDATA[200]]>
+               <!--下载返回码为 200 视为成功 -->
+          </item>
+          <item name="get_next_url" mode="str">
+               <![CDATA[0]]>
+               <!--  get_next_url =1 为获取下一页， 其它为替换 -->
+          </item>
+          <item name="cycle_retry_times" mode="str">
+               <![CDATA[1]]>
+               <!-- 重试次数 -->
+          </item>
+          <!--内容解析成功必须存在的几个 值  -->
+          <item name="exist_keys" mode="str">
+               <![CDATA[rtText]]>
+               <!-- 能够获取到列表块 视为此模板匹配成功 -->
+          </item>
+     </load_on_items>
+     <!-- 临时集合 -->
+     <tmp_items>
+          <item name="rtText" mode="xpath" type="tmp"><![CDATA[//td[@class="rtText"]/@class]]></item>
+     </tmp_items>
+     <!--翻页 下一页规则 -->
+     <page>
+          <item name="page" mode="str"><![CDATA[0]]></item>
+          <!-- <item name="tmp_page" mode="xpath" type="tmp" >
+   			<![CDATA[//span[@id='CurPageListBottom']/html()]]>
+		</item>
+		<item name="page" mode="regular"  parent="tmp_page">
+   			<![CDATA[<a href="([^>]+?)" class="Href_03">&gt;</a>]]>
+		</item> -->
+     </page>
+     <list>
+          <item name="list_items" mode="xpath" type="tmp"><![CDATA[/html/body/table[3]/tbody/tr[4]/td/table[1]/tbody/tr[1]/td/table/tbody/tr/td/table/tbody/tr]]></item>
+     </list>
+     <items>
+          <item name="Title" mode="xpath"><![CDATA[tr/td/a[@class='rLink']/text()]]></item>
+          <item name="Url" mode="xpath" regex="&amp;highlight=[^&amp;]+" replacement=""><![CDATA[tr/td/a[@class='rLink']/@href]]></item>
+          <item name="tmp_pubDateTime" mode="xpath" type="tmp"><![CDATA[tr/td[@class='rtText']/text()]]></item>
+          <item name="pubDateTime" mode="regular" dateformat="yyyy-MM-dd" parent="tmp_pubDateTime">
+               <![CDATA[\d{4}-\d{2}-\d{2}]]>
+               <!--另一种方法 获取时间 ： 发表于：(.*?)$  ^(.*?)$-->
+          </item>
+     </items>
+</html>
+

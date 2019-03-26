@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>
+	<!-- 发展论坛http://forum.home.news.cn/post/viewPostSingle.do?id=11114680&ui=128474993 -->
+	<forurlReg><![CDATA[http://forum.home.news.cn/post[\S]+]]></forurlReg>
+	<!-- 临时集合 页面下载前获取-->
+	<load_on_items>
+		<item name="siteName" mode="str">
+   	 		<![CDATA[发展论坛]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[GBK]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[GBK]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[Title|Content]]>
+		</item>
+	</load_on_items>
+	<Contents>
+		<!--标题 -->
+		<item name="Title" mode="xpath">
+    	<![CDATA[//td[@class='biaoti']/text()]]>
+		</item>
+		<item name="Author" mode="xpath"><!--作者  -->
+    	<![CDATA[//span[@class='zuozhe01']/a[@class='zuozhe01']/text()]]>
+		</item>
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="tmp_pubDateTime" mode="xpath" type="tmp">
+    	<![CDATA[//td[@class='zuozhe']/text()]]>
+		</item>
+		<item name="pubDateTime" mode="regular" dateformat="yyyy-MM-dd HH:mm:ss"
+			parent="tmp_pubDateTime">
+    	<![CDATA[于 (\d+-\d+-\d+ \d+:\d+:\d+)]]>
+		</item>
+		<item name="Content" mode="xpath" ><!--内容 -->
+    	<![CDATA[//table[@class='zhengwen']/html()]]>
+		</item>
+	</Contents>
+</html>

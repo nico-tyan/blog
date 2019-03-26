@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>
+	<!--浙江在线http://zjnews.zjol.com.cn/zjnews/hznews/201707/t20170710_4525600.shtml -->
+	<!--浙江在线http://v.zjol.com.cn/video/179263.html -->
+	<forurlReg><![CDATA[http://[\S]+.zjol.com.cn/[\S]+]]></forurlReg>
+	<!-- 临时集合 页面下载前获取-->
+	<load_on_items>
+		<item name="siteName" mode="str">
+   	 		<![CDATA[浙江在线]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[class]]>
+		</item>
+		<item name="first_keys" mode="str">
+   			<![CDATA[class]]>
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<!-- 能够获取到列表块 视为此模板匹配成功 -->
+		<item name="class" mode="regular" type="tmp">
+   			<![CDATA[class]]>
+		</item> 
+	</tmp_items>
+	<Contents>
+		<!--标题 -->
+		<item name="Title" mode="xpath">
+    	<![CDATA[//div[@class='contTit']/font/text()|//div[@class='detail-title mb20 mt10']/span/text()|//div[@class="main"]/div[@class="title"]/text()|//div[@class='list_con']/p[@class='title']/text()|//h1[@class='artTitle mb15']/text()|//h1[@id='curPlayVideoTitle']/text()|//div[@class='contTit']/text()]]>
+		</item>
+		
+		<item name="Author" mode="xpath"><!--作者  -->
+    	<![CDATA[//span[@class='fr']/text()]]>
+		</item>
+		
+		<item name="Author12" mode="xpath" type="tmp"><!--作者  -->
+    	<![CDATA[//div[@class='editor']/text()]]>
+		</item>
+		<item name="Author" mode="regular" parent="Author12" trim="1"><!--作者  -->
+    	<![CDATA[^(.*?)$]]>
+		</item>
+		
+		<item name="Author13" mode="xpath" type="tmp"><!--作者  -->
+    	<![CDATA[//div[@class='info']/p[2]/text()]]>
+		</item>
+		<item name="Author" mode="regular" parent="Author13" ><!--作者  -->
+    	<![CDATA[^(.*?)$]]>
+		</item>
+		
+		<item name="Summary" mode="xpath"> <!--摘要 -->
+		</item>
+		
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="pubDateTime" mode="xpath">
+    	<![CDATA[//span[@id='pubtime_baidu']/text()]]>
+		</item>
+		<item name="tmp_pubDateTime2" mode="xpath" type="tmp">
+    	<![CDATA[//p[@class='mod_video_desc_time']/text()]]>
+		</item>
+		<item name="pubDateTime" mode="regular" dateformat="yyyy-MM-dd HH:mm"
+			parent="tmp_pubDateTime2">
+    	<![CDATA[(\d+-\d+-\d+ \d+:\d+)]]>
+		</item>
+		<item name="pubDateTime" mode="regular" dateformat="yyyy年MM月dd日 HH:mm:ss"
+			parent="tmp_pubDateTime2">
+    	<![CDATA[(\d+年\d+月\d+日\s*\d+:\d+:\d+)]]>
+		</item>
+		
+		<item name="tmp_pubDateTime" mode="xpath" type="tmp">
+    	<![CDATA[//div[@class='news_info']/div[1]/text()]]>
+		</item>
+		<item name="pubDateTime" mode="regular" dateformat="yyyy年MM月dd日HH:mm"
+			parent="tmp_pubDateTime">
+    	<![CDATA[(\d+年\d+月\d+日\d+:\d+)]]>
+		</item>
+		
+		<item name="tmp_pubDateTime1" mode="xpath" type="tmp">
+    	<![CDATA[//div[@class='info']/p[5]/text()]]>
+		</item>
+		<item name="pubDateTime" mode="regular" dateformat="yyyy年MM月dd日 HH:mm:ss"
+			parent="tmp_pubDateTime1">
+    	<![CDATA[(\d+年\d+月\d+日 \d+:\d+:\d+)]]>
+		</item>
+		
+		<item name="tmp_pubDateTime3" mode="xpath" type="tmp">
+    	<![CDATA[//div[@class='detail-date mb30']/text()]]>
+		</item>
+		<item name="pubDateTime" mode="regular" dateformat="yyyy-MM-dd HH:mm:ss"
+			parent="tmp_pubDateTime3">
+    	<![CDATA[(\d+-\d+-\d+ \d+:\d+:\d+)]]>
+		</item>
+		
+		<item name="From11" mode="xpath" type="tmp">
+    	     <![CDATA[//span[@id='source_baidu']/text()]]>   	     
+		</item>
+		<item name="From" mode="regular" parent="From11"><!--回复数 -->
+    	<![CDATA[来源：\s*([\S]+)]]>
+		</item>
+		
+		<item name="From12" mode="xpath" type="tmp">
+    	     <![CDATA[//div[@class='news_info']/div[2]/text()]]>   	     
+		</item>
+		<item name="From" mode="regular" parent="From12"><!--回复数 -->
+    	<![CDATA[来源：([\S]+)$]]>
+		</item>
+		
+		<item name="From13" mode="xpath" type="tmp">
+    	<![CDATA[//div[@class='info']/p[4]/text()]]>
+		</item>
+		<item name="From" mode="regular" parent="From13"><!--回复数 -->
+    	<![CDATA[^([\S]+)$]]>
+		</item>
+		
+		<item name="ClickCount" mode="xpath" regex="," replacement=""><!--点击量 -->
+    	<![CDATA[]]>
+		</item>
+		
+		<item name="ReplyCount" mode="xpath"><!--回复数 -->
+    	<![CDATA[]]>
+		</item>
+		
+		<item name="Content" mode="xpath" ><!--内容 -->
+    	<![CDATA[//div[@class='contTxt']/html()|//div[@class='content']/html()|//div[@class='artCon']/html()|//div[@class='news_con']/html()|//div[@class='mb10 style=']/html()|//p[@class='mod_video_desc_info more-intro']/text()]]>
+		</item>
+	</Contents>
+	<page>
+		<!--翻页 下一页规则 -->
+		<!-- 第一种方式 --> 
+		<item name="page" mode="regular" type="tmp">
+   			<![CDATA[href="(\S+)">下一页]]> 
+		</item>
+	</page>
+	<!-- 翻页 下一页内容 -->
+	<Next_Contents>
+		<item name="Content" mode="xpath"><!-- 内容 -->
+    	<![CDATA[//div[@class='artCon']/html()]]>
+		</item>
+	</Next_Contents>
+</html>

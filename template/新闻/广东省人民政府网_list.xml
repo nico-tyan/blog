@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html>
+     <!--广东省人民政府网http://go.southcn.com/gdsearch/?c=core&a=call&_m=search.local 详细页-->
+     <!-- http://go.southcn.com/gdsearch/?c=index&a=local&page=2&keywords=%E6%9D%A5    -->
+     <forurlReg><![CDATA[http://go.southcn.com/[\S]+]]></forurlReg>
+     <load_on_items>
+          <item name="siteCode" mode="str"><![CDATA[N0000543]]></item>
+          <item name="siteName" mode="str"><![CDATA[广东省人民政府网]]></item>
+          <item name="type" mode="str">
+               <![CDATA[1]]>
+               <!-- 1 搜索列表  2 详情 -->
+          </item>
+          <item name="siteUrl" mode="str">
+               <![CDATA[http://go.southcn.com/gdsearch/?c=core&a=call&_m=search.local]]>
+               <!--搜索链接 -->
+          </item>
+          <item name="charset" mode="str"><![CDATA[utf-8]]></item>
+          <item name="url_charset" mode="str"><![CDATA[utf-8]]></item>
+          <item name="method" mode="str"><![CDATA[post]]></item>
+          <item name="statusCode" mode="str">
+               <![CDATA[200]]>
+               <!--下载返回码为 200 视为成功 -->
+          </item>
+          <item name="cycle_retry_times" mode="str">
+               <![CDATA[1]]>
+               <!-- 重试次数 -->
+          </item>
+          <!--内容解析成功必须存在的几个 值  -->
+          <item name="exist_keys" mode="str">
+               <![CDATA[page_total]]>
+               <!-- 能够获取到列表块 视为此模板匹配成功 -->
+          </item>
+     </load_on_items>
+     <!-- 临时集合 -->
+     <!-- page:1
+keywords:来 -->
+     <form_data_join name="page"><![CDATA[{Page}]]></form_data_join>
+     <form_data_join name="keywords"><![CDATA[{Keyword}]]></form_data_join>
+     <!-- 临时集合  页面下载后获取-->
+     <tmp_items>
+          <!-- 能够获取到列表块 视为此模板匹配成功 -->
+          <item name="page_total" mode="json" type="tmp"><![CDATA[$..page_total]]></item>
+     </tmp_items>
+     <!--翻页 下一页规则 -->
+     <page>
+          <item name="page" mode="str"><![CDATA[0]]></item>
+     </page>
+     <list>
+          <item name="list_items" mode="json" type="tmp"><![CDATA[$..args.list]]></item>
+     </list>
+     <items>
+          <item name="Title" mode="json"><![CDATA[$..title]]></item>
+          <item name="Url" mode="json" regex="&amp;highlight=[^&amp;]+" replacement=""><![CDATA[$..url]]></item>
+          <item name="pubDateTime" mode="json" dateformat="yyyy/MM/dd">
+               <![CDATA[$..date]]>
+               <!--另一种方法 获取时间 ： 发表于：(.*?)$  ^(.*?)$-->
+          </item>
+     </items>
+</html>
+<!-- 
+a. 转义序列各字符间不能有空格； 
+b. 转义序列必须以"；"结束； 
+c. 单独的&不被认为是转义开始； 
+d. 区分大小写。
+
+以下是XML中需要的转义字符:
+&(逻辑与)  &amp;        
+<(小于)    &lt;        
+>(大于)    &gt;        
+"(双引号)  &quot;      
+'(单引号)  &apos;  
+-->
+

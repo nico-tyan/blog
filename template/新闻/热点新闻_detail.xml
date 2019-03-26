@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>
+	<!-- 热点新闻http://hotnews.qdswwl.com/junshi/33267.html-->
+	<forurlReg><![CDATA[http://hotnews.qdswwl.com[\S]+]]></forurlReg>
+	<!-- 临时集合 页面下载前获取-->
+	<load_on_items>
+		<item name="siteName" mode="str">
+   	 		<![CDATA[热点新闻]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[Title|pubDateTime|Content]]>
+		</item>
+		<item name="first_keys" mode="str">
+   			<![CDATA[right]]>
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<!-- 能够获取到列表块 视为此模板匹配成功 -->
+		<item name="right" mode="xpath" type="tmp">
+   			<![CDATA[//div[@class="cl"]/@class]]>
+		</item> 
+	</tmp_items>
+	<Contents>
+		<!--标题 -->
+		<item name="Title" mode="xpath">
+    		<![CDATA[//div[@class="titlem"]/h1/text()]]>
+		</item>		
+	    <item name="Author1" mode="xpath" type="tmp">
+    	     <![CDATA[]]>   	     
+		</item>
+		<item name="Author" mode="regular" parent="Author1">
+    	     <![CDATA[]]>   	     
+		</item>
+		<item name="From1" mode="xpath" type="tmp">
+    	     <![CDATA[]]>   	     
+		</item>
+		<item name="From" mode="regular" parent="From1">
+    	     <![CDATA[]]>   	     
+		</item>
+		
+		<item name="pubDateTime1" mode="xpath" type="tmp">
+    	     <![CDATA[//div[@class="fr"]/text()]]>    
+		</item>
+		<item name="pubDateTime" mode="regular" dateformat="yyyy-MM-dd HH:mm" parent="pubDateTime1">
+    	     <![CDATA[(\d+-\d+-\d+ \d+:\d+)]]>    
+		</item>
+		<item name="Summary" mode="xpath"> <!--摘要 -->
+			<![CDATA[]]>
+		</item>
+		<item name="ClickCount" mode="regular"  parent="tmp_ClickCount">
+    	     <![CDATA[]]>   	     
+		</item>
+		<item name="ClickCount" mode="regular">
+    	     <![CDATA[]]>   	     
+		</item>
+		<item name="ReplyCount1" mode="xpath" type="tmp"><!--回复数 -->
+    		<![CDATA[]]>
+		</item>
+		<item name="ReplyCount" mode="regular" parent="ReplyCount1"><!--回复数 -->
+    		<![CDATA[]]>
+		</item>
+		<item name="Content" mode="xpath" ><!--内容 -->
+    		<![CDATA[//div[@class="descp"]/html()]]>
+		</item>
+	</Contents>
+	<Append_Contents>
+		
+	</Append_Contents>
+	
+	<page>
+		<!--翻页 下一页规则 -->
+		<!-- 第一种方式 --> 
+		<item name="page" mode="regular" type="tmp">
+   			<![CDATA[]]> 
+		</item>
+		<!-- 第二种方式 -->
+		<item name="currentPage" mode="regular" type="tmp">
+   			<![CDATA[]]>
+		</item>
+		<item name="countPage" mode="regular" type="tmp">
+   			<![CDATA[]]>
+		</item>
+		<!-- append_page = 0 or 1   时 递增规则 0 或 1 开始 --> 
+		<url_join ref="next_url" append_page="1"><![CDATA[_]]></url_join>
+		<url_join ><![CDATA[.shtml]]></url_join>
+	</page>
+	<!-- 翻页 下一页内容 -->
+	<Next_Contents>
+		<item name="Content" mode="xpath"><!-- 内容 -->
+    	<![CDATA[]]>
+		</item>
+	</Next_Contents>
+	
+	<!-- ajax异步获取 -->
+	<!-- <ajax>
+		<method><![CDATA[get]]></method>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		组装 请求连接  ref引用已获取或已处理数据  data_type 数据类型
+		<url_join ref="id" data_type="String"><![CDATA[]]></url_join>
+		<url_join ref="gen_str" data_type="String"><![CDATA[]]></url_join>
+		<item name="ClickCount" mode="regular">
+	    	<![CDATA[]]>
+		</item>
+	</ajax> -->
+	
+	
+	<!--最终获取到的内容过滤  如广告-->
+	<!-- 
+	<regex_filter ><![CDATA[<a[^>]*?>[\s\S]+?</a>]]></regex_filter> 如替换掉所有a标签
+	<css_filter><![CDATA[a[href]]]></css_filter>//带有href属性的a元素 删除
+	<css_filter><![CDATA[img[src$=.png]]]></css_filter>//扩展名为.png的图片   删除
+	<css_filter><![CDATA[h3.r > a]]></css_filter>//在h3元素之后的a元素   删除 
+	-->
+</html>
+<!--
+webmagic 的 xpath
+函数	说明
+text(n)	第n个文本节点(0表示取所有)
+allText()	包括子节点的所有文本
+tidyText()	包括子节点的所有文本，并进行智能换行
+html()	内部html(不包括当前标签本身)
+outerHtml()	外部html(包括当前标签本身)
+
+a. 转义序列各字符间不能有空格； 
+b. 转义序列必须以"；"结束； 
+c. 单独的&不被认为是转义开始； 
+d. 区分大小写。
+
+以下是XML中需要的转义字符:
+&(逻辑与)  &amp;        
+<(小于)    &lt;        
+>(大于)    &gt;        
+"(双引号)  &quot;      
+'(单引号)  &apos;  
+-->

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>
+	<!--邵阳新闻在线http://finance.shaoyangnews.net/c/201810/23/1191504.html 财经
+	               http://news.shaoyangnews.net/c/201812/17/1197233.html  新闻-->
+	<forurlReg><![CDATA[http[s]*://[\S]+.shaoyangnews.net/c.+?\.html]]></forurlReg>
+	<!-- 临时集合 页面下载前获取-->
+	<load_on_items>
+		<item name="siteName" mode="str">
+   	 		<![CDATA[邵阳新闻在线]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[container]]>
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<!-- 能够获取到列表块 视为此模板匹配成功 -->
+		<item name="container" mode="xpath" type="tmp">
+   			<![CDATA[//div[@id='article-main']/@id]]>
+		</item> 
+	</tmp_items>
+	<Contents>
+		<!--标题 -->
+		<item name="Title" mode="xpath">
+    	<![CDATA[//div[@class='hd']/h1/text()]]>
+		</item>
+		
+		<item name="tmp_Author" mode="xpath" type="tmp">
+    	     <![CDATA[//div[@class='edr']/text()]]>   	     
+		</item> 
+		
+		<item name="Author" mode="regular"  parent="tmp_Author">
+    	     <![CDATA[责任编辑：(.*?)$]]>   	     
+		</item> 
+		
+		
+		<item name="From1" mode="xpath"  type="tmp">
+    	     <![CDATA[//span[@class='where']/text()]]>   	     
+		</item>
+		
+		<item name="From" mode="regular" parent="From1">
+    	     <![CDATA[来源：(.*?)\】]]>   	     
+		</item>
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="pubDateTime1" mode="xpath" type="tmp">
+    	<![CDATA[//span[@class='time']/text()]]>
+		</item> 
+		
+		<item name="pubDateTime"  mode="regular" parent="pubDateTime1" dateformat="yyyy-MM-dd HH:mm" >
+    	<![CDATA[(\d+-\d+-\d+ \d+:\d+)]]>
+		</item> 
+		<item name="Content" mode="xpath" ><!--内容 -->
+    	<![CDATA[//div[@class='Main-Article']/html()]]>
+		</item>
+		
+	</Contents>
+	<page>
+		<!--翻页 下一页规则 -->
+		<!-- 第一种方式 --> 
+		<item name="page" mode="regular" type="tmp">
+   			<![CDATA[]]> 
+		</item>
+	</page>
+	<Next_Contents>
+		<item name="Content" mode="xpath"><!-- 内容 -->
+    	<![CDATA[]]>
+		</item>
+	</Next_Contents>
+</html>

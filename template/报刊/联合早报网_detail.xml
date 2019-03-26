@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>	
+   <!--联合早报网http://www.zaobao.com/news/china/story20170412-747485详细页-->
+	<forurlReg ><![CDATA[http://www.zaobao.com/[\S]+]]></forurlReg>
+	<load_on_items>
+	     <item name="siteName" mode="str">
+   			<![CDATA[联合早报网]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!-- <item name="load_referer" mode="str">
+   			<![CDATA[#]]> 
+		</item> -->
+		
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[Title|Content|pubDateTime]]>
+		</item>
+		<item name="next_url" mode="regular" type="tmp" ref="url"><!--引用  url匹配  -->
+    	<![CDATA[^(.*?)\.htm]]>
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<item name="sina_anywhere_iframe" mode="xpath" type="tmp">
+   			<![CDATA[//div[@id="sina_anywhere_iframe"]/@id]]>
+		</item>
+	</tmp_items>
+	<tmp_items>
+		
+	</tmp_items>
+	<!--内容块 -->
+	<Contents>	
+		<!--标题 -->		
+	  	<item name="Title" mode="xpath">
+    		<![CDATA[//div[@class='body-content']/h1/text()]]>
+		</item>
+			<!-- 作者 -->
+		<item name="Author" mode="xpath"  >
+    	     <![CDATA[//aside[@class='trackme']/span[@class='contributor meta-byline']/a/text()|//span[@class='contributor meta-editor']/a/text()]]>   	     
+		</item> 
+		
+							
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="tmp_pubDateTime" mode="xpath" type="tmp" >
+    		<![CDATA[//aside[@class='trackme']/span[@class='datestamp']/html()]]>
+		</item>
+	       <item name="pubDateTime" mode="regular"  dateformat="yyyy年MM月dd日" parent="tmp_pubDateTime">
+    	     <![CDATA[\d{4}年\d{1,2}月\d{1,2}日]]>
+		</item> 
+
+		<!-- 来源 -->
+		<item name="tmp_From" mode="xpath" type="tmp">
+    	     <![CDATA[]]>
+		</item>
+		<item name="From" mode="regular" parent="tmp_From">
+    	     <![CDATA[]]>
+		</item> 
+				
+     	<item name="tmp_ClickCount" mode="xpath" regex="," replacement="" trim="1" type="tmp" ><!--点击量 -->
+    	<![CDATA[]]>
+		</item>
+		<item name="ClickCount" mode="regular"  parent="tmp_ClickCount">
+    	     <![CDATA[]]>
+		</item> 
+		<item name="ReplyCount" mode="xpath"><!--回复数 -->
+    	<![CDATA[]]>
+		</item>
+		<item name="Summary" mode="xpath"><!-- 摘要 -->
+		 <![CDATA[]]>
+		</item>		
+		<item name="Content" mode="xpath" ><!--内容 -->
+    	<![CDATA[//div[@id='FineDining']/html()]]>
+		</item>		                             
+	</Contents>	
+	    <!-- 删除广告 -->
+	<css_filter><![CDATA[section#imu]]></css_filter>
+	<!--最终获取到的内容过滤  如广告-->
+	<!-- 
+	<regex_filter ><![CDATA[<a[^>]*?>[\s\S]+?</a>]]></regex_filter> 如替换掉所有a标签
+	<css_filter><![CDATA[a[href]]]></css_filter>//带有href属性的a元素 删除
+	<css_filter><![CDATA[img[src$=.png]]]></css_filter>//扩展名为.png的图片   删除
+	<css_filter><![CDATA[h3.r > a]]></css_filter>//在h3元素之后的a元素   删除 
+	   -->
+</html>

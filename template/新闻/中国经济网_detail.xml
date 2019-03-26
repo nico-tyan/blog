@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>	                  
+	 <!--中国经济网http://www.ce.cn/cysc/zgjd/kx/201408/14/t20140814_3353454.shtml
+	              http://www.ce.cn:8080/cysc/newmain/yc/jsxw/201810/30/t20181030_30664960.shtml
+	              http://finance.ce.cn/rolling/201206/21/t20120621_16896478.shtml详细页-->
+	<forurlReg><![CDATA[http://[\S]+.ce.cn/[\S]+|http://www.ce.cn:8080/cysc[\S]+]]></forurlReg>
+	<load_on_items>
+	    <item name="siteName" mode="str">
+   			<![CDATA[中国经济网]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		 <item name="charset" mode="str">
+   			<![CDATA[gbk]]>
+		</item> 
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>	
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[Title|Content|pubDateTime]]>
+		</item>
+		<item name="next_url" mode="regular" type="tmp" ref="url"><!--引用  url匹配  -->
+    	<![CDATA[^(.*?)\.htm]]>
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<item name="content" mode="xpath" type="tmp">
+   			<![CDATA[//div[@class="content"]/@class|//div[@class="neirong"]/@class]]>
+		</item>
+	</tmp_items>
+	<!--内容块 -->
+	<Contents>
+		<!--标题 -->	
+		<item name="Title" mode="xpath">
+    		<![CDATA[//h1[@id='articleTitle']/text()]]>
+		</item>
+			<!-- 作者 -->
+		<item name="Author" mode="xpath" >
+    	     <![CDATA[//span[@id='articleAuthor']/text()]]>   	     
+		</item> 
+		<item name="Author" mode="regular" >
+    	     <![CDATA[编辑：(.*?)\）]]>   	     
+		</item> 			
+						
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		 <item name="tmp_pubDateTime" mode="xpath" type="tmp" >
+    		<![CDATA[//span[@id='articleTime']/text()]]>
+		</item> 
+	       <item name="pubDateTime" mode="regular"  dateformat="yyyy年MM月dd日 HH:mm"  parent="tmp_pubDateTime">
+    	     <![CDATA[(.*?)$]]>
+		</item>  		
+		<!--来源  -->
+		<item name="tmp_From" mode="xpath" type="tmp" >
+    	     <![CDATA[//span[@id='articleSource']/text()]]>   	     
+		</item>	
+		<item name="From" mode="regular" parent="tmp_From">
+    	     <![CDATA[来源：(.*?)$]]>   	     
+		</item>
+		
+     	<item name="tmp_ClickCount" mode="xpath" regex="," replacement="" trim="1" type="tmp" ><!--点击量 -->
+    	<![CDATA[]]>
+		</item>
+		<item name="ClickCount" mode="regular" parent="tmp_ClickCount">
+    	     <![CDATA[]]>   	     
+		</item>
+		<item name="ReplyCount" mode="xpath"><!--回复数 -->
+    	<![CDATA[]]>
+		</item>
+		<item name="Summary" mode="xpath"><!-- 摘要 -->
+		 <![CDATA[]]>
+		</item>		
+		<item name="Content" mode="xpath" ><!--内容 -->
+    	<![CDATA[//div[@id='articleText']/div[@class='TRS_Editor']/html()|//div[@class="content"]/html()]]>
+		</item>			
+	</Contents>		
+</html>

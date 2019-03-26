@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>
+	<!-- 南通大学http://xltw.ntu.edu.cn//xltw/ua/content/a610120d-47c9-4713-9fb1-cbd8537ca55d.html -->
+	<forurlReg><![CDATA[http://xltw.ntu.edu.cn/[\S]+]]></forurlReg>
+	<!-- 临时集合 页面下载前获取-->
+	<load_on_items>
+		<item name="siteName" mode="str">
+   	 		<![CDATA[南通大学]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[Title|pubDateTime]]>
+		</item>
+		<item name="id" mode="regular" type="tmp" ref="url"> <!-- 引用  url匹配 -->    
+    		<![CDATA[content/(\S+).html]]>
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<Contents>
+		<!--标题 -->
+		<item name="Title" mode="xpath">
+    	<![CDATA[//div[@class='article-top']/div[@class='titlecon']/text()]]>
+		</item>
+		<item name="Author" mode="xpath"><!--作者  -->
+    	<![CDATA[//span[@class='date']/span[3]/text()]]>
+		</item>
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="tmp_pubDateTime" mode="xpath" type="tmp">
+    	<![CDATA[//span[@class='date']/span[1]/text()]]>
+		</item>
+		<item name="pubDateTime" mode="regular" dateformat="yyyy-MM-dd"
+			parent="tmp_pubDateTime">
+    	<![CDATA[^(.*?)$]]>
+		</item>
+		<item name="Content" mode="xpath" ><!--内容 -->
+    	<![CDATA[//div[@class='article-content']/html()]]>
+		</item>
+	</Contents>
+	<!-- ajax异步获取 -->
+		<ajax>
+		<method><![CDATA[get]]></method>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<!-- 组装 请求连接  ref引用已获取或已处理数据  data_type 数据类型 -->
+		<!-- http://210.29.65.177:8001/TrueCMS/sysVisitorLogController/visit.do?&siteId=31f3afd6-1040-431b-9ae8-653261e7a63d&messageId=a610120d-47c9-4713-9fb1-cbd8537ca55d&_=1502105273011 -->
+		<url_join ref="id" data_type="String"><![CDATA[http://210.29.65.177:8001/TrueCMS/sysVisitorLogController/visit.do?&siteId=31f3afd6-1040-431b-9ae8-653261e7a63d&messageId=]]></url_join>
+		<url_join ref="gen_str" data_type="String"><![CDATA[&_=1502105273011]]></url_join>
+		<item name="ClickCount" mode="json">
+	    	<![CDATA[$..count]]>
+		</item>
+	</ajax>
+</html>

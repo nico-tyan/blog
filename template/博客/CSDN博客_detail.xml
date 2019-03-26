@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>
+	
+	<!--CSDN博客 http://blog.csdn.net/qq_31655965/article/details/55049192 详细页 -->
+	<forurlReg><![CDATA[http://blog.csdn.net/[\S]+]]></forurlReg>
+	<!-- 临时集合 页面下载前获取-->
+	<load_on_items>
+		<item name="siteName" mode="str">
+   	 		<![CDATA[CSDN博客]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[container]]>
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<!--翻页 下一页规则 -->
+		<item name="container" mode="xpath" type="tmp">
+   			<![CDATA[//div[@id='container']/@id]]>
+		</item>
+	</tmp_items>
+	<Contents>
+		<!--标题 -->
+		<item name="Title" mode="xpath">
+    	<![CDATA[//div[@class='article_title']/h1/span/a/text()]]>
+		</item>
+		<item name="Content" mode="xpath"><!--内容 -->
+    	<![CDATA[//div[@class='article_content']/div[@class='markdown_views']/html()]]>
+		</item>
+		
+		<item name="Author" mode="xpath">
+    	<![CDATA[//div[@id='blog_userface']/span/a/text()]]>
+		</item>
+		<item name="Summary" mode="xpath"> <!--摘要 -->
+		</item>
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="pubDateTime" mode="xpath">
+    	<![CDATA[//div[@class='article_manage clearfix']/div[@class='article_r']/span[1]/text()]]>
+		</item>
+		<!-- <item name="pubDateTime" mode="regular" dateformat="yyyy-MM-dd HH:mm:ss"
+			parent="tmp_pubDateTime">
+    	<![CDATA[]]>
+		</item> -->
+		<item name="ClickCount" mode="xpath" regex="," replacement=""><!--点击量 -->
+    	<![CDATA[//div[@class='article_manage clearfix']/div[@class='article_r']/span[2]/text()]]>
+		</item>
+		<item name="ReplyCount" mode="xpath"><!--回复数 -->
+    	<![CDATA[//div[@class='article_manage clearfix']/div[@class='article_r']/span[3]/text()]]>
+		</item>
+	</Contents>
+	<Append_Contents>
+		<item name="Content" mode="xpath"><!--内容 累加-->
+    		<![CDATA[]]>
+		</item>
+	</Append_Contents>
+	<ajax>
+	<!-- 	<method><![CDATA[get]]></method>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		组装 请求连接  ref引用已获取或已处理数据  data_type 数据类型
+		<url_join ref="uid" data_type="String"><![CDATA[]]></url_join>
+		<url_join ref="aids" data_type="String"><![CDATA[]]></url_join>
+		<url_join ref="gen_str" data_type="String"><![CDATA[]]></url_join>
+		内容加载后替换
+		<filter get_data="1"><![CDATA[]]></filter> -->
+		<!-- <filter replacement="xxxxxxx"><![CDATA[^[\s\S]*?jQuery.*?\(]]></filter>
+		<filter replacement=""><![CDATA[xxxxxxx]]></filter> -->
+		<!-- <item name="f" mode="regular">
+	    	<![CDATA["f":(\d+)]]> 收藏数
+		</item>
+		<item name="d" mode="regular">
+	    	<![CDATA["d":(\d+)]]> 喜欢数
+		</item> -->
+	<!-- 	<item name="ReplyCount" mode="regular">
+	    	<![CDATA[]]>
+		</item>
+		<item name="ReplyCount111" mode="json">
+	    	<![CDATA[]]>
+		</item>
+		<item name="CitedCount" mode="regular">
+	    	<![CDATA[]]>
+		</item>
+		<item name="ClickCount" mode="regular">
+	    	<![CDATA[]]>
+		</item> -->
+	</ajax>
+</html>

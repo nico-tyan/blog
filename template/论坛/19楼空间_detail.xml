@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>
+	<!--19楼空间http://www.19lou.com/forum-15-thread-8961492331943249-1-1.html -->
+	<forurlReg><![CDATA[http://www.19lou.com/forum[\S]+]]></forurlReg>
+	<!-- 临时集合 页面下载前获取-->
+	<load_on_items>
+		<item name="siteName" mode="str">
+   	 		<![CDATA[19楼空间]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[gb2312]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<item name="load_referer" mode="str" type="tmp">
+   			<![CDATA[#]]>
+		</item>
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[view-wrap]]>
+		</item>
+		 <item mode="gen" name="random_number" rule="3" length="2" type="tmp">
+    		<![CDATA[{empty}]]>
+		</item> 
+	</load_on_items>
+	<cookie_data_join name="_Z3nY0d4C_" ref="random_number">
+		<![CDATA[37XgPK9h-%3D1360-1360-1360-6{data}]]>
+	</cookie_data_join>
+	<tmp_items>
+		<!-- 能够获取到列表块 视为此模板匹配成功 -->
+		<item name="view-wrap" mode="xpath" type="tmp">
+   			<![CDATA[//div[@id='view-wrap']/@id]]>
+		</item> 
+	</tmp_items>
+	
+	<Contents>
+		<!--标题 -->
+		<item name="Title" mode="xpath">
+    	<![CDATA[//h1[@class='title-cont']/a/span/text()]]>
+		</item>
+		<item name="Author" mode="xpath"><!--作者  -->
+    	<![CDATA[//div[@class='J_triCard u-avatar link0']/a/span[@class='name']/text()]]>
+		</item>
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="tmp_pubDateTime" mode="xpath" type="tmp">
+    	<![CDATA[//div[@class='u-add link0 clearall']/html()]]>
+		</item>
+		<item name="pubDateTime" mode="regular" dateformat="yyyy-MM-dd HH:mm" parent="tmp_pubDateTime">
+    	<![CDATA[\d{4}\-\d{2}\-\d{2}\s+\d{2}:\d{2}]]>
+		</item>
+		<item name="ClickCount" mode="xpath" regex="," replacement=""  trim="1"><!--点击量 -->
+    		<![CDATA[//em[@id='J_threadViewNum']/text()]]>
+		</item>
+		<item name="ReplyCount" mode="xpath" regex="," replacement="" trim="1"><!--回复数 -->
+    		<![CDATA[//em[@id='J_threadReplyNum']/text()]]>
+		</item>
+		<item name="Content" mode="xpath" ><!--内容 -->
+    	<![CDATA[//div[@class='post-cont']/html()]]>
+		</item>
+	</Contents>
+</html>
+<!--
+a. 转义序列各字符间不能有空格； 
+b. 转义序列必须以"；"结束； 
+c. 单独的&不被认为是转义开始； 
+d. 区分大小写。
+
+以下是XML中需要的转义字符:
+&(逻辑与)  &amp;        
+<(小于)    &lt;        
+>(大于)    &gt;        
+"(双引号)  &quot;      
+'(单引号)  &apos;  
+-->

@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>
+	<!-- 仲恺管委会http://www.hzzk.gov.cn/front/searchArticle.shtml?tmp=0.29657958721252964&siteSn=hzzk&catalogs=&begin=00&end=1000&key=%E6%83%A0%E5%B7%9E -->
+	<forurlReg><![CDATA[http://www.hzzk.gov.cn/front/searchArticle.shtml\?[\S]+]]></forurlReg>
+	<!-- 临时集合 页面下载前获取-->
+	<load_on_items>
+		<item name="siteCode" mode="str">
+			<![CDATA[N0000665]]>
+		</item>
+		<item name="siteName" mode="str">
+   	 		<![CDATA[仲恺管委会]]>
+		</item>
+		<item name="pageSize" mode="str">
+   	 		<![CDATA[20]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[1]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="siteUrl" mode="str">
+   			<![CDATA[http://www.hzzk.gov.cn/front/searchArticle.shtml?tmp={timestamp}&siteSn=hzzk&catalogs=&begin={beginPage}&end={endPage}&key={Keyword}]]> <!--搜索链接 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="get_next_url" mode="str">
+   			<![CDATA[1]]><!--  get_next_url =1 为获取下一页， 其它为替换 -->
+		</item>
+		<item name="load_referer" mode="str" type="tmp"><!-- 检查是否需要referer -->
+   			<![CDATA[#]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值  -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[root]]> <!-- 能够获取到列表块 视为此模板匹配成功 -->
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<!-- 能够获取到列表块 视为此模板匹配成功 -->
+		<item name="root" mode="regular" type="tmp">
+   			<![CDATA[root]]>
+		</item> 
+	</tmp_items>
+	<list>
+ 		<item name="list_items" mode="xpath" type="tmp"><!--相当于添加了一个父类 （标题url这些需要获取的共同路径）  下面的网站主题就可以写精简 -->
+ 			<![CDATA[//data/article]]>
+		</item>
+	</list>
+	<items>
+		<item name="tmp_Title" mode="xpath" type="tmp"><!-- 标题 -->
+   			<![CDATA[title/text()]]>
+		</item>
+		<item name="Title" mode="regular" parent="tmp_Title"><!-- 标题 -->
+   			<![CDATA[A\[(.*?)\]\]]]>
+		</item>
+		<item name="Url1" mode="xpath"  type="tmp"><!-- url链接 -->
+   			<![CDATA[cataId/text()]]>
+		</item>
+		<item name="Url2" mode="xpath" type="tmp"><!-- url链接 -->
+   			<![CDATA[id/text()]]>
+		</item>
+		<item name="Url3" mode="join_str"  join_item="Url2">
+   			<![CDATA[&artId=]]>
+		</item>
+		<item name="Url4" mode="join_str"   join_item="Url1|Url3">
+   			<![CDATA[.html?cataId=]]>
+		</item>
+		<item name="Url5" mode="join_str"   join_item="Url2|Url4">
+   			<![CDATA[/]]>
+		</item>
+		<item name="Url6" mode="join_str"   join_item="Url1|Url5">
+   			<![CDATA[http://www.hzzk.gov.cn/pages/cms/hzzk/html/]]>
+		</item>
+		<item name="Url7" mode="regular"  regex="html/2c9aa8c42747057801274716c47e0003" replacement="html/yqdt"  parent="Url6" >
+   			<![CDATA[^(.*?)$]]>
+		</item> 
+		<item name="Url8" mode="regular"  regex="html/2c9aa8c42747057801274716e4790004" replacement="html/zbdt"  parent="Url7" >
+   			<![CDATA[^(.*?)$]]>
+		</item> 
+		<item name="Url9" mode="regular"  regex="html/88606e3843574f3eb4e918da8826112" replacement="html/lsqkgk"  parent="Url8" >
+   			<![CDATA[^(.*?)$]]>
+		</item> 
+		<item name="Url10" mode="regular"  regex="html/2c9ae4f927474b84012747875b9f0008" replacement="html/ywgs"  parent="Url9">
+   			<![CDATA[^(.*?)$]]>
+		</item> 
+		<item name="Url11" mode="regular"  regex="html/2c9ae4f927474b8401274786e8430007" replacement="html/tzgg"  parent="Url10" >
+   			<![CDATA[^(.*?)$]]>
+		</item> 
+		<item name="Url12" mode="regular"  regex="html/bc81895e8ab24738b9cfacbcf2bbd84d" replacement="html/bmdt"  parent="Url11" >
+   			<![CDATA[^(.*?)$]]>
+		</item> 
+		<item name="Url13" mode="regular"  regex="html/0cce0b85c82a44f7811a17e60fa63d75" replacement="html/hygq"  parent="Url12">
+   			<![CDATA[^(.*?)$]]>
+		</item> 
+		<item name="Url14" mode="regular"  regex="html/2c9aa8c4274705780127471e8971000e" replacement="html/tzhj"  parent="Url13" >
+   			<![CDATA[^(.*?)$]]>
+		</item> 
+		<item name="Url15" mode="regular"  regex="html/4598d563e3504e4baea8416958e51647" replacement="html/zbgg"  parent="Url14" >
+   			<![CDATA[^(.*?)$]]>
+		</item> 
+		<item name="Url16" mode="regular"  regex="html/cec8642c39d9424f8bd75c83812d5eb5" replacement="html/zfhy"  parent="Url15" >
+   			<![CDATA[^(.*?)$]]>
+		</item> 
+		<item name="Url17" mode="regular"  regex="html/2c9aa8c4274705780127471b8133000c" replacement="html/zsdt"  parent="Url16">
+   			<![CDATA[^(.*?)$]]>
+		</item> 
+		<item name="Url18" mode="regular"  regex="html/2a96b3722bb64323955cdd0c3231aa47" replacement="html/zxgcgk"  parent="Url17" >
+   			<![CDATA[^(.*?)$]]>
+		</item> 
+		<item name="Url19" mode="regular"  regex="html/b35787af8b23494cbe44931c5e2a8d63" replacement="html/yjdt"  parent="Url18" >
+   			<![CDATA[^(.*?)$]]>
+		</item> 
+		<item name="Url20" mode="regular"  regex="html/67f15bf8791f49d0946c080f1b536078" replacement="html/zctl"  parent="Url19" >
+   			<![CDATA[^(.*?)$]]>
+		</item> 
+		<item name="Url21" mode="regular"  regex="html/edd00ffb525143da81d73c52a14d787b" replacement="html/dcsjgk"  parent="Url20" >
+   			<![CDATA[^(.*?)$]]>
+		</item> 
+		<item name="Url22" mode="regular"  regex="html/e9a56a179ef14e6cb025404169ce4303" replacement="html/jchgk"  parent="Url21" >
+   			<![CDATA[^(.*?)$]]>
+		</item> 
+		<item name="Url23" mode="regular"  regex="html/b7e036b11c8f438cbd6b0fa2553106ae" replacement="html/csjy"  parent="Url22" >
+   			<![CDATA[^(.*?)$]]>
+		</item> 
+		<item name="Url24" mode="regular"  regex="html/6acc364fec20435e9246649f183301be" replacement="html/jy1"  parent="Url23" >
+   			<![CDATA[^(.*?)$]]>
+		</item> 
+		<item name="Url25" mode="regular"  regex="html/ad728486ee8d490f903950e394b1f7b4" replacement="html/zktz"  parent="Url24" >
+   			<![CDATA[^(.*?)$]]>
+		</item> 
+		<item name="Url26" mode="regular"  regex="html/2f41d1eff2164db9a6c54ed093b03f6a" replacement="html/ggqysydwgk"  parent="Url25" >
+   			<![CDATA[^(.*?)$]]>
+		</item> 
+		<item name="Url27" mode="regular"  regex="html/2c9aa8c427470578012747173e320005" replacement="html/jgsz"  parent="Url26" >
+   			<![CDATA[^(.*?)$]]>
+		</item>
+		<item name="Url28" mode="regular"  regex="html/1b89b126075345d8b9e83be1ebe98bc3" replacement="html/xjbkf"  parent="Url27" >
+   			<![CDATA[^(.*?)$]]>
+		</item>
+		<item name="Url29" mode="regular"  regex="html/d5da41c3e3b245579d3ad8c8614e4783" replacement="html/qtwj"  parent="Url28" >
+   			<![CDATA[^(.*?)$]]>
+		</item>
+		<item name="Url" mode="regular"  regex="html/d27546446b43493ca5dd564d0b66e35b" replacement="html/ldzc"  parent="Url29" >
+   			<![CDATA[^(.*?)$]]>
+		</item>
+		
+		<item name="pubDateTime" mode="xpath" dateformat="yyyy-MM-dd"><!-- 时间 -->
+    		<![CDATA[pubTime/text()]]>
+		</item>
+	</items>
+	<!-- 获取下一页地址 -->
+	 <page>
+	 	<item name="tmp_page" mode="xpath" type="tmp">  
+		<![CDATA[]]>
+		</item>
+		<item name="page" mode="regular" parent="tmp_page" type="tmp">
+		<![CDATA[]]>
+		</item>
+	</page> 
+</html>

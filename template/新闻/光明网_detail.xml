@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>	                  
+	 <!--光明网      http://gmw.cn/xueshu/2017-11/17/content_26822726.htm  详细页-->
+	<forurlReg><![CDATA[http://[\S]*gmw.cn/[\S]+]]></forurlReg>
+	<load_on_items>
+	    <item name="siteName" mode="str">
+   			<![CDATA[光明网]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>	
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[class]]>
+		</item>
+		<item name="first_keys" mode="str">
+   			<![CDATA[class]]>
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<item name="class" mode="regular" type="tmp">
+   			<![CDATA[class]]>
+		</item>
+	</tmp_items>
+	<!--内容块 -->
+	<Contents>
+		<!--标题 -->	
+		<item name="Title" mode="xpath">
+    		<![CDATA[//h1[@id='articleTitle']/text()|//div[@class='contentLeft']/h1/text()|//div[@class='text_c']/h1/html()|//div[@class='m-title-box']/h1/text()]]>
+		</item>
+		
+		<!--作者-->		
+		<item name="pubAuthor" mode="xpath" type="tmp">
+    	     <![CDATA[//div[@id='contentLiability']/text()]]>   	     
+		</item> 
+		<item name="Author" mode="regular" parent="pubAuthor">
+    	     <![CDATA[编辑:(.*?)\]]]>   	     
+		</item>	
+		<item name="tmp_Author2" mode="xpath" type="tmp">
+    	     <![CDATA[//div[@class='lai']/span/text()]]>   	     
+		</item> 
+		 <item name="Author" mode="regular"  parent="tmp_Author2">
+    	     <![CDATA[作者：(.*?)$]]>
+		</item>  	
+		<item name="tmp_Author3" mode="xpath" type="tmp">
+    	     <![CDATA[//span[@class="liability"]/text()]]>   	     
+		</item> 
+		<item name="Author" mode="regular" parent="tmp_Author3">
+    	     <![CDATA[责编：(.*?)\]]]>   	     
+		</item>		
+						
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="DateTime" mode="xpath" type="tmp" >
+    	     <![CDATA[//span[@id='pubTime']/text()|//span[@class='m-con-time']/text()]]>   	     
+		</item> 
+		<item name="pubDateTime" mode="regular" parent="DateTime" dateformat="yyyy-MM-dd HH:mm">
+    	     <![CDATA[^(.*?)$]]>   	     
+		</item>	
+		<item name="tmp_pubDateTime" mode="xpath" type="tmp" >
+    		<![CDATA[//div[@class='lai']/b/text()]]>
+		</item>
+	       <item name="pubDateTime" mode="regular"  dateformat="yyyy年MM月dd日" parent="tmp_pubDateTime">
+    	     <![CDATA[\d{4}年\d{2}月\d{2}日]]>
+		</item>  	
+		
+		<!--来源 -->	
+		<item name="pubFrom" mode="xpath" type="tmp">
+    	     <![CDATA[//span[@id='source']/a/text()|//span[@class='m-con-source']/a/text()]]>   	    
+		</item>	
+		<item name="From" mode="regular" parent="pubFrom">
+    	     <![CDATA[^(.*?)$]]>   	     
+		</item>		
+		
+		<!--摘要 -->	
+		<item name="Summary" mode="xpath"><!-- 摘要 -->
+		 <![CDATA[//div[@id='articleContent']/p/strong/text()]]>
+		</item>		
+		
+		<!--内容-->	
+		<item name="Content" mode="xpath" ><!--内容 -->
+    		<![CDATA[//div[@id="contentMain"]/html()|//div[@id='articleContent']/html()|//div[@class='u-mainText']/html()]]>
+		</item>		
+	</Contents>		
+	<page>
+		<!--翻页 下一页规则 -->
+		<!-- 第一种方式 --> 
+		<item name="page" mode="regular" type="tmp">
+   			<![CDATA[<a href="([\S]+)" class="ptfontcon">下一页]]> 
+		</item>
+		<!-- 第二种方式 -->
+		<item name="currentPage" mode="regular" type="tmp">
+   			<![CDATA[]]>
+		</item>
+		<item name="countPage" mode="regular" type="tmp">
+   			<![CDATA[]]>
+		</item>
+		<!-- append_page = 0 or 1   时 递增规则 0 或 1 开始 --> 
+		<url_join ref="next_url" append_page="1"><![CDATA[_]]></url_join>
+		<url_join ><![CDATA[]]></url_join>
+	</page>
+	<!-- 翻页 下一页内容 -->
+	<Next_Contents>
+		<item name="Content" mode="xpath"><!-- 内容 -->
+    		<![CDATA[//div[@id="contentMain"]/html()]]>
+		</item>
+	</Next_Contents>
+</html>

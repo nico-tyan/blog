@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>
+	<!-- 广东海洋大学http://news.gdou.edu.cn/show.php?contentid=22740 -->
+	<forurlReg><![CDATA[http://news.gdou.edu.cn/show.php\?[\S]+]]></forurlReg>
+	<!-- 临时集合 页面下载前获取-->
+	<load_on_items>
+		<item name="siteName" mode="str">
+   	 		<![CDATA[广东海洋大学]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[gbk]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[gbk]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[TopNav]]>
+		</item>
+		<item name="id" mode="regular" type="tmp" ref="url"><!-- 引用  url匹配      -->
+    	<![CDATA[contentid=(\d+)]]>
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<!-- 能够获取到列表块 视为此模板匹配成功 -->
+		<item name="TopNav" mode="xpath" type="tmp">
+   			<![CDATA[//div[@id='TopNav']/@id]]>
+		</item> 
+	</tmp_items>
+	<Contents>
+		<!--标题 -->
+		<item name="Title" mode="xpath">
+    	<![CDATA[//div[@id='content_head']/h1[1]/text()]]>
+		</item>
+		<item name="tmp_Author" mode="xpath" type="tmp" > <!--作者  -->
+    	<![CDATA[//div[@id='content_head']/h2/text()]]>
+		</item>
+		<item name="Author" mode="regular" parent="tmp_Author">
+    	     <![CDATA[作者：(.*?)\s]]>   	     
+		</item>
+		<item name="Summary" mode="xpath"> <!--摘要 -->
+		</item>
+		<item name="tmp_From" mode="xpath" type="tmp" >
+    	     <![CDATA[//div[@id='content_head']/h2/text()]]>   	     
+		</item>
+		<item name="From" mode="regular"  parent="tmp_From">
+    	     <![CDATA[来源：(.*?)\s]]>   	     
+		</item>
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="tmp_pubDateTime" mode="xpath" type="tmp">
+    	<![CDATA[//div[@id='content_head']/h2/span[1]/text()]]>
+		</item>
+		<item name="pubDateTime" mode="regular" dateformat="yyyy-MM-dd HH:mm:ss"
+			parent="tmp_pubDateTime">
+    	<![CDATA[^(.*?)$]]>
+		</item>
+		<item name="ClickCount" mode="xpath" regex="," replacement=""><!--点击量 -->
+    	<![CDATA[]]>
+		</item>
+		<item name="ReplyCount" mode="xpath"><!--回复数 -->
+    	<![CDATA[]]>
+		</item>
+		<item name="Content" mode="xpath" ><!--内容 -->
+    	<![CDATA[//div[@id='endtext']/html()]]>
+		</item>
+	</Contents>
+	
+	<ajax>
+		<method><![CDATA[get]]></method>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<!-- 组装 请求连接  ref引用已获取或已处理数据  data_type 数据类型 -->
+		<!-- http://news.gdou.edu.cn/count.php?contentid=22740 -->
+		<url_join ref="id" data_type="String"><![CDATA[http://news.gdou.edu.cn/count.php?contentid=]]></url_join>
+		<item name="ClickCount" mode="regular">
+	    	<![CDATA[\$\('#hits'\)\.html\('(\d+)'\)]]>
+		</item>
+	</ajax>
+</html>

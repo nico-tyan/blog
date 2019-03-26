@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>	
+	<!--大河网新闻http://www.dahe.cn/xwzx/tp/sytp/t20060523_519794.htm详细页 -->	                                     
+	<!--大河网新闻https://news.dahe.cn/2017/11-15/218107.html详细页 -->	                                     
+	<forurlReg><![CDATA[http[s]?://[\S]+.dahe.cn/[\S]+]]></forurlReg>
+	<load_on_items>
+	   <item name="siteName" mode="str">
+   			<![CDATA[大河网新闻]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[newscenter]]>
+		</item>
+		<item name="next_url" mode="regular" type="tmp" ref="url"><!--引用  url匹配  -->
+    	<![CDATA[^(.*?)\.htm]]>
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<item name="newscenter" mode="xpath" type="tmp">
+   			<![CDATA[//div[@align="center"]/@align|//div[@class="newscenter"]/@class|//div[@id="contentMain"]/@id]]>
+		</item>	
+	</tmp_items>
+	<tmp_items>
+		
+	</tmp_items>
+	<!--内容块 -->
+	<Contents>		
+		<!--标题 -->		
+	  	<item name="Title" mode="xpath">
+    		<![CDATA[//span[@class='biaoti']/h1/font/text()|//div[@id='subMenu']/h1/text()|//td[@class='font01']/text()]]>
+		</item>
+		<item name="Title" mode="xpath">
+    		<![CDATA[//div[@id='contentMain']/h1/text()]]>
+		</item>
+		<item name="Title" mode="xpath">
+    		<![CDATA[//h1[@id='4g_title']/text()]]>
+		</item>
+		
+		
+	    <item name="tmp_Author" mode="xpath" type="tmp" >
+    		<![CDATA[//span[@class='hei']/text()|//div[@id='editer']/text()|//p[@id='editor_baidu']/text()]]>
+		</item>	
+		 <item name="Author" mode="regular" parent="tmp_Author">
+    		<![CDATA[编辑：(.*?)$]]>
+		</item>		
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="tmp_pubDateTime" mode="xpath" type="tmp" >
+    		<![CDATA[//td[@bgcolor="B1BDC7"]/text()|//span[@class='sTime']/text()|//p[@id='pubtime_baidu']/text()]]>
+		</item>
+	       <item name="pubDateTime" mode="regular"  dateformat="yyyy-MM-dd HH:mm:ss" parent="tmp_pubDateTime">
+    	     <![CDATA[\d{4}-\d{2}-\d{2}\s*\d{2}:\d{2}:\d+]]>
+		</item> 
+	    <item name="pubDateTime" mode="regular"  dateformat="yyyy年MM月dd日 HH:mm" parent="tmp_pubDateTime">
+    	     <![CDATA[\d{4}年\d{2}月\d{2}日\s+\d{2}:\d{2}]]>
+		</item> 
+	    <item name="pubDateTime" mode="regular"  dateformat="yyyy年MM月dd日HH:mm" parent="tmp_pubDateTime">
+    	     <![CDATA[\d{4}年\d{2}月\d{2}日\s*\d{2}:\d{2}]]>
+		</item> 
+		<item name="tmp_pubDateTime1" mode="xpath" type="tmp" >
+    		<![CDATA[//div[@class='dSearch']/strong/text()]]>
+		</item>
+	       <item name="pubDateTime" mode="regular"  dateformat="yyyy年MM月dd日" parent="tmp_pubDateTime1">
+    	     <![CDATA[(\d+年\d+月\d+日)]]>
+		</item> 
+	
+		<item name="tmp_From" mode="xpath"  type="tmp">
+		<![CDATA[span[@class='hong']/text()|//div[@id='msg']/span[2]/text()|//div[@id='msg']/span[2]/text()|//p[@id='source_baidu']/text()]]>
+		</item>
+		 <item name="From" mode="regular" parent="tmp_From">
+    		<![CDATA[来源[:|：]?(.*?)$]]>
+		</item>
+		
+  
+     	<item name="ClickCount" mode="xpath" regex="," replacement="" trim="1"><!--点击量 -->
+    	<![CDATA[]]>
+		</item>
+		<item name="ReplyCount" mode="xpath"><!--回复数 -->
+    	<![CDATA[]]>
+		</item>
+		<item name="Summary" mode="xpath"><!-- 摘要 -->
+		 <![CDATA[]]>
+		</item>
+		
+		<item name="Content" mode="xpath"><!--内容 -->
+    	<![CDATA[//font[@id="zoom"]/html()|//div[@id='main']/html()|//div[@class='newscontent']/html()|//div[@id='ozoom']/html()]]>
+		</item>
+	</Contents>	
+	
+</html>

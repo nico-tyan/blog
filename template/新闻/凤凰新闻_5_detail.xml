@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>	
+	 <!--凤凰新闻 http://news.ifeng.com/a/20151231/46908396_0.shtml 详细页--> 
+     <!-- http://news.ifeng.com/a/20170327/50843471_0.shtml        --> 
+     <!-- http://cq.ifeng.com/a/20180419/6513105_0.shtml -->
+	<forurlReg><![CDATA[http://[a-z]+\.ifeng.com/a/[\S]+_0\.shtml]]></forurlReg>
+	<load_on_items>
+	   <item name="siteName" mode="str">
+   			<![CDATA[凤凰新闻]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[Title|Content|pubDateTime]]>
+		</item>
+		<item name="url" mode="regular" type="tmp" ref="url"><!--引用  url匹配  -->
+    	<![CDATA[^(.*?)$]]>
+		</item>
+		<item name="next_url" mode="regular" type="tmp" ref="url"><!--引用  url匹配  -->
+    	<![CDATA[^(.*?)\.htm]]>
+		</item>
+		<item name="first_keys" mode="str">
+   			<![CDATA[target]]>
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<item name="target" mode="xpath" type="tmp">
+   			<![CDATA[//div[@id="artical"]/@id]]>
+		</item>
+	</tmp_items>
+
+	<!--内容块 -->
+	<Contents>
+	
+		<!--标题 -->		
+	  	<item name="Title" mode="xpath">
+    		<![CDATA[//div[@id='artical']/h1/text()]]>
+		</item>
+			
+		<item name="tmp_Author" mode="xpath" type="tmp">
+    	     <![CDATA[//p[@class="iphone_none"]/text()]]>   	     
+		</item> 
+		<item name="Author" mode="regular"   parent="tmp_Author">
+    	     <![CDATA[\[责任编辑：(.*?)\]]]>
+		</item>
+		
+						
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="tmp_pubDateTime" mode="xpath" type="tmp" >
+    		<![CDATA[//div[@id='artical_sth']/p/span/text()]]>
+		</item>
+	       <item name="pubDateTime" mode="regular"  dateformat="yyyy年MM月dd日 HH:mm" parent="tmp_pubDateTime">
+    	     <![CDATA[\d{4}年\d{2}月\d{2}日\s+\d{2}:\d{2}]]>
+		</item>  
+		
+		
+		
+		<item name="From" mode="xpath" >
+    	     <![CDATA[//div[@id='artical_sth']/p/span[2]/a/text()|//span[@class="ss03"]/text()]]>
+		</item>	
+		<!-- 来源 -->
+		<item name="tmp_From" mode="xpath"  type="tmp">
+    	     <![CDATA[//span[@class="ss03"]/a/text()]]>
+		</item>	
+		<item name="From" mode="regular"   parent="tmp_From">
+    	     <![CDATA[^(.*?)$]]>
+		</item> 
+  
+     	<item name="ClickCount" mode="xpath" regex="," replacement="" trim="1"><!--点击量 -->
+    	<![CDATA[]]>
+		</item>
+		<item name="ReplyCount" mode="xpath"><!--回复数 -->
+    	<![CDATA[]]>
+		</item>
+		<item name="Summary" mode="xpath"><!-- 摘要 -->
+		 <![CDATA[]]>
+		</item>		
+
+		<item name="Content" mode="xpath"><!--内容 -->
+    	<![CDATA[//div[@id='main_content']/html()|//div[@id="artical_real"]/div[2]/html()]]>
+		</item>
+		
+		
+	</Contents>	
+<!-- 	http://comment.ifeng.com/get.php?doc_url=http%3A%2F%2Fnews.ifeng.com%2Fa%2F20170327%2F50843471_0.shtml
+	&format=js&job=1&callback=callbackGetFastCommentCount&callback=callbackGetFastCommentCount -->
+	<ajax>
+		<url_mode><![CDATA[get]]></url_mode>
+		<!-- 组装 请求连接  ref引用已获取或已处理数据  data_type 数据类型-->
+		<charset><![CDATA[gbk]]></charset>
+		<url_join><![CDATA[http://comment.ifeng.com/get.php?]]></url_join>
+		<url_join ref="url"><![CDATA[doc_url=]]></url_join>
+		<url_join><![CDATA[&format=js&job=1&callback=callbackGetFastCommentCount&callback=callbackGetFastCommentCount]]></url_join>
+		<!-- 内容加载后替换 -->
+		<filter get_data="1"><![CDATA[commentJsonVarStr___=([\s\S]+});[\s]*callbackGetFastCommentCount]]></filter>
+		<item name="ReplyCount" mode="json">
+	    	<![CDATA[$..count]]>
+		</item>
+		<item name="ClickCount" mode="json">
+	    	<![CDATA[$..join_count]]>
+		</item>
+	</ajax>
+</html>

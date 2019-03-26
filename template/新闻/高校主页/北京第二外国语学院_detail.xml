@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>
+	<!-- 北京第二外国语学院http://lvguan.bisu.edu.cn/art/2017/7/18/art_191_149341.html -->
+	<forurlReg><![CDATA[http://[\S]+.bisu.edu.cn/[\S]+]]></forurlReg>
+	<!-- 临时集合 页面下载前获取-->
+	<load_on_items>
+		<item name="siteName" mode="str">
+   	 		<![CDATA[北京第二外国语学院]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[Title|Content]]>
+		</item>
+		<item name="articleid" mode="regular" type="tmp" ref="url"><!--  引用  url匹配     -->
+    	<![CDATA[(\d+)\.html]]>
+		</item>
+		<item name="columnid" mode="regular" type="tmp" ref="url"><!--  引用  url匹配     -->
+    	<![CDATA[_(\d+)_]]>
+		</item>
+	</load_on_items>
+	<Contents>
+		<!--标题 -->
+		<item name="Title" mode="regular" trim="1">
+    	<![CDATA[标题\]>begin-->(.*?)<!--<\$\[标题\]>end]]>
+		</item>
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="tmp_pubDateTime" mode="xpath" type="tmp">
+    	<![CDATA[//td[@class='art_top']/span/text()	]]>
+		</item>
+		<item name="pubDateTime" mode="regular" dateformat="yyyy-MM-dd"
+			parent="tmp_pubDateTime">
+    	<![CDATA[^(.*?)$]]>
+		</item>
+		<item name="Content" mode="xpath" ><!--内容 -->
+    	<![CDATA[//div[@id='zoom']/html()]]>
+		</item>
+	</Contents>
+	<!-- ajax异步获取 -->
+	<ajax>
+		<method><![CDATA[get]]></method>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<!-- 组装 请求连接  ref引用已获取或已处理数据  data_type 数据类型 -->
+		<!-- http://123.127.226.252/vc/vc/interface/artcount/artcount.jsp?i_columnid=191&i_articleid=149341 -->
+		<url_join ref="columnid" data_type="String"><![CDATA[http://123.127.226.252/vc/vc/interface/artcount/artcount.jsp?i_columnid=]]></url_join>
+		<url_join ref="articleid" data_type="String"><![CDATA[&i_articleid=]]></url_join>
+		<item name="ClickCount" mode="regular">
+	    	<![CDATA[(\d+)]]>
+		</item>
+	</ajax>
+</html>

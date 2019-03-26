@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>	
+	<!--人民网       http://gs.people.com.cn/BIG5/n2/2017/1218/c183283-31041776.html
+	             http://theory.people.com.cn/BIG5/n1/2017/0830/c40531-29502886.html
+	             http://sc.people.com.cn/BIG5/n2/2017/1219/c359545-31046559.html
+	             http://media.people.com.cn/BIG5/n1/2017/1227/c40606-29730494.html 
+	             http://sh.people.com.cn/BIG5/n2/2017/1227/c134768-31078980.html
+	             http://it.people.com.cn/BIG5/n1/2017/1228/c1009-29734170.html -->
+	<forurlReg ><![CDATA[http[s]*://[\S]+\.people.com.cn/BIG5/n.+?\.html]]></forurlReg>
+	<!-- 临时集合 页面下载前获取-->
+	<load_on_items>
+	   <item name="siteName" mode="str">
+   			<![CDATA[人民网]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<!-- <item name="charset" mode="str">
+   			<![CDATA[gb2312]]>
+		</item> -->
+		<item name="url_charset" mode="str">
+   			<![CDATA[gb2312]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[Title|Content|pubDateTime]]>
+		</item>
+		<item name="first_keys" mode="str">
+   			<![CDATA[text_title]]>
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<item name="text_title" mode="xpath" type="tmp">
+   			<![CDATA[//div[@class="clearfix w1000_320 text_title"]/@class|//div[@class="p2j_con03 clearfix w1000"]/@class]]>
+		</item>
+	</tmp_items>
+	<!--内容块 -->
+	<Contents>
+		<!--标题 -->
+	  	<item name="Title" mode="xpath">
+    		<![CDATA[//div[@class='clearfix w1000_320 text_title']/h1/text()|//div[@class="text_c"]/h1/text()]]>
+		</item>
+		<item name="tmp_Author" mode="xpath"  type="tmp">
+    		<![CDATA[//div[@class='edit clearfix']/text()|//div[@class="edit"]/text()]]>
+		</item>
+		<item name="Author" mode="regular" parent="tmp_Author">
+    		<![CDATA[\(責編：(.+?)\)]]>
+		</item> 
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="Date" mode="xpath" type="tmp">
+		    <![CDATA[//div[@class="fl"]/text()|//p[@class="sou"]/text()]]>
+		</item>
+		<item name="pubDateTime" mode="regular" datetimeformat="yyyy年MM月dd日HH:mm" parent="Date">
+    		<![CDATA[(\d+年\d+月\d+日\d+:\d+)]]>
+		</item>
+		<item name="From" mode="xpath">
+		     <![CDATA[//div[@class="box01"]/div/a/text()|//p[@class="sou"]/a/text()]]>
+		</item>
+		<item name="Content" mode="xpath"><!--内容 -->
+    	     <![CDATA[//div[@class='box_con']/html()|//div[@class="show_text"]/html()]]>
+		</item>
+	</Contents>
+	
+</html>

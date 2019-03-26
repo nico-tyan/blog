@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>
+	<!-- 佛山电台http://www.946.com.cn/news/maypotp/201710050001.html-->
+	<forurlReg><![CDATA[http://www.946.com.cn[\S]+]]></forurlReg>
+	<!-- 临时集合 页面下载前获取-->
+	<load_on_items>
+		<item name="siteName" mode="str">
+   	 		<![CDATA[佛山电台]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[gbk]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[gbk]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[Title|Content]]>
+		</item>
+	</load_on_items>
+	<Contents>
+		<!--标题 -->
+		<item name="Title" mode="regular">
+    	<![CDATA[<font style="font-size:\d+pt"><b>([\S\s]+?)</b></font>]]>
+		</item>
+		<item name="pubDateTime" mode="regular" dateformat="yyyy-MM-dd HH:mm:ss">
+    	<![CDATA[(\d+-\d+-\d+ \d+:\d+:\d+)]]>
+		</item>
+		<item name="Content" mode="regular" ><!--内容 -->
+    	<![CDATA[(<div align="center">\s+<br>[\s\S]+?<span style="font-size: 10.5pt">[\S\s]+?)</td>]]>
+		</item>
+	</Contents>
+</html>

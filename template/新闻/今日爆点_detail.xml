@@ -1,0 +1,52 @@
+<html>
+	<!-- 今日爆点http://sh.qihoo.com/pc/detail?360newsdetail=1&_sign=searchdet&check=7811afb2786df569&sign=360_e39369d1&url=http://m2.people.cn/r/MV8wXzEwMTQ1NTU0XzM1MzVfMTUxMTIyMDIyNA%3D%3D?__from%3Dlook360 -->
+	<forurlReg><![CDATA[http://sh.qihoo.com/[\S]+]]></forurlReg>
+	<!-- 临时集合 页面下载前获取-->
+	<load_on_items>
+		<item name="siteName" mode="str">
+   	 		<![CDATA[今日爆点]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[bd_article]]>
+		</item>
+		
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<!-- 能够获取到列表块 视为此模板匹配成功 -->
+		<item name="bd_article" mode="regular" type="tmp">
+   			<![CDATA[bd_article]]>
+		</item> 
+	</tmp_items>
+	<Contents>
+		<!--标题 -->
+		<item name="Title" mode="regular">
+    	<![CDATA[<h1 id="bd_article_title">(\S+)</h1>]]>
+		</item>
+		<item name="From" mode="regular" >
+    	     <![CDATA[<span class="source">([\s\S]+?)</span>]]>   	     
+		</item>
+		<item name="pubDateTime" mode="regular" dateformat="yyyy-MM-dd HH:mm">
+    	<![CDATA[<time>(\d+-\d+-\d+ \d+:\d+)</time>]]>
+		</item>
+		<item name="Content" mode="regular" ><!--内容 -->
+    	<![CDATA[<div class="content">([\s\S]+?)</div>\s+</article>]]>
+		</item>
+	</Contents>
+</html>

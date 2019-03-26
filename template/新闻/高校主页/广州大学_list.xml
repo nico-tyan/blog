@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html>
+     <!--广州大学http://www.gzhu.edu.cn/ss.jsp?a131748t=7&a131748p=1&a131748c=20&a131748i=%E5%B9%BF%E5%B7%9E&entrymode=1&Find=find&INTEXT2=5bm%2F5bee&wbtreeid=1001&news_search_code=&INTEXT=-->
+     <forurlReg><![CDATA[http://www.gzhu.edu.cn/ss.jsp\?[\S]+]]></forurlReg>
+     <!-- 临时集合 页面下载前获取-->
+     <load_on_items>
+          <item name="siteCode" mode="str"><![CDATA[N0001198]]></item>
+          <item name="siteName" mode="str"><![CDATA[广州大学]]></item>
+          <item name="type" mode="str">
+               <![CDATA[1]]>
+               <!-- 1 搜索列表  2 详情 -->
+          </item>
+          <item name="siteUrl" mode="str">
+               <![CDATA[http://www.gzhu.edu.cn/ss.jsp?a131748t=7&a131748p={Page}&a131748c=20&a131748i={Keyword}&entrymode=1&Find=find&INTEXT2=5bm%2F5bee&wbtreeid=1001&news_search_code=&INTEXT=]]>
+               <!--搜索链接 -->
+          </item>
+          <item name="charset" mode="str"><![CDATA[utf-8]]></item>
+          <item name="url_charset" mode="str"><![CDATA[utf-8]]></item>
+          <item name="get_next_url" mode="str">
+               <![CDATA[1]]>
+               <!--  get_next_url =1 为获取下一页， 其它为替换 -->
+          </item>
+          <item name="load_referer" mode="str" type="tmp">
+               <!-- 检查是否需要referer -->
+               <![CDATA[#]]>
+          </item>
+          <item name="statusCode" mode="str">
+               <![CDATA[200]]>
+               <!--下载返回码为 200 视为成功 -->
+          </item>
+          <item name="cycle_retry_times" mode="str">
+               <![CDATA[1]]>
+               <!-- 重试次数 -->
+          </item>
+          <!--内容解析成功必须存在的几个 值  -->
+          <item name="exist_keys" mode="str">
+               <![CDATA[container]]>
+               <!-- 能够获取到列表块 视为此模板匹配成功 -->
+          </item>
+     </load_on_items>
+     <!-- 临时集合  页面下载后获取-->
+     <tmp_items>
+          <!-- 能够获取到列表块 视为此模板匹配成功 -->
+          <item name="container" mode="xpath" type="tmp"><![CDATA[//div[@class='container']/@class]]></item>
+     </tmp_items>
+     <list>
+          <item name="list_items" mode="xpath" type="tmp">
+               <!--相当于添加了一个父类 （标题url这些需要获取的共同路径）  下面的网站主题就可以写精简 -->
+               <![CDATA[//div[@class='jianjie-main-con-right-bottom']/form/table[1]/tbody/tr]]>
+          </item>
+     </list>
+     <items>
+          <item name="Title" mode="xpath">
+               <!-- 标题 -->
+               <![CDATA[td/a/text()]]>
+          </item>
+          <item name="Url" mode="xpath">
+               <!-- url链接 -->
+               <![CDATA[td/a/@href]]>
+          </item>
+          <item name="pubDateTime" mode="regular" dateformat="yyyy-MM-dd"><![CDATA[\d+-\d+-\d+]]></item>
+     </items>
+     <!-- 获取下一页地址 -->
+     <page>
+          <item name="page" mode="xpath" type="tmp"><![CDATA[//a[@class='Next']/@href]]></item>
+     </page>
+</html>
+

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html>
+     <!--江门市质计所 http://www.jmm.com.cn/zjb/search.asp?page={Page}&act=topic&classid=&keyword=%D6%D0%B9%FA详细页-->
+     <forurlReg><![CDATA[http://www.jmm.com.cn/zjb/search.asp?[\S]+]]></forurlReg>
+     <load_on_items>
+          <item name="siteCode" mode="str"><![CDATA[N0000651]]></item>
+          <item name="siteName" mode="str"><![CDATA[江门市质计所]]></item>
+          <item name="type" mode="str">
+               <![CDATA[1]]>
+               <!-- 1 搜索列表  2 详情 -->
+          </item>
+          <item name="siteUrl" mode="str">
+               <![CDATA[http://www.jmm.com.cn/zjb/search.asp?page={Page}&act=topic&classid=&keyword={Keyword}]]>
+               <!--搜索链接 -->
+          </item>
+          <item name="charset" mode="str"><![CDATA[gb2312]]></item>
+          <item name="url_charset" mode="str"><![CDATA[utf-8]]></item>
+          <item name="statusCode" mode="str">
+               <![CDATA[200]]>
+               <!--下载返回码为 200 视为成功 -->
+          </item>
+          <item name="get_next_url" mode="str">
+               <![CDATA[0]]>
+               <!--  get_next_url =1 为获取下一页， 其它为替换 -->
+          </item>
+          <item name="load_referer" mode="str"><![CDATA[#]]></item>
+          <item name="cycle_retry_times" mode="str">
+               <![CDATA[1]]>
+               <!-- 重试次数 -->
+          </item>
+          <!--内容解析成功必须存在的几个 值  -->
+          <item name="exist_keys" mode="str">
+               <![CDATA[globalBody]]>
+               <!-- 能够获取到列表块 视为此模板匹配成功 -->
+          </item>
+     </load_on_items>
+     <!-- 临时集合 -->
+     <tmp_items>
+          <item name="globalBody" mode="xpath" type="tmp"><![CDATA[//div[@class="globalBody"]/@class]]></item>
+     </tmp_items>
+     <!--翻页 下一页规则 -->
+     <page>
+          <item name="page" mode="str"><![CDATA[0]]></item>
+     </page>
+     <list>
+          <item name="list_items" mode="xpath" type="tmp"><![CDATA[//td[@id='searchmain']/table[@class='searchBorder']]]></item>
+     </list>
+     <items>
+          <item name="Title" mode="xpath"><![CDATA[//td[@class='searchTopic']/a/@title]]></item>
+          <item name="Url" mode="xpath"><![CDATA[//td[@class='searchTopic']/a/@href]]></item>
+          <item name="tmp_pubDateTime" mode="xpath" type="tmp"><![CDATA[//span[@class='oldDate']/text()]]></item>
+          <item name="pubDateTime" mode="regular" dateformat="yyyy-MM-dd" parent="tmp_pubDateTime">
+               <![CDATA[\d{4}-\d{2}-\d{2}]]>
+               <!--另一种方法 获取时间 ： 发表于：(.*?)$  ^(.*?)$-->
+          </item>
+     </items>
+</html>
+<!-- 
+a. 转义序列各字符间不能有空格； 
+b. 转义序列必须以"；"结束； 
+c. 单独的&不被认为是转义开始； 
+d. 区分大小写。
+
+以下是XML中需要的转义字符:
+&(逻辑与)  &amp;        
+<(小于)    &lt;        
+>(大于)    &gt;        
+"(双引号)  &quot;      
+'(单引号)  &apos;  
+-->
+

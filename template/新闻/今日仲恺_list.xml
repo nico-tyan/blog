@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>
+	<!-- 今日仲恺http://zhannei.baidu.com/cse/site?q=%E6%83%A0%E5%B7%9E&p=0&nsid=&cc=jinrizhongkai.com -->
+	<forurlReg><![CDATA[http://zhannei.baidu.com/cse/site\?[\S]+cc=jinrizhongkai.com]]></forurlReg>
+	<!-- 临时集合 页面下载前获取-->
+	<load_on_items>
+		<item name="siteCode" mode="str">
+			<![CDATA[N0000663]]>
+		</item>
+		<item name="siteName" mode="str">
+   	 		<![CDATA[今日仲恺]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[1]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="siteUrl" mode="str">
+   			<![CDATA[http://zhannei.baidu.com/cse/site?q={Keyword}&p={Page}&nsid=&cc=jinrizhongkai.com]]> <!--搜索链接 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="get_next_url" mode="str">
+   			<![CDATA[1]]><!--  get_next_url =1 为获取下一页， 其它为替换 -->
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值  -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[wrap]]> <!-- 能够获取到列表块 视为此模板匹配成功 -->
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<!-- 能够获取到列表块 视为此模板匹配成功 -->
+		<item name="wrap" mode="xpath" type="tmp">
+   			<![CDATA[//div[@id='wrap']/@id]]>
+		</item> 
+	</tmp_items>
+	<list>
+ 		<item name="list_items" mode="xpath" type="tmp">
+ 			<![CDATA[//div[@class='content-main']/div[@class='result f s0']]]>
+		</item>
+	</list>
+	<items>
+		<item name="Title" mode="xpath">
+   			<![CDATA[h3/a/allText()]]>
+		</item>
+		<item name="Url" mode="xpath" regex="&amp;highlight=[^&amp;]+" replacement="">
+   			<![CDATA[h3/a/@href]]>
+		</item>
+		<item name="pubDateTime" mode="regular"
+		dateformat="yyyy-MM-dd">
+		<![CDATA[\s(\S+)(?=</span>)]]>
+		</item>
+	</items>
+	<!-- 获取下一页地址 -->
+	<page>
+		 <item name="page" mode="xpath" type="tmp">
+		<![CDATA[//div[@class='pager clearfix']/a[@class='pager-next-foot n']/@href]]>
+		</item> 
+	</page>  
+</html>

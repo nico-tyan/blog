@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>
+	<!-- 电视之家http://www.tvhome.com/article/62602.html -->
+	<forurlReg><![CDATA[http://www.tvhome.com/[\S]+]]></forurlReg>
+	<!-- 临时集合 页面下载前获取-->
+	<load_on_items>
+		<item name="siteName" mode="str">
+   	 		<![CDATA[电视之家]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[main]]>
+		</item>  	
+    	<item name="id" mode="regular"  type="tmp" ref="url" ><!-- 时间戳 -->
+    	<![CDATA[/(\d+)\.html]]>
+		</item>
+		<!-- gen_str rule{1 时间戳 2 随机数（0.424242443 ）不需要长度  (3 数字  4 字母 5 数字加字母  )+length  } 生成字符串  length 生成长度 -->
+		<item mode="gen" name="_" rule="1">
+    	<![CDATA[#]]>
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<!-- 能够获取到列表块 视为此模板匹配成功 -->
+		<item name="main" mode="xpath" type="tmp">
+   			<![CDATA[//div[@class='main']/@class|//div[@class='wrap']/@class]]>
+		</item> 
+	</tmp_items>
+	
+	<Contents>
+		<!--标题 -->
+		<item name="Title" mode="xpath">
+    	<![CDATA[//h1[@class='article_title']/text()|//div[@class='article']/h1/text()]]>
+		</item>
+		<item name="Author" mode="xpath"><!--作者  -->
+    	<![CDATA[//div[@class='aside_box']/span[@class='aside02']/text()|//div[@class='info']/span[@class='span_2']/text()]]>
+		</item>
+		<item name="Summary" mode="xpath"> <!--摘要 -->
+		<![CDATA[//div[@class='lead_reading']/p/text()]]>
+		</item>
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="tmp_pubDateTime" mode="xpath" type="tmp">
+    	<![CDATA[//div[@class='aside_box']/span[@class='aside03']/text()|//div[@class='info']/span[@class='span_3']/text()]]>
+		</item>
+		<item name="pubDateTime" mode="regular" dateformat="yyyy-MM-dd HH:mm"
+			parent="tmp_pubDateTime">
+    	<![CDATA[^(.*?)$]]>
+		</item>
+		<item name="ClickCount" mode="xpath" regex="," replacement=""><!--点击量 -->
+    	<![CDATA[]]>
+		</item>
+		<item name="ReplyCount" mode="xpath"><!--回复数 -->
+    	<![CDATA[]]>
+		</item>
+		<item name="Content" mode="xpath" ><!--内容 -->
+    	<![CDATA[//div[@class='article']/html()]]>
+		</item>
+		<item name="view" mode="regular" type="tmp">
+    	<![CDATA[&view=(\d+)]]>
+		</item>
+	</Contents>
+	<Append_Contents>
+		<!-- json方式获取 -->
+		<!--json 图文  http://slide.news.sina.com.cn/w/slide_1_2841_108369.html -->
+		<!-- <item name="slide_data" mode="regular" type="tmp">
+	    	<![CDATA[var slide_data = ([\S\s]+})\s+var ARTICLE_DATA]]>
+		</item>
+		标题
+		<item name="Title" mode="json" parent="slide_data">
+    	<![CDATA[$.. slide.title]]>
+		</item>
+		<item name="pubDateTime" mode="json" dateformat="yyyy-MM-dd HH:mm:ss" parent="slide_data">
+    	<![CDATA[$.. slide.createtime]]>
+		</item>
+		<item name="images" mode="json" parent="slide_data" type="tmp">
+    	<![CDATA[$..images]]>
+		</item>
+		<item name="Content" mode="json_subset" parent="images" append_s="&lt;p&gt;" append_e="&lt;/p&gt;">
+    	<![CDATA[$..image_url@IMG|$..intro]]>如果存在@IMG <img> src="" 包围</img>
+		</item> -->
+	</Append_Contents>
+<!-- 	
+	<page>
+		翻页 下一页规则
+		第一种方式 
+		<item name="page" mode="xpath" type="tmp">
+   			<![CDATA[]]> 
+		</item>
+		第二种方式
+		<item name="currentPage" mode="regular" type="tmp">
+   			<![CDATA[]]>
+		</item>
+		<item name="countPage" mode="regular" type="tmp">
+   			<![CDATA[]]>
+		</item>
+		append_page = 0 or 1   时 递增规则 0 或 1 开始 
+		<url_join ref="next_url" append_page="1"><![CDATA[_]]></url_join>
+		<url_join ><![CDATA[.shtml]]></url_join>
+	</page>
+	翻页 下一页内容
+	<Next_Contents>
+		<item name="Content" mode="xpath">内容
+    	<![CDATA[]]>
+		</item>
+	</Next_Contents> -->
+	
+	<!-- ajax异步获取 -->
+	 <ajax>
+		<method><![CDATA[get]]></method>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<!-- http://www.tvhome.com/Ajax/getArticleView?id=62630&view=2252&callback=jQuery111306628560840777671_1490668771708&_=1490668771709 -->
+		<!-- 组装 请求连接  ref引用已获取或已处理数据  data_type 数据类型 -->
+		<url_join ref="id" data_type="String"><![CDATA[http://www.tvhome.com/Ajax/getArticleView?id=]]></url_join>
+		<url_join ref="view" data_type="String"><![CDATA[&view=]]></url_join>
+		<url_join ref="_" data_type="String"><![CDATA[&_=]]></url_join>
+		<item name="ClickCount" mode="regular">
+	    	<![CDATA["info":(\d+)]]>
+		</item>
+	</ajax> 
+	
+	
+	<!--最终获取到的内容过滤  如广告-->
+	<!-- 
+	<regex_filter ><![CDATA[<a[^>]*?>[\s\S]+?</a>]]></regex_filter> 如替换掉所有a标签
+	<css_filter><![CDATA[a[href]]]></css_filter>//带有href属性的a元素 删除
+	<css_filter><![CDATA[img[src$=.png]]]></css_filter>//扩展名为.png的图片   删除
+	<css_filter><![CDATA[h3.r > a]]></css_filter>//在h3元素之后的a元素   删除 
+	-->
+</html>
+<!--
+a. 转义序列各字符间不能有空格； 
+b. 转义序列必须以"；"结束； 
+c. 单独的&不被认为是转义开始； 
+d. 区分大小写。
+
+以下是XML中需要的转义字符:
+&(逻辑与)  &amp;        
+<(小于)    &lt;        
+>(大于)    &gt;        
+"(双引号)  &quot;      
+'(单引号)  &apos;  
+-->

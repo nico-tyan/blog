@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html>
+     
+     <!-- 新湖南https://www.baidu.com/s?q6=hunantoday.cn&q1=%E9%83%B4%E5%B7%9E -->
+     <forurlReg><![CDATA[https://www.baidu.com/s?q6=hunantoday.cn[\S]+]]></forurlReg>
+     <load_on_items>
+          <item name="siteCode" mode="str"><![CDATA[N0001770]]></item>
+          <item name="siteName" mode="str"><![CDATA[新湖南]]></item>
+          <item name="type" mode="str">
+               <![CDATA[1]]>
+               <!-- 1 搜索列表  2 详情 -->
+          </item>
+          <item name="siteUrl" mode="str">
+               <![CDATA[https://www.baidu.com/s?q6=hunantoday.cn&tn=baiduadv&q1={Keyword}]]>
+               <!--搜索链接 -->
+          </item>
+          <item name="curPage" mode="str">
+               <![CDATA[0]]>
+               <!-- 列表第几页开始 默认为1  为1时不需要设置此属性  -->
+          </item>
+          <item name="charset" mode="str"><![CDATA[utf-8]]></item>
+          <item name="url_charset" mode="str"><![CDATA[utf-8]]></item>
+          <item name="statusCode" mode="str">
+               <![CDATA[200]]>
+               <!--下载返回码为 200 视为成功 -->
+          </item>
+          <item name="cycle_retry_times" mode="str">
+               <![CDATA[1]]>
+               <!-- 重试次数 -->
+          </item>
+          <!--内容解析成功必须存在的几个 值  -->
+          <item name="exist_keys" mode="str">
+               <![CDATA[wrapper]]>
+               <!-- 能够获取到列表块 视为此模板匹配成功 -->
+          </item>
+          <!-- 系统默认时间 -->
+          <item name="tmp_date" mode="gen" rule="6">
+               <![CDATA[{empty}]]>
+          </item>
+     </load_on_items>
+     <!-- 临时集合 -->
+     <tmp_items>
+          <item name="wrapper" mode="xpath" type="tmp"><![CDATA[//div[@id="wrapper"]/@id]]></item>
+     </tmp_items>
+     <!--翻页 下一页规则 -->
+     <page>
+          <item name="tmp_page" mode="xpath" type="tmp"><![CDATA[//div[@id='page']/html()]]></item>
+          <item name="get_next_url" mode="str" type="tmp"><![CDATA[1]]></item>
+          <item name="page" mode="regular" parent="tmp_page"><![CDATA[<a href="([^>]+?)" class="n">下一页&gt;</a>]]></item>
+     </page>
+     <list>
+          <item name="list_items" mode="xpath" type="tmp"><![CDATA[//div[@id='content_left']/div[@class='result c-container ']]]></item>
+     </list>
+     <items>
+          <item name="Title" mode="xpath"><![CDATA[h3/a/allText()]]></item>
+          <item name="Url" mode="xpath" regex="&amp;highlight=[^&amp;]+" replacement=""><![CDATA[h3/a/@href]]></item>
+           	<!-- 系统默认时间 -->
+          <item name="pubDateTime" mode="regular" dateformat="yyyy-MM-dd" parent="tmp_date">
+               <![CDATA[(\d{4}-\d{2}-\d{2})]]><!-- 默认时间 -->
+          </item>
+          <item name="tmp_pubDateTime" mode="xpath" type="tmp"><![CDATA[div[@class='c-abstract']/span/text()|p[@class='f13 m']/text()]]></item>
+          <item name="pubDateTime" mode="regular" parent="tmp_pubDateTime">
+               <![CDATA[^(.*?)$]]>
+               <!--另一种方法 获取时间 ： 发表于：(.*?)$ -->
+          </item>
+          <item name="pubDateTime" mode="regular" dateformat="yyyy年MM月dd日" parent="tmp_pubDateTime">
+               <![CDATA[\d{4}年\d{2}月\d{2}日]]>
+               <!--另一种方法 获取时间 ： 发表于：(.*?)$ -->
+          </item>
+     </items>
+</html>
+<!-- 
+a. 转义序列各字符间不能有空格； 
+b. 转义序列必须以"；"结束； 
+c. 单独的&不被认为是转义开始； 
+d. 区分大小写。
+
+以下是XML中需要的转义字符:
+&(逻辑与)  &amp;        
+<(小于)    &lt;        
+>(大于)    &gt;        
+"(双引号)  &quot;      
+'(单引号)  &apos;  
+-->
+

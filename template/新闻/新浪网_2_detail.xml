@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>	                  
+	 <!--新浪网http://mil.news.sina.com.cn/china/2017-05-09/doc-ifyeychk7159777.shtml详细页-->
+	<forurlReg><![CDATA[http://mil.news.sina.com.cn/[\S]+]]></forurlReg>
+	<load_on_items>
+	    <item name="siteName" mode="str">
+   			<![CDATA[新浪网 ]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		 <item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item> 
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>	
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[Title|Content]]>
+		</item>
+		<item name="next_url" mode="regular" type="tmp" ref="url"><!--引用  url匹配  -->
+    	<![CDATA[^(.*?)\.htm]]>
+		</item>
+		<item name="first_keys" mode="str">
+   			<![CDATA[main_title|titer]]>
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<item name="main_title" mode="xpath" type="tmp">
+   			<![CDATA[//h1[@id="main_title"]/@id|//h1[@class='article-a__title']/@class|//h1[@id='artibodyTitle']/@id]]>
+		</item>
+		<item name="titer" mode="xpath" type="tmp">
+   			<![CDATA[//span[@class="titer"]/@class|//span[@class="article-a__time"]/@class|//span[@class='time-source']/@class|//span[@class='time-source']/@class]]>
+		</item>
+	</tmp_items>
+	<!--内容块 -->
+	<Contents>
+		<!--标题 -->	
+		<item name="Title" mode="xpath">
+    		<![CDATA[//h1[@id='main_title']/text()|//h1[@id='j_title']/text()|//h1[@id='artibodyTitle']/text()]]>
+		</item>
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		 <item name="tmp_pubDateTime" mode="xpath" type="tmp" >
+    		<![CDATA[//span[@class='time-source']/span[@class='titer']/text()|//span[@class='article-a__time']/text()]]>
+		</item> 
+	       <item name="pubDateTime" mode="regular"  dateformat="yyyy年MM月dd日HH:mm"  parent="tmp_pubDateTime">
+    	     <![CDATA[(.*?)$]]>
+		</item>  	
+		 <item name="tmp_pubDateTime1" mode="xpath" type="tmp" >
+    		<![CDATA[//span[@class='time-source']/text()]]>
+		</item> 
+	       <item name="pubDateTime" mode="regular"  dateformat="yyyy-MM-dd HH:mm:ss"  parent="tmp_pubDateTime1">
+    	     <![CDATA[(\d+-\d+-\d+ \d+:\d+:\d+)]]>
+		</item>
+	       <item name="pubDateTime" mode="regular"  dateformat="yyyy年MM月dd日HH:mm"  parent="tmp_pubDateTime1">
+    	     <![CDATA[(\d+年\d+月\d+日\d+:\d+)]]>
+		</item>  		
+		<item name="Content" mode="xpath" ><!--内容 -->
+    	<![CDATA[//div[@id='artibody']/html()|//div[@id='articleContent']/html()]]>
+		</item>
+	</Contents>
+	<regex_filter ><![CDATA[<div class="finance_app_zqtg finance_lcsds_ds_cls"[^>]*?>[\s\S]+?</div>]]></regex_filter> <!-- 如替换掉所有a标签 -->
+	<regex_filter ><![CDATA[<div class="adv-con"[^>]*?>[\s\S]+?</div>]]></regex_filter> <!-- 如替换掉所有a标签 -->
+	<regex_filter ><![CDATA[class="otherContent_01"[^>]*?>[\s\S]+?</div>]]></regex_filter> <!-- 如替换掉所有a标签 -->
+</html>

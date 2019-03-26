@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>
+	<!-- 东方体育https://sports.eastday.com/a/171111084539704000000.html
+	            http://mil.eastday.com/a/181130180948485.html
+	            http://fashion.eastday.com/a/181209103750661-2.html -->
+	<forurlReg><![CDATA[http[\S]+eastday.com/[\S]+]]></forurlReg>
+     <css_filter><![CDATA[img[src$=.jpeg]]]></css_filter>
+ 	<!-- 临时集合 页面下载前获取-->
+	<load_on_items>
+		<item name="siteName" mode="str">
+   	 		<![CDATA[东方体育]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[box]]>
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<!-- 能够获取到列表块 视为此模板匹配成功 -->
+		<item name="box" mode="xpath" type="tmp">
+   			<![CDATA[//body[@id='box']/@id|//div[@class="article"]/@class]]>
+		</item> 
+	</tmp_items>
+	<Contents>
+		<!--标题 -->
+		<item name="Title" mode="xpath">
+    	<![CDATA[//div[@class='article']/h3[@class='tit']/text()|//div[@class="J-title_detail title_detail"]/h1/span/text()]]>
+		</item>
+		<item name="tmp_From" mode="xpath" type="tmp">
+    	     <![CDATA[//div[@class='article']/p[@class='time']/span/text()]]>   	     
+		</item>
+		<item name="From" mode="regular"  parent="tmp_From">
+    	     <![CDATA[^(.*?)$]]>   	     
+		</item>
+		<item name="From" mode="xpath">
+    	     <![CDATA[//div[@class="fl"]/i[2]/text()]]>   	     
+		</item>
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="tmp_pubDateTime" mode="xpath" type="tmp">
+    	<![CDATA[//div[@class='article']/p[@class='time']/text()|//div[@class="share_cnt_p fl"]/i[3]/text()|//div[@class="fl"]/i/text()]]>
+		</item>
+		<item name="pubDateTime" mode="regular" dateformat="yyyy-MM-dd HH:mm:ss|yyyy-MM-dd HH:mm" parent="tmp_pubDateTime">
+    	<![CDATA[^(.*?)$]]>
+		</item>
+		<item name="Content" mode="xpath"><!--内容 -->   
+    	<![CDATA[//div[@class='txt']/html()|//div[@class='J-contain_detail_cnt contain_detail_cnt']/html()]]>
+		</item>
+	</Contents>
+	<page>
+		<!--翻页 下一页规则 -->
+		<!-- 第一种方式 --> 
+		<item name="page" mode="regular" type="tmp">
+   			<![CDATA[href="(\S+)" target="_self">下一页]]> 
+		</item>
+	</page>
+	<page>
+	<item name="page" mode="regular" type="tmp">
+   			<![CDATA[<a href="(.*?)">下一页]]> 
+	</item>
+		</page>
+	<!-- 翻页 下一页内容 -->
+	<Next_Contents>
+		<item name="Content" mode="xpath"><!-- 内容 -->
+    	<![CDATA[//div[@class='txt']/html()]]>
+		</item>
+	</Next_Contents>
+	<regex_filter ><![CDATA[<div id="DAnews_content_firstpicbt">[\s\S]+?</div>]]></regex_filter>
+</html>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>	
+	<!--人民网   http://2010lianghui.people.com.cn/GB/180670/11075058.html详细页 -->
+	<forurlReg ><![CDATA[http[s]*://[\S]+\.people.com.cn/GB.+?\.html]]></forurlReg>
+	<!-- 临时集合 页面下载前获取-->
+	<load_on_items>
+	   <item name="siteName" mode="str">
+   			<![CDATA[人民网]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<!-- <item name="charset" mode="str">
+   			<![CDATA[gb2312]]>
+		</item> -->
+		<item name="url_charset" mode="str">
+   			<![CDATA[gb2312]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[Title|Content|pubDateTime]]>
+		</item>
+		<item name="first_keys" mode="str">
+   			<![CDATA[text_title]]>
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<item name="text_title" mode="xpath" type="tmp">
+   			<![CDATA[//div[@class="t3_c_l"]/@class]]>
+		</item>
+	</tmp_items>
+	<!--内容块 -->
+	<Contents>
+		<!--标题 -->
+	  	<item name="Title" mode="xpath">
+    		<![CDATA[//div[@class="txt_content"]/h1/text()]]>
+		</item>
+		<item name="tmp_Author" mode="xpath"  type="tmp">
+    		<![CDATA[//div[@class="laiyuan"]/text()]]>
+		</item>
+		<item name="Author" mode="regular" parent="tmp_Author">
+    		<![CDATA[编辑：(.+?)\）]]>
+		</item>  
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="Date" mode="xpath" type="tmp">
+		    <![CDATA[//span[@id="p_publishtime"]/text()]]>
+		</item>
+		<item name="pubDateTime" mode="regular" datetimeformat="yyyy年MM月dd日HH:mm" parent="Date">
+    		<![CDATA[(\d+年\d+月\d+日\d+:\d+)]]>
+		</item>
+		<item name="From" mode="xpath">
+		     <![CDATA[//div[@class="time"]/a/text()]]>
+		</item>
+		<item name="Content" mode="xpath"><!--内容 -->
+    	     <![CDATA[//div[@class="txt_c"]/html()]]>
+		</item>
+	</Contents>
+</html>

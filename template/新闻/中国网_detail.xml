@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>	
+	<!--中国网 http://opinion.china.com.cn/opinion_73_160073.html详细页 -->                               
+	<forurlReg ><![CDATA[http://[\S]+.china.com.cn/[\S]+]]></forurlReg>
+	<!-- 临时集合 页面下载前获取-->
+	<load_on_items>
+	  <item name="siteName" mode="str">
+   			<![CDATA[中国网]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[cb]]>
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<item name="cb" mode="xpath" type="tmp">
+   			<![CDATA[//div[@class="cb"]/@class | //div[@class="headBox"]/@class|//div[@class="photo_center"]/@class|//div[@class="box0"]/@class|//div[@class='box']/@class]]>
+		</item>
+	</tmp_items>	
+	<!--内容块 -->
+	<Contents>
+	
+		<!--标题 -->
+	  	<item name="Title" mode="xpath">
+    		<![CDATA[//div[@class='wrap bc clearfix']/div[@class='fl w680']/h1/text()]]>
+		</item>
+		<item name="Title" mode="xpath">
+    		<![CDATA[//div[@class='headBox']/h1/text()]]>
+		</item>
+		<item name="Title" mode="xpath">
+    		<![CDATA[//div[@class='photo_center']/h1/text()]]>
+		</item>
+		<item name="Title" mode="xpath">
+    		<![CDATA[//div[@class='leftbox']/h1/text()|//div[@class='center_title']/h1/text()]]>
+		</item>
+		
+
+		<item name="tmp_Author" mode="xpath" type="tmp" >
+    		<![CDATA[//div[@class='cInfo clearfix']/div[@class='fl']/html()]]>
+		</item>
+	    <item name="Author" mode="xpath"  >
+    		<![CDATA[//div[@class='article-info']/p[3]/a/text()]]>
+		</item>
+		<item name="tmp_Author" mode="xpath" type="tmp" >
+    		<![CDATA[//div[@class='articleInfo']/div[@class='pub_date']/span[3]/text()]]>
+		</item>
+		<item name="Author" mode="regular" parent="tmp_Author" >
+    		<![CDATA[作者： (.+?)$]]>
+		</item>
+		<item name="tmp_Author" mode="xpath" type="tmp" >
+    		<![CDATA[//div[@class='photo_center']/div/html()|//div[@class='center_title']/div[@class='span']/text()]]>
+		</item>
+		<item name="Author" mode="regular" parent="tmp_Author" >
+    		<![CDATA[作者： (.+?)\s]]>
+		</item>
+		<item name="tmp_Author" mode="xpath" type="tmp" >
+    		<![CDATA[//div[@class='info']/div[@class='pub_date']/span[@id='author_baidu']/text()]]>
+		</item>
+		<item name="Author" mode="regular" parent="tmp_Author" >
+    		<![CDATA[作者： (.+?)$]]>
+		</item>
+		<!-- <item name="tmp_Author1" mode="xpath" type="tmp" >
+    		<![CDATA[//div[@class='center_title']/div[@class='span']/text()]]>
+		</item>
+		<item name="Author" mode="regular" parent="tmp_Author1" >
+    		<![CDATA[作者：  (.*?)|]]>
+		</item> -->
+		
+				
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="tmp_pubDateTime" mode="xpath" type="tmp">
+    		<![CDATA[//div[@class='cInfo clearfix']/div[@class='fl']/html()]]>
+		</item>
+	    <item name="pubDateTime" mode="regular"  dateformat="yyyy-MM-dd" parent="tmp_pubDateTime">
+    	     <![CDATA[发布时间： (.*?)$]]><!--另一种方法 获取时间 ： 发表于：(.*?)$ -->
+		</item> 
+		<item name="tmp_pubDateTime" mode="xpath" type="tmp">
+    		<![CDATA[//div[@class='articleInfo']/div[@class='pub_date']/span/text()]]>
+		</item>
+	    <item name="pubDateTime" mode="regular"  dateformat="yyyy-MM-dd HH:mm" parent="tmp_pubDateTime">
+    	     <![CDATA[发布时间： (.*?)$]]><!--另一种方法 获取时间 ： 发表于：(.*?)$ -->
+		</item> 
+		<item name="tmp_pubDateTime" mode="xpath" type="tmp">
+    		<![CDATA[//div[@class='photo_center']/div/html()|//div[@class='center_title']/div[@class='span']/text()]]>
+		</item>
+	    <item name="pubDateTime" mode="regular"  dateformat="yyyy-MM-dd HH:mm" parent="tmp_pubDateTime">
+    	     <![CDATA[\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}]]><!--另一种方法 获取时间 ： 发表于：(.*?)$ -->
+		</item> 
+		<item name="tmp_pubDateTime" mode="xpath" type="tmp">
+    		<![CDATA[//div[@class='info']/div[@class='pub_date']/span[@id='pubtime_baidu']/text()]]>
+		</item>
+	    <item name="pubDateTime" mode="regular"  dateformat="yyyy-MM-dd HH:mm | yyyy-MM-dd HH:mm:ss" parent="tmp_pubDateTime">
+    	     <![CDATA[发布时间：(.*?)&]]><!--另一种方法 获取时间 ： 发表于：(.*?)$ -->
+		</item>
+	
+	
+		<item name="From" mode="xpath"  >
+		<![CDATA[//div[@class='cInfo clearfix']/div[@class='fl']/a/text()]]>
+		</item> 
+		<item name="From" mode="xpath"  >
+		<![CDATA[//div[@class='articleInfo']/div[@class='pub_date']/span[@id='source_baidu']/a/text()]]>
+		</item> 
+		<item name="tmp_From" mode="xpath" type="tmp" >
+		<![CDATA[//div[@class='photo_center']/div/html()|//div[@class='center_title']/div[@class='span']/text()]]>
+		</item> 
+		<item name="From" mode="regular" parent="tmp_From" >
+		<![CDATA[来源： (.*?)\s]]>
+		</item> 
+		<item name="tmp_From" mode="xpath" type="tmp" >
+		<![CDATA[//div[@class='info']/div[@class='pub_date']/span[@id='source_baidu']/text()]]>
+		</item> 
+		<item name="From" mode="regular" parent="tmp_From" >
+		<![CDATA[来源： (.*?)$]]>
+		</item>
+		
+		
+  
+     	<item name="ClickCount" mode="xpath" regex="," replacement="" trim="1"><!--点击量 -->
+    	<![CDATA[]]>
+		</item>
+		<item name="ReplyCount" mode="xpath"><!--回复数 -->
+    	<![CDATA[]]>
+		</item>
+		<item name="Summary" mode="xpath"><!-- 摘要 -->
+		 <![CDATA[//div[@class='cBody']/p[2]/font/text()]]>
+		</item>
+		
+		<item name="Content" mode="xpath"><!--内容 -->
+    	<![CDATA[//div[@class='cBody']/html()]]>
+		</item>
+		
+		<item name="Content" mode="xpath"><!--内容 -->
+    	<![CDATA[//div[@class='articleBody']/html()]]>
+		</item>
+		
+		<item name="Content" mode="xpath"><!--内容 -->
+    	<![CDATA[//div[@class='center_box']/html()]]>
+		</item>
+		
+		<item name="Content" mode="xpath"><!--内容 -->
+    	<![CDATA[//div[@class='artCon']/html()]]>
+		</item>
+		
+	</Contents>	
+</html>

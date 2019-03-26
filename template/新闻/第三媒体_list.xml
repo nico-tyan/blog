@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html>
+     <!--第三媒体 http://www.thethirdmedia.com/Article/search.aspx?page={Page}&Keyword=%c5%b6 详细页-->
+     <forurlReg sys="1" method="get"><![CDATA[http://www.thethirdmedia.com/Article/search.aspx[\S]+]]></forurlReg>
+     <load_on_items>
+          <item name="siteCode" mode="str"><![CDATA[N0000784]]></item>
+          <item name="siteName" mode="str"><![CDATA[第三媒体]]></item>
+          <item name="type" mode="str">
+               <![CDATA[1]]>
+               <!-- 1 搜索列表  2 详情 -->
+          </item>
+          <item name="siteUrl" mode="str">
+               <![CDATA[http://www.thethirdmedia.com/Article/search.aspx?page={Page}&Keyword={Keyword}]]>
+               <!--搜索链接 -->
+          </item>
+          <item name="charset" mode="str"><![CDATA[gb2312]]></item>
+          <item name="url_charset" mode="str"><![CDATA[gb2312]]></item>
+          <item name="statusCode" mode="str">
+               <![CDATA[200]]>
+               <!--下载返回码为 200 视为成功 -->
+          </item>
+          <item name="cycle_retry_times" mode="str">
+               <![CDATA[1]]>
+               <!-- 重试次数 -->
+          </item>
+          <item name="get_next_url" mode="str">
+               <![CDATA[1]]>
+               <!--  get_next_url =1 为获取下一页， 其它为替换 -->
+          </item>
+          <!--内容解析成功必须存在的几个 值  -->
+          <item name="exist_keys" mode="str">
+               <![CDATA[p_1]]>
+               <!-- 能够获取到列表块 视为此模板匹配成功 -->
+          </item>
+          <item name="load_referer" mode="str"><![CDATA[#]]></item>
+     </load_on_items>
+     <!-- 临时集合 -->
+     <tmp_items>
+          <item name="p_1" mode="xpath" type="tmp"><![CDATA[//div[@class="p_1"]/@class]]></item>
+     </tmp_items>
+     <!--翻页 下一页规则 -->
+     <page>
+          <item name="tmp_page" mode="xpath" type="tmp"><![CDATA[//div[@class='s_1_l']/table/tbody/tr/td[1]/html()]]></item>
+          <item name="page" mode="regular" parent="tmp_page"><![CDATA[<a href="([^>]+?)">后页</a>]]></item>
+     </page>
+     <list>
+          <item name="list_items" mode="xpath" type="tmp"><![CDATA[//div[@class='s_1_l']/div[@class='s_1_l_3']]]></item>
+     </list>
+     <items>
+          <item name="Title" mode="xpath"><![CDATA[ul/li[@class='s_1_l_3_1']/a[2]/text()]]></item>
+          <item name="Url" mode="xpath" regex="&amp;highlight=[^&amp;]+" replacement=""><![CDATA[ul/li[@class='s_1_l_3_1']/a[2]/@href]]></item>
+          <item name="tmp_pubDateTime" mode="xpath" type="tmp"><![CDATA[ul/li[@class='s_1_l_3_1']/span/text()]]></item>
+          <item name="pubDateTime" mode="regular" dateformat="yyyy-MM-dd" parent="tmp_pubDateTime">
+               <![CDATA[\d{4}-\d{2}-\d{2}]]>
+               <!--另一种方法 获取时间 ： 发表于：(.*?)$  ^(.*?)$-->
+          </item>
+     </items>
+</html>
+<!-- 
+a. 转义序列各字符间不能有空格； 
+b. 转义序列必须以"；"结束； 
+c. 单独的&不被认为是转义开始； 
+d. 区分大小写。
+
+以下是XML中需要的转义字符:
+&(逻辑与)  &amp;        
+<(小于)    &lt;        
+>(大于)    &gt;        
+"(双引号)  &quot;      
+'(单引号)  &apos;  
+-->
+

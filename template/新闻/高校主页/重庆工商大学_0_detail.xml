@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>
+	<!-- 重庆工商大学http://news2014.ctbu.edu.cn/info/1002/1021240.htm -->
+	<forurlReg><![CDATA[http://[\S][^lib]+2014.ctbu.edu.cn/[\S]+]]></forurlReg>
+	<!-- 临时集合 页面下载前获取-->
+	<load_on_items>
+		<item name="siteName" mode="str">
+   	 		<![CDATA[重庆工商大学]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[column]]>
+		</item>
+		<item name="url" mode="regular" type="tmp" ref="url"> <!-- 引用  url匹配  -->   
+    	<![CDATA[//(\S+)ctbu]]>
+		</item>
+		<item name="id" mode="regular" type="tmp" ref="url"> <!-- 引用  url匹配  -->   
+    	<![CDATA[(\d+)\.htm]]>
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<!-- 能够获取到列表块 视为此模板匹配成功 -->
+		<item name="column" mode="xpath" type="tmp">
+   			<![CDATA[//div[@class='column']/@class]]>
+		</item> 
+	</tmp_items>
+	<Contents>
+		<!--标题 -->
+		<item name="Title" mode="xpath">
+    	<![CDATA[//div[@id="article"]/form/div/h1/text()]]>
+		</item>
+		<item name="tmp_Author" mode="xpath" type="tmp"><!--作者  -->
+    	<![CDATA[//div[@id='article_extinfo']/text()]]>
+		</item>
+		<item name="Author" mode="regular"  parent="tmp_Author">
+    	<![CDATA[作者：编辑：(.*?)\u00A0]]>   	     
+		</item>
+		<item name="tmp_From" mode="xpath" type="tmp" >
+    	     <![CDATA[//div[@id='article_extinfo']/span[1]/text()]]>   	     
+		</item>
+		<item name="From" mode="regular"  parent="tmp_From">
+    	     <![CDATA[来源：(.*?)$]]>   	     
+		</item>
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="tmp_pubDateTime" mode="xpath" type="tmp">
+    	<![CDATA[//div[@id='article_extinfo']/allText()]]>
+		</item>
+		<item name="pubDateTime" mode="regular" dateformat="yyyy年MM月dd日 HH:mm"
+			parent="tmp_pubDateTime">
+    	<![CDATA[(\d+年\d+月\d+日 \d+:\d+)]]>
+		</item>
+		<item name="Content" mode="xpath" ><!--内容 -->
+    	<![CDATA[//div[@id='vsb_content']/html()]]>
+		</item>
+		<item name="Content" mode="xpath" ><!--内容 -->
+    	<![CDATA[//div[@id='article_body']/html()]]>
+		</item>
+		<item name="Clickcount1" mode="regular" type="tmp" ><!--内容 -->
+    	<![CDATA["wbnews", (\d+),]]>
+		</item>
+	</Contents>
+	<!-- ajax异步获取 -->
+	<ajax>
+		<method><![CDATA[get]]></method>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<!-- 组装 请求连接  ref引用已获取或已处理数据  data_type 数据类型
+		http://news2014.ctbu.edu.cn/system/resource/code/news/click/dynclicks.jsp?clickid=1021240&owner=1091464654&clicktype=wbnews -->
+		<url_join ref="url" data_type="String"><![CDATA[http://]]></url_join>
+		<url_join ref="id" data_type="String"><![CDATA[ctbu.edu.cn/system/resource/code/news/click/dynclicks.jsp?clickid=]]></url_join>
+		<url_join ref="Clickcount1" data_type="String"><![CDATA[&owner=]]></url_join>
+		<url_join ref="_" data_type="String"><![CDATA[&clicktype=wbnews]]></url_join>
+		<item name="ClickCount" mode="regular">
+	    	<![CDATA[(\d+)]]>
+		</item>
+	</ajax>
+	
+	
+	<!--最终获取到的内容过滤  如广告-->
+	<!-- 
+	<regex_filter ><![CDATA[<a[^>]*?>[\s\S]+?</a>]]></regex_filter> 如替换掉所有a标签
+	<css_filter><![CDATA[a[href]]]></css_filter>//带有href属性的a元素 删除
+	<css_filter><![CDATA[img[src$=.png]]]></css_filter>//扩展名为.png的图片   删除
+	<css_filter><![CDATA[h3.r > a]]></css_filter>//在h3元素之后的a元素   删除 
+	-->
+</html>
+<!--
+webmagic 的 xpath
+函数	说明
+text(n)	第n个文本节点(0表示取所有)
+allText()	包括子节点的所有文本
+tidyText()	包括子节点的所有文本，并进行智能换行
+html()	内部html(不包括当前标签本身)
+outerHtml()	外部html(包括当前标签本身)
+
+a. 转义序列各字符间不能有空格； 
+b. 转义序列必须以"；"结束； 
+c. 单独的&不被认为是转义开始； 
+d. 区分大小写。
+
+以下是XML中需要的转义字符:
+&(逻辑与)  &amp;        
+<(小于)    &lt;        
+>(大于)    &gt;        
+"(双引号)  &quot;      
+'(单引号)  &apos;  
+-->

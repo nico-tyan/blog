@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html>
+     <!--北方网新闻搜索列表 http://fullsearch.enorth.com.cn/m_fullsearch/searchurl/mfullsearch!descResult.do  列表页-->
+     <!-- http://fullsearch.enorth.com.cn/m_fullsearch/searchurl/mfullsearch!descResult.do -->
+     <forurlReg><![CDATA[http://fullsearch.enorth.com.cn/[\S]+]]></forurlReg>
+     <!-- 临时集合 页面下载前获取-->
+     <load_on_items>
+          <item name="siteCode" mode="str"><![CDATA[N0000420]]></item>
+          <item name="siteName" mode="str"><![CDATA[北方网新闻]]></item>
+          <item name="type" mode="str">
+               <![CDATA[1]]>
+               <!-- 1 搜索列表  2 详情 -->
+          </item>
+          <item name="siteUrl" mode="str">
+               <![CDATA[http://fullsearch.enorth.com.cn/m_fullsearch/searchurl/mfullsearch!descResult.do]]>
+               <!--搜索链接 -->
+          </item>
+          <item name="charset" mode="str"><![CDATA[gb2312]]></item>
+          <item name="url_charset" mode="str"><![CDATA[utf-8]]></item>
+          <item name="method" mode="str"><![CDATA[post]]></item>
+          <item name="get_next_url" mode="str">
+               <![CDATA[0]]>
+               <!--  get_next_url =1 为获取下一页， 其它为替换 -->
+          </item>
+          <item name="statusCode" mode="str">
+               <![CDATA[200]]>
+               <!--下载返回码为 200 视为成功 -->
+          </item>
+          <item name="cycle_retry_times" mode="str">
+               <![CDATA[1]]>
+               <!-- 重试次数 -->
+          </item>
+          <!-- gen_str rule{1 时间戳 2 随机数（0.424242443 ）不需要长度  (3 数字  4 字母 5 数字加字母  )+length  } 生成字符串  length 生成长度 -->
+          <item mode="gen" name="gen_str" rule="2"><![CDATA[#]]></item>
+          <!--内容解析成功必须存在的几个 值  -->
+          <item name="exist_keys" mode="str">
+               <![CDATA[searchTitle]]>
+               <!-- 能够获取到列表块 视为此模板匹配成功 -->
+          </item>
+     </load_on_items>
+     <!-- keywords:(unable to decode value)
+channelId:0
+channelId:0
+channel_id:0
+size:
+header:
+keywords:
+footer:
+orderFlg:
+startPage:
+endPage:
+pageNoCurrent:3
+pageNoRecode:
+allChannelId: -->
+     <form_data_join name="keywords"><![CDATA[{Keyword}]]></form_data_join>
+     <form_data_join name="channelId"><![CDATA[0]]></form_data_join>
+     <form_data_join name="channelId"><![CDATA[0]]></form_data_join>
+     <form_data_join name="channel_id"><![CDATA[0]]></form_data_join>
+     <form_data_join name="size"><![CDATA[{empty}]]></form_data_join>
+     <form_data_join name="header"><![CDATA[{empty}]]></form_data_join>
+     <form_data_join name="keywords"><![CDATA[{empty}]]></form_data_join>
+     <form_data_join name="footer"><![CDATA[{empty}]]></form_data_join>
+     <form_data_join name="orderFlg"><![CDATA[{empty}]]></form_data_join>
+     <form_data_join name="startPage"><![CDATA[{empty}]]></form_data_join>
+     <form_data_join name="endPage"><![CDATA[{empty}]]></form_data_join>
+     <form_data_join name="pageNoCurrent"><![CDATA[{Page}]]></form_data_join>
+     <form_data_join name="pageNoRecode"><![CDATA[{empty}]]></form_data_join>
+     <form_data_join name="allChannelId"><![CDATA[{empty}]]></form_data_join>
+     <!-- 临时集合  页面下载后获取-->
+     <tmp_items>
+          <!-- 能够获取到列表块 视为此模板匹配成功 -->
+          <item name="searchTitle" mode="xpath" type="tmp"><![CDATA[//td[@class='searchTitle']/@class]]></item>
+     </tmp_items>
+     <!--翻页 下一页规则 -->
+     <page>
+          <!--  <item name="page" mode="str" >
+	      <![CDATA[0]]>
+	     </item> -->
+          <item name="page" mode="css" attr="onclick"><![CDATA[html>body>table>tbody>tr>td.pagenum>a:last-child]]></item>
+     </page>
+     <list>
+ 		<item name="list_items" mode="regular_subset" type="tmp"><!--相当于添加了一个父类 （标题url这些需要获取的共同路径）  下面的网站主题就可以写精简 -->
+ 			<![CDATA[<td class="searchTitle"[\S\s]+?<br><br></td>]]>
+		</item>
+	</list>
+
+     <items>
+          <item name="Url" mode="regular"><![CDATA[tabindex="7"\s+href="(\S+)">]]></item>
+          <item name="pubDateTime" mode="regular" dateformat="yyyy-MM-dd"><![CDATA[(\d+-\d+-\d+)<br><br>]]></item>
+          <item name="Title" mode="regular"><![CDATA[tabindex="7"\s+href="\S+">([\s\S]+?)</a>]]></item>
+     </items>
+</html>

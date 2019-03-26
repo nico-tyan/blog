@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>
+	<!--凤凰新闻http://news.ifeng.com/a/20170905/51881076_0.shtml#p=1-->
+	<!-- http://news.ifeng.com/gundong/detail_2012_12/12/20068321_0.shtml -->
+	<forurlReg><![CDATA[http://news.ifeng.com/[\S]+]]></forurlReg>
+	<!-- 临时集合 页面下载前获取-->
+	<load_on_items>
+		<item name="siteName" mode="str">
+   	 		<![CDATA[凤凰新闻]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[photoMHD]]>
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<!-- 能够获取到列表块 视为此模板匹配成功 -->
+		<item name="photoMHD" mode="xpath" type="tmp">
+   			<![CDATA[//div[@class='photoMHD']/@class|//div[@class="left"]/@class]]>
+		</item> 
+	</tmp_items>
+	<Contents>
+		<!--  <item name="slide_data" mode="regular" type="tmp">
+	    	<![CDATA[var _listdata=([\S\s]+})\s+function showall]]>
+		</item> -->
+		<item name="Title" mode="json" parent="slide_data">
+    	<![CDATA[$.. title]]>
+		</item>
+		
+		<item name="Title" mode="xpath">
+    	<![CDATA[//h1[@id="artical_topic"]/text()]]>
+		</item>
+		
+		<item name="pubDateTime" mode="json" dateformat="yyyy-MM-dd HH:mm:ss" parent="slide_data">
+    	<![CDATA[]]>
+		</item>
+		<item name="images" mode="json" parent="slide_data" type="tmp">
+    	<![CDATA[$..timg]]>
+		</item>
+		
+		<item name="pubDateTime" mode="xpath" dateformat="yyyy年MM月dd日 HH:mm">
+    	<![CDATA[div[@id="artical_sth"]/p/span[1]/text()]]>
+		</item>
+		
+		<item name="From" mode="xpath">
+    	<![CDATA[div[@id="artical_sth"]/p/span[2]/a/text()]]>
+		</item>
+		
+		<item name="Content" mode="json_subset" parent="images" append_s="&lt;p&gt;" append_e="&lt;/p&gt;">
+    	<![CDATA[$..listimg|$..title]]><!-- 如果存在@IMG <img> src="" 包围</img> -->
+		</item>
+		
+		<item name="Content" mode="xpath">
+    	<![CDATA[div[@id="main_content"]/html()]]><!-- 如果存在@IMG <img> src="" 包围</img> -->
+		</item>
+		
+	</Contents>
+</html>

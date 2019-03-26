@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html>
+     <!--国家质量监督检验检疫总局http://so.aqsiq.gov.cn/s?q=1&qt=%E6%9D%A5&pageSize=10&database=all&page={Page}详细页-->
+     <forurlReg><![CDATA[http://so.aqsiq.gov.cn/[\S]+]]></forurlReg>
+     <load_on_items>
+          <item name="siteCode" mode="str"><![CDATA[N0000480]]></item>
+          <item name="siteName" mode="str"><![CDATA[国家质量监督检验检疫总局]]></item>
+          <item name="type" mode="str">
+               <![CDATA[1]]>
+               <!-- 1 搜索列表  2 详情 -->
+          </item>
+          <item name="siteUrl" mode="str">
+               <![CDATA[http://so.aqsiq.gov.cn/s?q=1&qt={Keyword}&pageSize=10&database=all&page={Page}]]>
+               <!--搜索链接 -->
+          </item>
+          <item name="charset" mode="str"><![CDATA[utf-8]]></item>
+          <item name="url_charset" mode="str"><![CDATA[utf-8]]></item>
+          <item name="statusCode" mode="str">
+               <![CDATA[200]]>
+               <!--下载返回码为 200 视为成功 -->
+          </item>
+          <item name="get_next_url" mode="str">
+               <![CDATA[1]]>
+               <!--  get_next_url =1 为获取下一页， 其它为替换 -->
+          </item>
+          <item name="cycle_retry_times" mode="str">
+               <![CDATA[1]]>
+               <!-- 重试次数 -->
+          </item>
+          <!--内容解析成功必须存在的几个 值  -->
+          <item name="exist_keys" mode="str">
+               <![CDATA[up_header]]>
+               <!-- 能够获取到列表块 视为此模板匹配成功 -->
+          </item>
+     </load_on_items>
+     <!-- 临时集合 -->
+     <tmp_items>
+          <item name="up_header" mode="xpath" type="tmp"><![CDATA[//div[@class="up_header"]/@class]]></item>
+     </tmp_items>
+     <!--翻页 下一页规则 -->
+     <page>
+          <item name="tmp_page" mode="xpath" type="tmp"><![CDATA[//div[@class='page']/html()]]></item>
+          <item name="page" mode="regular" parent="tmp_page"><![CDATA[<a href="([^>]+?)" target="_self">下一页</a>]]></item>
+     </page>
+     <list>
+          <item name="list_items" mode="xpath" type="tmp"><![CDATA[//div[@class='center_side']/div[@class='list']]]></item>
+     </list>
+     <items>
+          <item name="Title" mode="xpath"><![CDATA[ul/li/h1/a/text()]]></item>
+          <item name="Url" mode="xpath" regex="&amp;highlight=[^&amp;]+" replacement=""><![CDATA[ul/li/h1/a/@href]]></item>
+          <item name="tmp_pubDateTime" mode="xpath" type="tmp"><![CDATA[//ul/html()]]></item>
+          <item name="pubDateTime" mode="regular" dateformat="yyyy-MM-dd" parent="tmp_pubDateTime">
+               <![CDATA[\d{4}-\d{2}-\d{2}]]>
+               <!--另一种方法 获取时间 ： 发表于：(.*?)$  ^(.*?)$-->
+          </item>
+     </items>
+</html>
+

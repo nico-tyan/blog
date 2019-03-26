@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html>
+     <!-- 新浪微博http://s.weibo.com/weibo/%25E5%25A4%25A7%25E6%25A6%2582&Refer=STopic_box-->
+     <forurlReg><![CDATA[http://s.weibo.com/weibo/.+?]]></forurlReg>
+     <filter replacement="[Space]"><![CDATA[\\n]]></filter>
+	 <filter replacement="[Space]"><![CDATA[\\t]]></filter>
+     <filter get_data="1"><![CDATA[STK.pageletM.view\(\{"pid":"pl_weibo_direct".+?"html":"(.+?)"}\)</script>]]></filter>
+     <!-- 临时集合 页面下载前获取-->
+     <load_on_items>
+          <item name="siteCode" mode="str"><![CDATA[N0000060-1]]></item>
+          <item name="siteName" mode="str"><![CDATA[新浪微博]]></item>
+          <item name="type" mode="str">
+               <![CDATA[1]]>
+               <!-- 1 搜索列表  2 详情 -->
+          </item>
+          <item name="siteUrl" mode="str">
+               <![CDATA[http://s.weibo.com/weibo/{Keyword}&nodup=1&page={Page}]]>
+               <!--搜索链接 -->
+          </item>
+          <item name="charset" mode="str"><![CDATA[utf-8]]></item>
+          <item name="url_charset" mode="str"><![CDATA[utf-8]]></item>
+          <item name="is_unicode" mode="str"><![CDATA[1]]></item>
+          <item name="get_next_url" mode="str">
+               <![CDATA[0]]>
+               <!--  get_next_url =1 为获取下一页， 其它为替换 -->
+          </item>
+          <item name="load_referer" mode="str" type="tmp">
+               <!-- 检查是否需要referer -->
+               <![CDATA[#]]>
+          </item>
+          <item name="statusCode" mode="str">
+               <![CDATA[200]]>
+               <!--下载返回码为 200 视为成功 -->
+          </item>
+          <item name="cycle_retry_times" mode="str">
+               <![CDATA[1]]>
+               <!-- 重试次数 -->
+          </item>
+           <item name="check_Obsolete" mode="str">
+               <![CDATA[1]]>
+               <!--作用 列表在时间降序的情况 爬虫检测列表是否有过期数据自动停止分页 -->
+          </item>
+          <!--内容解析成功必须存在的几个 值  -->
+          <item name="exist_keys" mode="str">
+               <![CDATA[S_main]]>
+               <!-- 能够获取到列表块 视为此模板匹配成功 -->
+          </item>
+		  <item name="Cookie" mode="str">
+   			<![CDATA[SINAGLOBAL=1525732694675.8054.1509097692656; httpsupgrade_ab=SSL; un=13075123020; wvr=6; SWBSSL=usrmdinst_13; _s_tentry=-; Apache=9379038280906.27.1511744589841; ULV=1511744590007:24:20:1:9379038280906.27.1511744589841:1511485155462; SSOLoginState=1511745551; SCF=ArIlL17tya8i83qS0v0N5gKZ-cc_VHNyrTy2k3CyVQwBGebLDI1Bj5GugoQn8M0cCFrEGQfsT-8X8FmPyxQ3QXQ.; SUB=_2A253HxhADeRhGeNN61EV8SvKyDmIHXVUbQ6IrDV8PUNbmtBeLWvakW9NHetkT2gAXFbXM8AuBmOdLYwhoYCMZhhh; SUBP=0033WrSXqPxfM725Ws9jqgMF55529P9D9WhcLssVJk1GI8GIMF-uj3155JpX5KMhUgL.Fo-0eheXeK-ce0-2dJLoIpjLxKnL1h5L1KMLxK-LB-BL1KqLxK-L1K5L1-zt; SUHB=0qj0UY6yG7WBnE; ALF=1543281551; UOR=www.cnhan.com,widget.weibo.com,login.sina.com.cn; SWB=usrmdinst_13; WBStorage=82ca67f06fa80da0|undefined]]>
+		</item>
+     </load_on_items>
+
+     <!-- 临时集合  页面下载后获取-->
+     <tmp_items>
+          <!-- 能够获取到列表块 视为此模板匹配成功 -->
+          <item name="S_main" mode="xpath" type="tmp"><![CDATA[//div[@class='S_main']/@class]]></item>
+     </tmp_items>
+     <list>
+          <item name="list_items" mode="regular_subset" type="tmp"><![CDATA[<div class=\\"WB_cardwrap S_bg2 clearfix\\" >(.*?)class=\\"WB_feed_repeat S_bg1\\"]]></item>
+     </list>
+     <items>
+		<item name="Title" mode="regular" regex="class" replacement="&quot;&quot;">
+   			<![CDATA[(cl[\S]*ss)]]>
+		</item>
+          <item name="Author" mode="regular">
+               <!-- 作者 -->
+               <![CDATA[&name=(.*?)&uid]]>
+          </item>
+          <item name="Url" mode="regular" regex="\\" replacement="" append_s="https:">
+               <!-- url链接 -->
+               <![CDATA[<div class=\\"feed_from W_textb\\">.*?<a href=\\"(\S+)\\" target=\\"_blank\\" title=]]>
+          </item>
+          <item name="Content" mode="regular" regex="\\" replacement=""><![CDATA[(<p class=\\"comment_txt\\".*?">.*?)<div class=\\"feed_from W_textb\\">]]></item>
+          <item name="Pag" mode="regular" regex="W_ficon ficon_arrow_down" replacement="1">
+           <![CDATA[全文<i class=\\\"(\D+)\\\">c]]>
+          </item>
+          <item name="pubDateTime" mode="regular" dateformat="yyyy-MM-dd HH:mm"><![CDATA[target=\\"_blank\\" title=\\"(\d+-\d+-\d+ \d+:\d+)\\" date=]]></item>
+          <item name="CitedCount" mode="regular">
+               <!--转载-->
+               <![CDATA[转发<em>(\d+)<\\/em>]]>
+          </item>
+          <item name="ReplyCount" mode="regular">
+               <!--回复量 -->
+               <![CDATA[评论<em>(\d+)<\\/em>]]>
+          </item>
+     </items>
+     <!-- 获取下一页地址 -->
+     <page>
+          <item name="page" mode="regular" type="tmp">
+          <![CDATA[next S_txt1 S_line1\\">下一页]]>
+          </item>
+     </page>
+</html>
+

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>	
+     <!--湖北省质量技术监督局http://zjj.hubei.gov.cn/zwdt/ttrd/131203.htm 详细页-->
+	<forurlReg ><![CDATA[http://zjj.hubei.gov.cn/[\S]+]]></forurlReg>
+	<load_on_items>
+	    <item name="siteName" mode="str">
+   			<![CDATA[湖北省质量技术监督局]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[UTF-8]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>		
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[Title|Content|pubDateTime]]>
+		</item>
+		<item name="next_url" mode="regular" type="tmp" ref="url"><!--引用  url匹配  -->
+    	<![CDATA[^(.*?)\.htm]]>
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<item name="wrap" mode="xpath" type="tmp">
+		</item>
+	</tmp_items>
+	<tmp_items>
+		
+	</tmp_items>
+	<!--内容块 -->
+	<Contents>	
+		<!--标题 -->		
+	  	<item name="Title" mode="xpath">
+    		<![CDATA[//h2[@class='tit']/text()]]>
+		</item>
+			<!-- 作者 -->
+		<item name="Author" mode="xpath" >
+    	     <![CDATA[]]>   	     
+		</item> 
+							
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="tmp_pubDateTime" mode="xpath" type="tmp" >
+    		<![CDATA[//p[@class='info']/span[1]/text()]]>
+		</item>
+	       <item name="pubDateTime" mode="regular"  dateformat="yyyy-MM-dd" parent="tmp_pubDateTime">
+    	     <![CDATA[\d{4}-\d{2}-\d{2}]]>
+		</item> 
+
+		<!-- 来源 -->
+		<item name="tmp_From" mode="xpath" type="tmp" >
+    	     <![CDATA[//p[@class='info']/span[2]/text()]]>
+		</item> 
+		<item name="From" mode="regular"  parent="tmp_From">
+    	     <![CDATA[来源：(.*?)$]]>
+		</item> 
+		
+     	<item name="tmp_ClickCount" mode="xpath" regex="," replacement="" trim="1" type="tmp" ><!--点击量 -->
+    	<![CDATA[//div[@class='article']/p[@class='info']/span[3]/span[@id='hits']/text()]]>
+		</item>
+		<item name="ClickCount" mode="regular"  parent="tmp_ClickCount">
+    	     <![CDATA[(/d+)]]>
+		</item> 
+		<item name="ReplyCount" mode="xpath"><!--回复数 -->
+    	<![CDATA[]]>
+		</item>
+		<item name="Summary" mode="xpath"><!-- 摘要 -->
+		 <![CDATA[]]>
+		</item>		
+
+		<item name="Content" mode="xpath" ><!--内容 -->
+    	<![CDATA[//div[@class='article-box']/html()]]>
+		</item>
+		
+		<!-- <item name="params" mode="regular"  type="tmp" ref="url"> 
+    	<![CDATA[([^/]+?).htm]]>
+		</item> -->
+	</Contents>	
+	<!--    	<ajax>
+		组装 请求连接  ref引用已获取或已处理数据  data_type 数据类型
+		<method><![CDATA[post]]></method>
+		<url_join ref="ajax" data_type="String"><![CDATA[http://www.hbzljd.gov.cn/JSON-RPC]]></url_join>
+		<json_data_join name="id" ><![CDATA[3]]></json_data_join>
+		<json_data_join name="method"><![CDATA[InfoBaseRPC.getInfoClickCount]]></json_data_join>
+		<json_data_join name="params" ref="params"><![CDATA[{empty}]]></json_data_join>		
+		<item name="ClickCount" mode="json">
+	    	<![CDATA[$..result]]>
+		</item>
+	</ajax>  -->
+	  
+</html>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>	
+	 <!--国家质量监督检验检疫总局执法督查司http://zfdcs.aqsiq.gov.cn/zxdjzzxd/qt/201408/t20140818_419613.htm 详细页-->                  
+	<forurlReg><![CDATA[http://zfdcs.aqsiq.gov.cn/[\S]+]]></forurlReg>
+	<load_on_items>
+	    <item name="siteName" mode="str">
+   			<![CDATA[国家质量监督检验检疫总局执法督查司]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[gbk]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[Title|Content|pubDateTime]]>
+		</item>
+		<item name="next_url" mode="regular" type="tmp" ref="url"><!--引用  url匹配  -->
+    	<![CDATA[^(.*?)\.htm]]>
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<item name="top" mode="xpath" type="tmp">
+   			<![CDATA[//div[@id="top"]/@id]]>
+		</item>
+	</tmp_items>
+	<tmp_items>
+		
+	</tmp_items>
+	<!--内容块 -->
+	<Contents>
+	
+		<!--标题 -->	
+		<item name="Title" mode="xpath">
+    		<![CDATA[//div[@class='title-xl']/h1/text()|html/body/table[4]/tbody/tr/td/table[1]/tbody/tr/td/h1/text()|//div[@class='title-xl']/h3/text()]]>
+		</item>
+			
+		<item name="Author" mode="xpath">
+    	     <![CDATA[]]>   	     
+		</item> 		
+				<!-- 没有发布时间 -->		
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<!-- <item name="tmp_pubDateTime" mode="xpath" type="tmp" ref="url" >
+    		<![CDATA[]]>
+		</item> -->
+		<item name="pubDateTime" mode="regular"  dateformat="yyyyMMdd"  parent="next_url">
+    	     <![CDATA[/t(\d{8})_]]>
+		</item>  
+		
+		<item name="From" mode="xpath"  >
+    	     <![CDATA[]]>
+		</item> 
+		<item name="tmp_From" mode="xpath" type="tmp" >
+    	     <![CDATA[]]>
+		</item> 
+		<item name="From" mode="regular"  parent="tmp_From">
+    	     <![CDATA[]]>
+		</item>  
+		
+     	<item name="ClickCount" mode="xpath" regex="," replacement="" trim="1"><!--点击量 -->
+    	<![CDATA[]]>
+		</item>
+		<item name="ReplyCount" mode="xpath"><!--回复数 -->
+    	<![CDATA[]]>
+		</item>
+		<item name="Summary" mode="xpath"><!-- 摘要 -->
+		 <![CDATA[]]>
+		</item>		
+
+		<item name="Content" mode="xpath" ><!--内容 -->
+    	<![CDATA[//div[@class='Custom_UnionStyle']/html()|//div[@class='TRS_Editor']/html()]]>
+		</item>
+		
+	</Contents>	
+</html>

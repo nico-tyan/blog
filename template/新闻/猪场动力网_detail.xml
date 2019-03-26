@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>	                  
+	 <!--猪场动力网  http://www.powerpigs.net/e/action/ShowInfo.php?classid=116&id=13122 详细页-->
+	<forurlReg><![CDATA[http://www.powerpigs.net[\S]+]]></forurlReg>
+	<load_on_items>
+	    <item name="siteName" mode="str">
+   			<![CDATA[猪场动力网]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>	
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[Title|Content]]>
+		</item>
+		<item name="first_keys" mode="str">
+   			<![CDATA[inmain]]>
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<item name="inmain" mode="xpath" type="tmp">
+   			<![CDATA[//div[@class="inmain"]/@class]]>
+		</item>
+	</tmp_items>
+	<!--内容块 -->
+	<Contents>
+		<!--标题 -->	
+		<item name="Title" mode="xpath">
+    		<![CDATA[//div[@class='hd1']/h1/text()]]>
+		</item>
+		
+		<!--作者-->		
+		<item name="tmp_Author" mode="xpath" type="tmp" >
+    	     <![CDATA[]]>   	     
+		</item> 
+		<item name="Author" mode="regular" parent="tmp_Author">
+    	     <![CDATA[]]>   	     
+		</item>				
+						
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="DateTime" mode="xpath" type="tmp">
+    	     <![CDATA[//span[@class="pubTime"]/text()]]>   	     
+		</item>	
+		<item name="pubDateTime" mode="regular" parent="DateTime" dateformat="yyyy-MM-dd HH:mm:ss">
+    	     <![CDATA[^(.*?)$]]>   	     
+		</item>		
+		
+		<!--来源 -->	
+		<item name="From" mode="xpath">
+    	     <![CDATA[//span[@class="where"]/a/text()]]>   	     
+		</item>	
+		
+		<!--摘要 -->	
+		<item name="Summary" mode="xpath"><!-- 摘要 -->
+		 <![CDATA[]]>
+		</item>		
+		
+		<!--内容-->	
+		<item name="Content" mode="xpath" ><!--内容 -->
+    	<![CDATA[//div[@id='myarticle']/html()]]>
+		</item>		
+	</Contents>		
+</html>

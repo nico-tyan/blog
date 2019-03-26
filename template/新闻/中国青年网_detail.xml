@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>	
+	<!--中国青年网http://news.youth.cn/jsxw/201703/t20170309_9256478_1.htm
+	            http://www.779p.com/a/jinrong/20181030/181076.html?qqdrsign=0071c
+	            http://agzy.youth.cn/qsnag/zxbd/201811/t20181126_11796205.htm详细页 -->
+	<forurlReg><![CDATA[http://news.youth.cn[\S]+|http://[\S]+.779p.com[\S]+|http://agzy.youth.cn/[\S]+]]></forurlReg>
+	<!-- 临时集合 页面下载前获取-->
+	<load_on_items>
+	   <item name="siteName" mode="str">
+   			<![CDATA[中国青年网 ]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[Title|Content|pubDateTime]]>
+		</item>
+		<item name="first_keys" mode="str">
+   			<![CDATA[main_l]]>
+		</item>
+	</load_on_items>
+	<tmp_items>
+		<item name="main_l" mode="xpath" type="tmp">
+   			<![CDATA[//div[@class="main_l"]/@class|//div[@class="page_k"]/@class|//div[@class="container"]/@class]]>
+		</item>
+	</tmp_items>
+	<!--内容块 -->
+	<Contents>
+	  	<item name="Title" mode="xpath">
+    		<![CDATA[//div[@class='main_l']/div[@class='l_tit']/html()|//div[@class="page_title"]/h1/text()|//p[@class="pbt"]/text()]]>
+		</item>
+		
+		<item name="tmp_Author" mode="xpath" type="tmp">
+    		<![CDATA[//span[@id='editor_baidu']/text()]]>
+		</item>
+		<item name="Author" mode="regular" parent="tmp_Author"> <!--采集自网站名 -->
+			<![CDATA[责任编辑：(.*?)$]]>
+		</item>
+		
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="tmp_pubDateTime" mode="xpath" type="tmp">
+    		<![CDATA[//span[@id='pubtime_baidu']/text()|//span[@id="page_right"]/text()|//p[@class="pwz"]/text()]]>
+		</item>
+		<item name="pubDateTime" mode="regular" dateformat="yyyy-MM-dd HH:mm:ss" parent="tmp_pubDateTime">
+    		<![CDATA[发稿时间：(.*?)$]]>
+		</item> 
+		
+		<item name="tmp_From" mode="xpath" type="tmp">
+			<![CDATA[//span[@id='source_baidu']/text()]]>
+		</item>
+		<item name="From" mode="regular" parent="tmp_From" trim="1"> <!--采集自网站名 -->
+			<![CDATA[来源：\s*([\S]+)]]><!-- (.*?)$ fromSiteName -->
+		</item>
+		<item name="From" mode="xpath">
+			<![CDATA[//span[@id='source_baidu']/a/text()|//p[@class="pwz"]/a/text()]]>
+		</item>
+		
+		<item name="ClickCount" mode="xpath" regex="," replacement="" trim="1"><!--点击量 -->
+    		<![CDATA[]]>
+		</item>
+		
+		<item name="ReplyCount" mode="xpath"><!--回复数 -->
+    		<![CDATA[]]>
+		</item>
+		
+		<item name="Summary" mode="xpath"><!-- 摘要 -->
+			 <![CDATA[]]>
+		</item>
+		
+		<item name="Content" mode="xpath"><!--内容 -->
+    		<![CDATA[//div[@class="TRS_Editor"]/html()|//div[@class='content']/html()|//div[@id='container']/html()]]>
+		</item>
+	</Contents>
+	<!--翻页 下一页规则 -->
+	<page>
+		<item name="page" mode="regular" type="tmp">
+   			<![CDATA[<a href="([\S]+)" target="_top">下一页]]>
+		</item>
+		<item name="countPage" mode="regular" type="tmp">
+   			<![CDATA[]]>
+		</item>
+		<!-- append_page = 0 or 1   时 递增规则 0 或 1 开始--> 
+		<url_join ref="next_url" append_page="0"><![CDATA[_]]></url_join>
+		<url_join ><![CDATA[]]></url_join>
+	</page>
+	<!--翻页 下一页内容-->
+	<Next_Contents>
+		<item name="Content" mode="xpath"><!--内容 -->
+    	<![CDATA[//div[@class="TRS_Editor"]/html()|//div[@class='content']/html()|//div[@id='container']/html()]]>
+		</item>
+	</Next_Contents>
+</html>
+
+<!-- 
+a. 转义序列各字符间不能有空格； 
+b. 转义序列必须以"；"结束； 
+c. 单独的&不被认为是转义开始； 
+d. 区分大小写。
+
+以下是XML中需要的转义字符:
+&(逻辑与)  &amp;        
+<(小于)    &lt;        
+>(大于)    &gt;        
+"(双引号)  &quot;      
+'(单引号)  &apos;  
+-->

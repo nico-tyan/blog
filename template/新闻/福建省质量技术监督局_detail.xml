@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>	
+	 <!--福建省质量技术监督局 http://www.fjqi.gov.cn/xxgk/zjdt/mtzjxw/201408/t20140819_450277.htm 详细页-->                        
+	<forurlReg><![CDATA[http://www.fjqi.gov.cn/xxgk/[\S]+]]></forurlReg>
+	<load_on_items>
+	    <item name="siteName" mode="str">
+   			<![CDATA[福建省质量技术监督局]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[Title|Content|pubDateTime]]>
+		</item>
+		<item name="next_url" mode="regular" type="tmp" ref="url"><!--引用  url匹配  -->
+    	<![CDATA[^(.*?)\.htm]]>
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<item name="top_line" mode="xpath" type="tmp">
+   			<![CDATA[//div[@class="top_line"]/@class]]>
+		</item>
+	</tmp_items>
+	<tmp_items>
+		
+	</tmp_items>
+	<!--内容块 -->
+	<Contents>
+	
+		<!--标题 -->		
+	  	<item name="Title" mode="xpath">
+    		<![CDATA[//div[@class='xl_content']/h1/html()]]>
+		</item>
+			
+		<item name="tmp_Author" mode="xpath" type="tmp">
+    	     <![CDATA[]]>   	     
+		</item> 
+		<item name="Author" mode="regular"   parent="tmp_Author">
+    	     <![CDATA[]]>
+		</item> 
+		
+						
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="tmp_pubDateTime" mode="xpath" type="tmp" >
+    		<![CDATA[//div[@class='time']/html()]]>
+		</item>
+	       <item name="pubDateTime" mode="regular"  dateformat="yyyy-MM-dd" parent="tmp_pubDateTime">
+    	     <![CDATA[\d{4}-\d{2}-\d{2}]]>
+		</item>  
+		
+		<item name="tmp_From" mode="xpath" type="tmp" >
+		<![CDATA[//div[@class='time']/html()]]>
+		</item> 
+		<item name="From" mode="regular"   parent="tmp_From">
+    	     <![CDATA[信息来源：(.*?)\s]]>
+		</item>	
+			<item name="From" mode="xpath" >
+    	     <![CDATA[]]>
+		</item>	
+			
+  
+     	<item name="ClickCount" mode="xpath" regex="," replacement="" trim="1"><!--点击量 -->
+    	<![CDATA[]]>
+		</item>
+		<item name="ReplyCount" mode="xpath"><!--回复数 -->
+    	<![CDATA[]]>
+		</item>
+		<item name="Summary" mode="xpath"><!-- 摘要 -->
+		 <![CDATA[]]>
+		</item>		
+
+		<item name="Content" mode="xpath"><!--内容 -->
+    	<![CDATA[//div[@class='TRS_Editor']/html()]]>
+		</item>
+		
+		<item name="docId" mode="regular" type="tmp" ref="url"><!--引用  url匹配  -->
+    	<![CDATA[_([^_]+)\.htm]]>
+		</item>
+		<!-- gen_str rule{1 时间戳 2 随机数（0.424242443 ）不需要长度  (3 数字  4 字母 5 数字加字母  )+length  } 生成字符串  length 生成长度 -->
+		<item mode="gen" name="r" rule="2" >
+    	<![CDATA[#]]>
+		</item>
+	</Contents>	
+		<ajax>
+<!-- 		http://www.fjqi.gov.cn/stats/sitestat/stat.action?r=0.447778101808471&docId=450277&channelId=0
+		    &url=http://www.fjqi.gov.cn/xxgk/zjdt/mtzjxw/201408/t20140819_450277.htm&userId=-1&type=document -->
+<!-- 	    http://www.fjqi.gov.cn/stats/sitestat/stat.action?r=0.34379723507689297&docId=476666&channelId=0
+		    &url=http://www.fjqi.gov.cn/xxgk/tzgg/201703/t20170317_476666.htm&userId=-1&type=document -->
+		<url_mode><![CDATA[get]]></url_mode>
+		<!-- 组装 请求连接  ref引用已获取或已处理数据  data_type 数据类型-->
+		<url_join><![CDATA[http://www.fjqi.gov.cn/stats/sitestat/stat.action?]]></url_join>
+		<url_join ref="r"><![CDATA[r=]]></url_join>
+		<url_join ref="docId"><![CDATA[&docId=]]></url_join>
+		<url_join ><![CDATA[&channelId=0]]></url_join>
+		<url_join ref="url"><![CDATA[&url=]]></url_join>
+		<url_join><![CDATA[&userId=-1&type=document]]></url_join>
+		<item name="ClickCount" mode="json">
+	    	<![CDATA[$..count]]>
+		</item>
+	</ajax>
+	 	
+</html>

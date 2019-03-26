@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html>
+     <!--微信文章http://weixin.sogou.com/weixin?query=%E5%B9%BF%E5%B7%9E%E7%A7%BB%E5%8A%A8&fr=sgsearch&sut=3197&lkt=0%2C0%2C0&type=2&sst0=1426226644465&page=1&ie=utf8&w=01019900&dr=1 搜狗微信公众号搜索页 -->
+     <forurlReg><![CDATA[http://weixin\.sogou\.com/weixin\?query=\S+&fr=sgsearch\S+]]></forurlReg>
+     <!-- 临时集合 页面下载前获取-->
+     <load_on_items>
+          <item name="siteCode" mode="str"><![CDATA[N0000058]]></item>
+          <item name="siteName" mode="str"><![CDATA[微信]]></item>
+          <item name="type" mode="str">
+               <![CDATA[1]]>
+               <!-- 1 搜索列表  2 详情 -->
+          </item>
+          <item name="siteUrl" mode="str">
+               <![CDATA[http://weixin.sogou.com/weixin?query={Keyword}&fr=sgsearch&sut=3197&lkt=0%2C0%2C0&type=2&sst0=1426226644465&page={Page}&ie=utf8&w=01019900&dr=1]]>
+               <!--搜索链接 -->
+          </item>
+          <item name="charset" mode="str"><![CDATA[utf-8]]></item>
+          <item name="url_charset" mode="str"><![CDATA[utf-8]]></item>
+          <item name="get_next_url" mode="str">
+               <![CDATA[1]]>
+               <!--  get_next_url =1 为获取下一页， 其它为替换 -->
+          </item>
+          <item name="load_referer" mode="str" type="tmp">
+               <!-- 检查是否需要referer -->
+               <![CDATA[#]]>
+          </item>
+          
+          <item name="begin_day" mode="str"><!-- 搜索开始时间 -->
+   			<![CDATA[&tsn=5&ft|yyyy-MM-dd]]>
+		  </item>
+		  <item name="end_day" mode="str"><!-- 搜索结束时间 -->
+   			<![CDATA[et|yyyy-MM-dd]]>
+		  </item>
+          <item name="statusCode" mode="str">
+               <![CDATA[200]]>
+               <!--下载返回码为 200 视为成功 -->
+          </item>
+          <item name="cycle_retry_times" mode="str">
+               <![CDATA[1]]>
+               <!-- 重试次数 -->
+          </item>
+          <!--内容解析成功必须存在的几个 值  -->
+          <item name="exist_keys" mode="str">
+               <![CDATA[Title|Author|pubDateTime]]>
+               <!-- 能够获取到列表块 视为此模板匹配成功 -->
+          </item>
+     </load_on_items>
+     <!-- 临时集合  页面下载后获取-->
+     <tmp_items>
+          <!-- 能够获取到列表块 视为此模板匹配成功 -->
+          <item name="wrapper" mode="xpath" type="tmp"><![CDATA[//div[@class='wrapper']/@class]]></item>
+     </tmp_items>
+     <list>
+          <item name="list_items" mode="xpath" type="tmp">
+               <!--相当于添加了一个父类 （标题url这些需要获取的共同路径）  下面的网站主题就可以写精简 -->
+               <![CDATA[//div[@class='news-box']/ul[@class='news-list']/li/div[@class='txt-box']]]>
+          </item>
+     </list>
+     <items>
+          <item name="Title" mode="xpath">
+               <!-- 标题 -->
+               <![CDATA[h3/a/allText()]]>
+          </item>
+          <item name="Url" mode="xpath">
+               <!-- url链接 -->
+               <![CDATA[h3/a/@href]]>
+          </item>
+          <item name="Author" mode="xpath">
+               <!-- 作者 -->
+               <![CDATA[div[@class='s-p']/a/text()]]>
+          </item>
+          <item name="Section" mode="xpath">
+               <!-- 区域吧 -->
+          </item>
+          <item name="pubDateTime" mode="regular" dateformat="timestamp"><![CDATA[document.write\(timeConvert\('(\d+)'\)\)]]></item>
+     	<item name="joinss" mode="join_str" join_item="Title|Author|pubDateTime">
+   			<![CDATA[{empty}]]>
+		</item>
+		<item name="sign" mode="regular" parent="joinss">
+   			<![CDATA[^(.*?)$]]>
+		</item>
+     </items>
+     <!-- 获取下一页地址 -->
+     <page>
+          <item name="page" mode="xpath" type="tmp"><![CDATA[//div[@class='p-fy']/a[@class='np']/@href]]></item>
+     </page>
+     <!--  临时集合
+	json方式获取  例如：新华网时政_list.xml
+	<tmp_items>
+		<item name="search-result" mode="xpath" type="tmp">
+   			<![CDATA[//div[@class="search-result"]/@class]]>
+		</item>
+	</tmp_items>
+	翻页 下一页规则
+	<page>
+		<item name="page" mode="str" >
+   			<![CDATA[0]]>
+		</item>
+	</page>
+	<list>
+		<item name="list_items" mode="json" type="tmp">
+    	<![CDATA[$..results]]>
+		</item>
+	</list>
+	<items>
+		<item name="Url" mode="json">
+    	<![CDATA[$..url]]>
+		</item>
+		<item name="Title" mode="json">
+    	<![CDATA[$..title]]>
+		</item>
+		<item name="pubDateTime" mode="json" dateformat="yyyy-MM-dd HH:mm">
+    	<![CDATA[$..pubtime]]>
+		</item>
+	</items>	
+	 -->
+</html>
+

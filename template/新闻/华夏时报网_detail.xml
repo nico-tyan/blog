@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>
+	<!-- http://www.chinatimes.cc/article/72159.html -->
+	<forurlReg><![CDATA[http://www.chinatimes.cc/article[\S]+]]></forurlReg>
+	<!-- 临时集合 页面下载前获取-->
+	<load_on_items>
+		<item name="siteName" mode="str">
+   	 		<![CDATA[华夏时报网]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[container]]>
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<!-- 能够获取到列表块 视为此模板匹配成功 -->
+		<item name="container" mode="xpath" type="tmp">
+   			<![CDATA[//div[@class='newList']/@class]]>
+		</item> 
+	</tmp_items>
+	<Contents>
+		<!--标题 -->
+		<item name="Title" mode="xpath" trim="1">
+    	<![CDATA[//div[@class='newList']/div[@class='content']/div[@class='title']/h1/text()]]>
+		</item>
+		
+		<!--作者 -->
+		<item name="Author" mode="xpath">
+    	<![CDATA[//div[@class='newList']/div[@class='content']/div[@class='info']/p[1]/a/text()]]>
+		</item> 
+		
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="tmp_pubDateTime"  mode="xpath" type="tmp">
+    	<![CDATA[//div[@class='newList']/div[@class='content']/div[@class='info']/p[3]/text()]]>
+		</item> 
+		<item name="pubDateTime" dateformat="yyyy-MM-dd HH:mm:ss" mode="regular" parent="tmp_pubDateTime">
+    	<![CDATA[发布时间：(.*?)$]]>
+		</item> 
+		
+		<!--来源 -->
+		<item name="tmp_From" mode="xpath" type="tmp">
+    	<![CDATA[//div[@class='newList']/div[@class='content']/div[@class='info']/p[2]/text()]]>
+		</item> 
+		<item name="From" mode="regular" parent="tmp_From" >
+    	     <![CDATA[来源：(.*?)$]]>   	     
+		</item>
+		
+		
+		<item name="tmp_Summary" mode="xpath" type="tmp"> <!--摘要 -->
+    	<![CDATA[//div[@class='newList']/div[@class='content']/div[@class='abstract']/text()]]>
+		</item>
+		<item name="Summary" mode="regular" parent="tmp_Summary" > <!--摘要 -->
+    	<![CDATA[摘要：(.*?)$]]>
+		</item>
+		
+		<item name="Content" mode="xpath" ><!--内容 -->
+    	<![CDATA[//div[@class='newList']/div[@class='content']/div[@class='infoMain']/html()]]>
+		</item>
+		
+	</Contents>
+</html>

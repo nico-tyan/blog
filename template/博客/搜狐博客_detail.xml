@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>	
+	<!-- 搜狐博客 http://miranda-yu.blog.sohu.com/323928783.html 详细页 -->
+	<forurlReg><![CDATA[http://[\S]+.blog.sohu.com/[\S]+.html]]></forurlReg>
+	<!-- 临时集合 页面下载前获取-->
+	<load_on_items>
+		<item name="siteName" mode="str">
+   	 		<![CDATA[搜狐博客]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[gbk]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<item name="id" mode="regular" type="tmp" ref="url"><!--引用  url匹配  -->
+    	<![CDATA[com/(.*?)\.html]]>
+		</item>
+		<!-- gen_str rule{1 时间戳 2 随机数（0.424242443 ）不需要长度  (3 数字  4 字母 5 数字加字母  )+length  } 生成字符串  length 生成长度 -->
+		<item mode="gen" name="gen_str" rule="1">
+    	<![CDATA[#]]>
+		</item>
+		<item mode="jqurey" name="gen_str" rule="1">
+    	<![CDATA[#]]>
+		</item>
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[wrapper]]>
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<!-- 能够获取到列表块 视为此模板匹配成功 -->
+		<item name="wrapper" mode="xpath" type="tmp">
+   			<![CDATA[//div[@id='wrapper']/@id]]>
+		</item> 
+	</tmp_items>
+	
+	<tmp_items>
+		<!--翻页 下一页规则 -->
+		<item name="page" mode="xpath">
+   			<![CDATA[//div[@id='main-content']/div[@class='newBlog-bom']/div[@class='newBlog-bom-pn']/span[2]/a/@href]]>
+		</item>
+	</tmp_items>
+	<Contents>
+		<!--标题 -->
+		<item name="Title" mode="xpath">
+    	<![CDATA[//div[@id='entry']/div[@class='item-body']/div[@class='newBlog-title']/h2/span[1]/text()]]>
+		</item>
+		<item name="tmp_Content" mode="xpath" type='tmp'><!--内容 -->
+    	<![CDATA[//div[@class='item-content']/div[1]/outerHtml()]]>
+		</item>
+		<item name='Content' mode='regular' parent='tmp_Content'>
+		<![CDATA[^(.*?)$]]>	
+		</item>
+		
+		<item name="Author" mode="xpath">
+    	<![CDATA[//div[@id='innerHeader']/h1/a/text()]]>
+		</item>
+		<item name="Summary" mode="xpath"> <!--摘要 -->
+		</item>
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="pubDateTime" mode="xpath">
+    	<![CDATA[//div[@class='newBlog-top-opration']/span[1]/text()]]>
+		</item>
+		<!--点击量 -->
+		<item name="ClickCount" mode="xpath" regex="," replacement="">
+    	<![CDATA[]]>
+		</item>
+		<item name="ReplyCount" mode="xpath"><!--回复数 -->
+    	<![CDATA[]]>
+		</item>
+	</Contents>
+	<Append_Contents>
+		<item name="Content" mode="xpath"><!--内容 累加-->
+    		<![CDATA[]]>
+		</item>
+	</Append_Contents>
+	<ajax>
+		<method><![CDATA[get]]></method>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<!-- http://ana.blog.sohu.com/blogcount?e=323928783&_=1488959135352 -->
+		<!-- 组装 请求连接  ref引用已获取或已处理数据  data_type 数据类型-->
+		<url_join ref="id" data_type="String"><![CDATA[http://ana.blog.sohu.com/blogcount?e=]]></url_join>
+		<url_join ref="gen_str" data_type="String"><![CDATA[&_=]]></url_join>
+		<item name="ClickCount" mode="regular">
+	    	<![CDATA["\d+":(\d+)}]]>
+		</item>
+		
+	</ajax>
+	<ajax>
+	<method><![CDATA[get]]></method>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<!--http://i.sohu.com/a/app/discuss/indexBlogList.htm?_input_encode=UTF-8&ids=blog_323928783_0_bWlyYW5kYWphY2tAc29odS5jb20=&page=1&sz=10&callback=jQuery1640504359712618536_1488959134762&_=1488959135138 -->
+		<!-- 组装 请求连接  ref引用已获取或已处理数据  data_type 数据类型-->
+		<url_join ref="id" data_type="String"><![CDATA[http://i.sohu.com/a/app/discuss/indexBlogList.htm?_input_encode=UTF-8&ids=blog_]]></url_join>
+		<url_join ref="callback" data_type="String"><![CDATA[_0_bWlyYW5kYWphY2tAc29odS5jb20=&page=1&sz=10&callback=jQuery]]></url_join>
+		<url_join ref="gen_str" data_type="String"><![CDATA[&_=]]></url_join>
+		<item name="ReplyCount" mode="regular">
+	    	<![CDATA["discusscount":(\d+)]]>
+		</item>
+	</ajax>
+</html>

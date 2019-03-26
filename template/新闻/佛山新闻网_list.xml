@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>
+	<!--佛山新闻网http://search.foshannews.net/search2016.jsp -->
+	<forurlReg><![CDATA[http://search.foshannews.net/search2016.jsp[\S]*?$]]></forurlReg>
+	<!-- 临时集合 页面下载前获取-->
+	<load_on_items>
+	   <item name="siteCode" mode="str"><![CDATA[N0000620]]></item>
+	   <item name="siteName" mode="str">
+   			<![CDATA[佛山新闻网]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[1]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="siteUrl" mode="str">
+   			<![CDATA[http://search.foshannews.net/search2016.jsp]]> <!--搜索链接 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="method" mode="str">
+   			<![CDATA[post]]>
+		</item>
+		<item name="get_next_url" mode="str">
+   			<![CDATA[0]]><!--  get_next_url =1 为获取下一页， 其它为替换 -->
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值  -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[layout]]> <!-- 能够获取到列表块 视为此模板匹配成功 -->
+		</item>
+	</load_on_items>
+	
+	<form_data_join name="pagesql"><![CDATA[select URL, abstract(title), author, DATE, abstract(text), abstract(KEYWS) from hlftidb  where contains(fulltext, '{Keyword}') order by DATE desc]]></form_data_join>
+	<form_data_join name="page"><![CDATA[{Page}]]></form_data_join> <!-- 当前页 -->
+	<form_data_join name="searchText"><![CDATA[{Keyword}]]></form_data_join> <!--关键字  -->
+	
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<!-- 能够获取到列表块 视为此模板匹配成功 -->
+		<item name="layout" mode="xpath" type="tmp">
+   			<![CDATA[//div[@class='layout region']/@class]]>
+		</item>
+	</tmp_items>
+	<!--翻页 下一页规则 -->
+	<page>
+		<item name="page" mode="regular" type="tmp">
+   			<![CDATA[next]]>
+		</item>
+	</page>
+	<list>
+ 		<item name="list_items" mode="xpath" type="tmp">
+ 			<![CDATA[//div[@class='list']/div[@class='item']]]>
+		</item>
+	</list>
+	<items>
+		<item name="Url" mode="xpath">
+   			<![CDATA[p[@class='fw f20']/a/@href]]>
+		</item>
+		<item name="pubDateTime" mode="xpath" dateformat="yyyy-MM-dd HH:mm:ss">
+    		<![CDATA[p[@class='info']/i[@class='time']/text()]]>
+		</item>	
+		<item name="Title" mode="xpath">
+    		<![CDATA[p[@class='fw f20']/a/allText()]]>
+		</item>
+	</items>
+</html>

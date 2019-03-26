@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>
+	<!-- 南京师范大学http://www.njnu.edu.cn/Scientific/2017-7/135555_333032.html-->
+	<forurlReg><![CDATA[http://www.njnu.edu.cn/[\S]+]]></forurlReg>
+	<!-- 临时集合 页面下载前获取-->
+	<load_on_items>
+		<item name="siteName" mode="str">
+   	 		<![CDATA[南京师范大学]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[container]]>
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<!-- 能够获取到列表块 视为此模板匹配成功 -->
+		<item name="container" mode="xpath" type="tmp">
+   			<![CDATA[//div[@class='container']/@class]]>
+		</item> 
+	</tmp_items>
+	<Contents>
+		<item name="Title" mode="xpath"><!--标题 -->
+    	<![CDATA[//div[@class='mainconts span9']/article/h3/text()]]>
+		</item>
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="tmp_pubDateTime" mode="xpath" type="tmp">
+    	<![CDATA[//small[@class='muted']/strong/text()]]>
+		</item>
+		<item name="pubDateTime" mode="regular" dateformat="yyyy/MM/dd"
+			parent="tmp_pubDateTime">
+    	<![CDATA[^(.*?)$]]>
+		</item>
+		<item name="Content" mode="xpath" ><!--内容 -->
+    	<![CDATA[//div[@class='mainconts span9']/html()]]>
+		</item>
+		<item name="id1" mode="regular" type="tmp"><!--内容 -->
+    	<![CDATA[\?id=(\d+)]]>
+		</item>
+	</Contents>
+	<!-- ajax异步获取 -->
+	<ajax>
+		<method><![CDATA[get]]></method>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<!-- 组装 请求连接  ref引用已获取或已处理数据  data_type 数据类型 -->
+		<!-- http://www.njnu.edu.cn/manage/viewinfo.aspx?id=44953&lx=1 -->
+		<url_join ref="id1" data_type="String"><![CDATA[http://www.njnu.edu.cn/manage/viewinfo.aspx?id=]]></url_join>
+		<url_join ref="_" data_type="String"><![CDATA[&lx=1]]></url_join>
+		<item name="ClickCount" mode="regular">
+	    	<![CDATA[document.write\('(\d+)'\);]]>
+		</item>
+	</ajax>
+	<regex_filter ><![CDATA[<h3>[\s\S]+?</h3>]]></regex_filter>
+	<regex_filter ><![CDATA[<small[^>]*?>[\s\S]+?</small>]]></regex_filter>
+</html>

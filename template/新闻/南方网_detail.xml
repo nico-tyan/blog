@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>	
+	 <!--南方网http://news.southcn.com/china/content/2017-04/19/content_169159573.htm详细页-->                 
+	 <!-- http://static.nfapp.southcn.com/content/201712/30/c879398.html?from=groupmessage -->
+	<forurlReg><![CDATA[http://[\S]+.southcn.com/[\S]+]]></forurlReg>
+	<load_on_items>
+	    <item name="siteName" mode="str">
+   			<![CDATA[南方网]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>	
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[class]]>
+		</item>
+		<item name="first_keys" mode="str">
+   			<![CDATA[class]]>
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<item name="class" mode="regular" type="tmp">
+   			<![CDATA[class]]>
+		</item>
+	</tmp_items>
+	<!--内容块 -->
+	<Contents>
+		<!--标题 -->	
+		<item name="Title" mode="xpath">
+    		<![CDATA[//div[@class='m-article']/h2[@id='article_title']/text()|h1[@id='article_title']/text()|//div[@class='zuo left']/h1/text()|//h2[@class='m-title']/text()|//h2[@id="articleTitle"]/text()|//div[@id="ScDetailTitle"]/text()]]>
+		</item>
+			
+		<item name="tmp_Author" mode="xpath" type="tmp">
+    	     <![CDATA[//div[@class='m-article']/div[@class='m-editor']/text()|span[@id='author_baidu']/text()|//div[@class='info']/span[2]/text()|//div[@class="editor"]/text()]]>   	     
+		</item> 	
+		<item name="Author" mode="regular" parent="tmp_Author">
+    	     <![CDATA[编辑：(.*?)$]]>   	     
+		</item> 
+		
+		<item name="tmp_Author1" mode="xpath" type="tmp">
+    	     <![CDATA[//div[@class="editor"]/text()]]>   	     
+		</item> 	
+		<item name="Author" mode="regular" parent="tmp_Author1">
+    	     <![CDATA[编辑(.*?)$]]>   	     
+		</item> 
+		
+		<item name="Author" mode="regular" parent="tmp_Author">
+    	     <![CDATA[作者：(.*?)$]]>   	     
+		</item> 
+		<item name="Author" mode="xpath">
+    	     <![CDATA[//div[@class="m-meta"]/span/text()]]>   	     
+		</item>
+		
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		 <item name="tmp_pubDateTime" mode="xpath" type="tmp">
+    		<![CDATA[//span[@id='pubtime_baidu']/text()|//div[@class="nfhtime"]/text()]]>
+		</item> 
+	    <item name="pubDateTime" mode="regular"  dateformat="yyyy-MM-dd HH:mm" parent="tmp_pubDateTime">
+    	     <![CDATA[\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}]]>
+		</item>  
+		
+		<item name="tmp_pubDateTime1" mode="xpath" type="tmp">
+    		<![CDATA[//div[@class='info']/span[1]/text()]]>
+		</item> 
+	    <item name="pubDateTime" mode="regular"  dateformat="yyyy-MM-dd"  parent="tmp_pubDateTime1">
+    	     <![CDATA[\d{4}-\d{2}-\d{2}]]>
+		</item> 
+		<item name="tmp_pubDateTime2" mode="xpath" type="tmp">
+    		<![CDATA[//time[@class='subtime']/text()|//div[@class="desc"]/text()]]>
+		</item> 
+	    <item name="pubDateTime" mode="regular"  dateformat="yyyy-MM-dd HH:mm"  parent="tmp_pubDateTime2">
+    	     <![CDATA[\d{4}-\d{2}-\d{2} \d{2}:\d{2}]]>
+		</item> 
+		<item name="pubDateTime" mode="regular"  dateformat="yyyy-MM-dd HH:mm:ss"  parent="tmp_pubDateTime2">
+    	     <![CDATA[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}]]>
+		</item> 
+		
+		 <item name="pubDateTime" mode="xpath" >
+    		<![CDATA[//span[@class='pubtime']/@data-time]]>
+		</item> 
+		<item name="pubDateTime" mode="regular" >
+    		<![CDATA[data-time="(\d+-\d+-\d+ \d+:\d+)"]]>
+		</item> 
+	  
+		<item name="tmp_From" mode="xpath"  type="tmp">
+    	     <![CDATA[//span[@id='source_baidu']/text()|//div[@class='info']/text()|//div[@class='m-meta']/text()]]>
+		</item> 
+		<item name="From" mode="regular"  parent="tmp_From">
+    	     <![CDATA[来源：(.*?)$]]>
+		</item> 
+		 <item name="From" mode="regular"  parent="tmp_pubDateTime2">
+    	     <![CDATA[来源：(.*?)日期]]>
+		</item> 
+		<item name="From" mode="xpath">
+    	     <![CDATA[//div[@id="pageInfoWrap"]/text()]]>
+		</item>  
+		<item name="Content" mode="xpath" ><!--内容 -->
+    	<![CDATA[//div[@id='content']/html()|//div[@class='zuo left']/html()|//div[@class='main']/html()|//div[@class="article"]/html()|//div[@id="gContentDetail"]/html()]]>
+		</item>		
+	</Contents>		
+	 <page>
+	<!--翻页 下一页规则 -->
+	<item name="tmp_page" mode="xpath" type="tmp">
+	 <![CDATA[//div[@id='displaypagenum']/center/html()]]>
+	 </item>
+	  <item name="page" mode="regular" parent="tmp_page" type="tmp">
+	  <![CDATA[<a href="([^>]+?)" class="page">下一页</a>]]>
+	  </item>
+	</page> 
+	<!--翻页 下一页内容-->
+	<Next_Contents>
+		<item name="Content" mode="xpath"><!--内容 -->
+    	<![CDATA[//div[@id='content']/html()]]>
+		</item>
+	</Next_Contents> 
+	<regex_filter ><![CDATA[<h1[^>]*?>[\s\S]+?</h1>]]></regex_filter>
+	<regex_filter ><![CDATA[<div class="info"[^>]*?>[\s\S]+?</div>]]></regex_filter>
+	<regex_filter ><![CDATA[<div class="abs"[^>]*?>[\s\S]+?</div>]]></regex_filter>
+</html>

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>	
+	<!--中国网http://henan.china.com.cn/news/2017/0724/5305487_2.shtml
+	         http://fangtan.china.com.cn/2018-11/26/content_74202219.htm详细页 -->                               
+	<forurlReg ><![CDATA[http://[\S]+.china.com.cn[\S]+]]></forurlReg>
+	<!-- 临时集合 页面下载前获取-->
+	<load_on_items>
+	  <item name="siteName" mode="str">
+   			<![CDATA[中国网]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值 -->
+	<item name="exist_keys" mode="str">
+   			<![CDATA[class]]>
+		</item>
+		<item name="first_keys" mode="str">
+   			<![CDATA[class]]>
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<item name="class" mode="regular" type="tmp">
+   			<![CDATA[class]]>
+		</item>
+	</tmp_items>		
+	<!--内容块 -->
+	<Contents>
+	
+		<!--标题 -->
+	  	<item name="Title" mode="xpath">
+    		<![CDATA[//h1[@class='article-title']/text()|//div[@class="show-title"]/h1/text()|//div[@class='article-title']/h1/text()|//div[@id='box2']/h1/text()|//div[@class='list']/h1/text()|//h1[@class="videoTitle"]/text()]]>
+		</item>
+		<item name="tmp_Author" mode="xpath" type="tmp" >
+    		<![CDATA[//span[@class='editors']/text()|//div[@id='box4']/table/tbody/tr/td/text()]]>
+		</item>
+		<item name="Author" mode="regular" parent="tmp_Author">
+    		<![CDATA[编辑：(.*?)$]]>
+		</item>
+		<item name="Author" mode="regular" parent="tmp_Author">
+    		<![CDATA[责任编辑: (.*?)$]]>
+		</item>
+		<item name="tmp_Author" mode="xpath" type="tmp" >
+    		<![CDATA[//span[@id='editor_baidu']/text()]]>
+		</item>
+		<item name="Author" mode="regular" parent="tmp_Author">
+    		<![CDATA[编辑：(.*?)$]]>
+		</item>
+		<item name="Author" mode="xpath" >
+    		<![CDATA[//div[@class='article-info']/p[3]/a/text()]]>
+		</item>
+		
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="pubDateTime" mode="xpath" dateformat="yyyy-MM-dd HH:mm | yyyy-MM-dd HH:mm:ss|yyyy年MM月dd日">
+    		<![CDATA[//time[@class='date']/text()|//span[@class='article-timestamp ml10']/text()|//div[@class="guestInfo"]/text()]]>
+		</item>
+		<item name="tmp_pubDateTime" mode="xpath" type="tmp">
+    	<![CDATA[//div[@id='box2']/h2/text()]]>
+		</item>
+		<item name="pubDateTime" mode="regular" dateformat="yyyy-MM-dd"
+			parent="tmp_pubDateTime">
+    	<![CDATA[(\d+-\d+-\d+)]]>
+		</item>
+		<item name="tmp_pubDateTime4" mode="xpath" type="tmp">
+    		<![CDATA[//span[@id='pubtime_baidu']/text()]]>
+		</item>
+	    <item name="pubDateTime" mode="regular"  dateformat="yyyy-MM-dd HH:mm" parent="tmp_pubDateTime4">
+    	     <![CDATA[(\d+-\d+-\d+ \d+:\d+)]]><!--另一种方法 获取时间 ： 发表于：(.*?)$ -->
+		</item>
+		
+		<item name="tmp_From" mode="xpath" type="tmp" >
+			<![CDATA[//span[@class='source']/a/text()|//span[@id='source_baidu']/text()]]>
+		</item> 
+		<item name="From" mode="regular" parent="tmp_From" >
+			<![CDATA[来源：(.*?)$]]>
+		</item> 
+		<item name="tmp_From" mode="xpath" type="tmp" >
+			<![CDATA[//span[@class="article-source"]/text()]]>
+		</item> 
+		<item name="From" mode="regular" parent="tmp_From" >
+			<![CDATA[来源：(.*?)$]]>
+		</item> 
+		
+     	<item name="ClickCount" mode="xpath" regex="," replacement="" trim="1"><!--点击量 -->
+    		<![CDATA[]]>
+		</item>
+		<item name="ReplyCount" mode="xpath"><!--回复数 -->
+    		<![CDATA[]]>
+		</item>
+		<item name="Summary" mode="xpath"><!-- 摘要 -->
+		 	<![CDATA[//div[@class='desc']/html()|//p[@class='article-intro pt10 pl30 w560']/html()]]>
+		</item>
+		<item name="Content" mode="xpath"><!-- 摘要 -->
+		 	<![CDATA[//div[@class='show-content']/html()|//div[@class='article-content']/html()|div[@id='box3']/html()|//div[@id="artbody"]/html()|//div[@class="main"]/html()]]>
+		</item>
+		<item name="Content1" mode="xpath" type="tmp"><!--回复数 -->
+    		<![CDATA[//div[@class='list']/html()]]>
+		</item>
+    	<item name="Content" mode="regular" parent="Content1" >
+			<![CDATA[<!--enpcontent-->([\s\S]+?)<!--/enpcontent-->]]>
+		</item>
+	</Contents>	
+</html>

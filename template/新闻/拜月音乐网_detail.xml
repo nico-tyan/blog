@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>	
+     <!--拜月音乐网http://www.byzxsjz.cn/xq/jdyj/2018/1122/548611.html详细页-->
+	<forurlReg><![CDATA[http://[\S]+.byzxsjz.cn[\S]+]]></forurlReg>
+	<load_on_items>
+	    <item name="siteName" mode="str">
+   			<![CDATA[拜月音乐网]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+	<!--	<item name="charset" mode="str">
+   			<![CDATA[gb2312]]>
+		</item>  -->
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>	
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[Title|Content|pubDateTime]]>
+		</item>
+	
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<item name="C-Main-Article-QQ" mode="xpath" type="tmp">
+   			<![CDATA[//div[@class="pleft"]/@class]]>
+		</item>
+	</tmp_items>
+	<!--内容块 -->
+	<Contents>
+		<!--标题 -->	
+		<item name="Title" mode="xpath">
+    		<![CDATA[//div[@class="title"]/h2/text()]]>
+		</item>
+		
+        <item name="Author1" mode="xpath" type="tmp">
+    		<![CDATA[//div[@class="info"]/text()]]>
+		</item>
+		<item name="Author" mode="regular" parent="Author1">
+    	     <![CDATA[网络整理 (.*?)次]]>   	     
+		</item>	
+		
+		<item name="pubDateTime" mode="regular" parent="Author1" dateformat="yyyy-MM-dd HH:mm">
+    	     <![CDATA[(\d+-\d+-\d+ \d+:\d+)]]>   	     
+		</item>	
+	
+		<item name="From" mode="regular" parent="Author1">
+    	     <![CDATA[\d+-\d+-\d+ \d+:\d+(.*?)蜘蛛侠]]>   	     
+		</item>
+     	<item name="tmp_ClickCount" mode="xpath" regex="," replacement="" trim="1" type="tmp" ><!--点击量 -->
+    	<![CDATA[]]>
+		</item>
+		<item name="ClickCount" mode="regular" parent="tmp_ClickCount">
+    	     <![CDATA[]]>   	     
+		</item>
+		<item name="ReplyCount" mode="xpath"><!--回复数 -->
+    	<![CDATA[]]>
+		</item>
+		<item name="Summary" mode="xpath"><!-- 摘要 -->
+		 <![CDATA[]]>
+		</item>		
+		<item name="Content" mode="xpath" ><!--内容 -->
+    	<![CDATA[//div[@class="content"]/html()]]>
+		</item>			
+	</Contents>		
+</html>

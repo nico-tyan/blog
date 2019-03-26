@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>
+	<!-- 淮海工学院旭日新闻网http://xuri.hhit.edu.cn/ssjgy.jsp?a106778t=2&a106778p=1&a106778c=15&a106778i=%E6%96%B0%E5%8D%8E&wbtreeid=1003&Find=find&entrymode=1&INTEXT2=5paw5Y2O&news_search_code=&wbtreeids=0&INTEXT= -->
+	<forurlReg><![CDATA[http://xuri.hhit.edu.cn/ssjgy.jsp\?[\S]+]]></forurlReg>
+	<!-- 临时集合 页面下载前获取-->
+	<load_on_items>
+		<item name="siteCode" mode="str"><![CDATA[N0000649]]></item>
+		<item name="siteName" mode="str">
+   	 		<![CDATA[淮海工学院旭日新闻网]]>
+		</item>
+			<item name="type" mode="str">
+   			<![CDATA[1]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="siteUrl" mode="str">
+   			<![CDATA[http://xuri.hhit.edu.cn/ssjgy.jsp?a106778t=2&a106778p={Page}&a106778c=15&a106778i={Keyword}&wbtreeid=1003&Find=find&entrymode=1&INTEXT2={Keyword}&news_search_code=&wbtreeids=0&INTEXT=]]> <!--搜索链接 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="get_next_url" mode="str">
+   			<![CDATA[1]]><!--  get_next_url =1 为获取下一页， 其它为替换 -->
+		</item>
+		<item name="load_referer" mode="str" type="tmp"><!-- 检查是否需要referer -->
+   			<![CDATA[#]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值  -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[center]]> <!-- 能够获取到列表块 视为此模板匹配成功 -->
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<!-- 能够获取到列表块 视为此模板匹配成功 -->
+		<item name="center" mode="xpath" type="tmp">
+   			<![CDATA[//table[@align='center']/@align]]>
+		</item> 
+	</tmp_items>
+	<list>
+ 		<item name="list_items" mode="xpath" type="tmp"><!--相当于添加了一个父类 （标题url这些需要获取的共同路径）  下面的网站主题就可以写精简 -->
+ 			<![CDATA[/html/body/div/table[5]/tbody/tr/td/table/tbody/tr/td[1]/table/tbody/tr[2]/td/form/table[2]/tbody/tr]]>
+		</item>
+	</list>
+	<items>
+		<item name="Title" mode="xpath"><!-- 标题 -->
+   			<![CDATA[a/span/text()]]>
+		</item>
+		<item name="Url" mode="xpath"><!-- url链接 -->
+   			<![CDATA[a/@href]]>
+		</item>
+	</items>
+	<!-- 获取下一页地址 -->
+	 <page>
+	 	<item name="page" mode="xpath" type="tmp">
+		<![CDATA[//a[@class='Next']/@href]]>
+		</item>
+	</page> 
+</html>

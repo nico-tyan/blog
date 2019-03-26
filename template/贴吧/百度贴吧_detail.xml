@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>
+	<!-- 百度贴吧https://tieba.baidu.com/p/5076503354?pid=106429114519&cid=0&red_tag=2226335862#106429114519 -->
+	<forurlReg><![CDATA[[\S]+tieba.baidu.com/[\S]+]]></forurlReg>
+	<!-- 临时集合 页面下载前获取-->
+	<load_on_items>
+		<item name="siteName" mode="str">
+   	 		<![CDATA[百度贴吧]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[wrap1]]>
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+		<tmp_items>
+		<!-- 能够获取到列表块 视为此模板匹配成功 -->
+		<item name="wrap1" mode="xpath" type="tmp">
+   			<![CDATA[//div[@class='wrap1']/@class]]>
+		</item> 
+	</tmp_items>
+	
+	<Contents>
+		<!--标题 -->
+		<item name="Title" mode="xpath">
+    	<![CDATA[//div[@class='core_title_wrap_bright clearfix']/h3/text()]]>
+		</item>
+		<item name="Title" mode="xpath">
+    	<![CDATA[//div[@class='core_title core_title_theme_bright']/h1/text()]]>
+		</item>
+		<item name="Author" mode="xpath"><!--作者  -->
+    	<![CDATA[//li[@class='d_name']/a/text()]]>
+		</item>
+		<item name="Content" mode="regular_content_subset">
+    	<![CDATA[<div id="post_content_[\s\S]+?>([\s\S]+?)</div><br>]]>
+		</item>
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<!-- <item name="Content" mode="xpath" >内容
+    	<![CDATA[//div[@class='d_post_content j_d_post_content d_post_content_bold clearfix']/html()|//div[@class='d_post_content j_d_post_content ']/html()|//div[@class='d_post_content j_d_post_content  clearfix']/html()|//div[@class='d_post_content j_d_post_content d_post_content_bold']/html()]]>
+		</item> --><!-- 
+		<item name="Content" mode="xpath" >内容
+    	<![CDATA[//div[@class='d_post_content j_d_post_content  clearfix']/html()]]>
+		</item> -->
+		<!-- <item name="Content" mode="xpath" >内容
+    	<![CDATA[//div[@class='d_post_content j_d_post_content d_post_content_bold']/html()]]>
+		</item> -->
+		<item name="tmp_pubDateTime" mode="xpath" type="tmp">
+    	<![CDATA[//div[@class='post-tail-wrap']/span[4]/text()|//div[@class='post-tail-wrap']/span[3]/text()]]>
+		</item>
+		<item name="pubDateTime" mode="regular" dateformat="yyyy-MM-dd HH:mm"
+			parent="tmp_pubDateTime">
+    	<![CDATA[(\d+-\d+-\d+ \d+:\d+)]]>
+		</item>
+		<item name="tmp_pubDateTime" mode="xpath" type="tmp">
+    	<![CDATA[//div[@class='l_post j_l_post l_post_bright noborder ']/@data-field]]>
+		</item>
+		<item name="pubDateTime" mode="regular" dateformat="yyyy-MM-dd HH:mm"
+			parent="tmp_pubDateTime">
+    	<![CDATA[(\d+-\d+-\d+ \d+:\d+)]]>
+		</item>
+	</Contents>
+</html>

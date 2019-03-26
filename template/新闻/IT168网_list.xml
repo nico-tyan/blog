@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html>
+     <!--IT168网http://sou.it168.com/search?q=%E5%8D%8E%E7%A1%95&f=69&ie=utf-8&st=50 -->
+     <forurlReg><![CDATA[http://sou.it168.com[\S]+]]></forurlReg>
+     <!-- 临时集合 页面下载前获取-->
+     <load_on_items>
+          <item name="siteCode" mode="str"><![CDATA[N0000194]]></item>
+          <item name="siteName" mode="str"><![CDATA[IT168网]]></item>
+          <item name="type" mode="str">
+               <![CDATA[1]]>
+               <!-- 1 搜索列表  2 详情 -->
+          </item>
+          <item name="siteUrl" mode="str">
+               <![CDATA[http://sou.it168.com/search?q={Keyword}&f=69&ie=utf-8&st={Page}]]>
+               <!--搜索链接 -->
+          </item>
+          <item name="charset" mode="str"><![CDATA[utf-8]]></item>
+          <item name="url_charset" mode="str"><![CDATA[utf-8]]></item>
+          <item name="get_next_url" mode="str">
+               <![CDATA[1]]>
+               <!--  get_next_url =1 为获取下一页， 其它为替换 -->
+          </item>
+          <item name="load_referer" mode="str" type="tmp">
+               <!-- 检查是否需要referer -->
+               <![CDATA[#]]>
+          </item>
+          <item name="statusCode" mode="str">
+               <![CDATA[200]]>
+               <!--下载返回码为 200 视为成功 -->
+          </item>
+          <item name="cycle_retry_times" mode="str">
+               <![CDATA[1]]>
+               <!-- 重试次数 -->
+          </item>
+          <!--内容解析成功必须存在的几个 值  -->
+          <item name="exist_keys" mode="str">
+               <![CDATA[w980_1]]>
+               <!-- 能够获取到列表块 视为此模板匹配成功 -->
+          </item>
+     </load_on_items>
+     <!-- 临时集合  页面下载后获取-->
+     <tmp_items>
+          <!-- 能够获取到列表块 视为此模板匹配成功 -->
+          <item name="w980_1" mode="xpath" type="tmp"><![CDATA[//div[@class='w980_1']/@class]]></item>
+     </tmp_items>
+     <list>
+          <item name="list_items" mode="xpath" type="tmp">
+               <!--相当于添加了一个父类 （标题url这些需要获取的共同路径）  下面的网站主题就可以写精简 -->
+               <![CDATA[//div[@class='l1']/]]>
+          </item>
+     </list>
+     <items>
+          <item name="Title" mode="xpath">
+               <!-- 标题 -->
+               <![CDATA[//font/a/html()]]>
+          </item>
+          <item name="Url" mode="xpath">
+               <!-- url链接 -->
+               <![CDATA[//font/a/@href]]>
+          </item>
+          <item name="Author" mode="xpath">
+               <!-- 作者 -->
+          </item>
+          <item name="Section" mode="xpath">
+               <!-- 区域吧 -->
+          </item>
+          <item name="pubDateTime" mode="regular" dateformat="yyyy-MM-dd"><![CDATA[(\d{4}-\d{2}-\d{2})]]></item>
+          <item name="ClickCount" mode="xpath">
+               <!--点击量 -->
+          </item>
+          <item name="ReplyCount" mode="xpath">
+               <!--回复量 -->
+          </item>
+     </items>
+     <!-- 获取下一页地址 -->
+     <page>
+          <item name="page" mode="css" attr="href"><![CDATA[body > div.w980_1 > div.l1 > div.page > ul > li:last-child > a]]></item>
+     </page>
+     <!--  临时集合
+	json方式获取  例如：新华网时政_list.xml
+	<tmp_items>
+		<item name="search-result" mode="xpath" type="tmp">
+   			<![CDATA[//div[@class="search-result"]/@class]]>
+		</item>
+	</tmp_items>
+	翻页 下一页规则
+	<page>
+		<item name="page" mode="str" >
+   			<![CDATA[0]]>
+		</item>
+	</page>
+	<list>
+		<item name="list_items" mode="json" type="tmp">
+    	<![CDATA[$..results]]>
+		</item>
+	</list>
+	<items>
+		<item name="Url" mode="json">
+    	<![CDATA[$..url]]>
+		</item>
+		<item name="Title" mode="json">
+    	<![CDATA[$..title]]>
+		</item>
+		<item name="pubDateTime" mode="json" dateformat="yyyy-MM-dd HH:mm">
+    	<![CDATA[$..pubtime]]>
+		</item>
+	</items>	
+	 -->
+</html>
+

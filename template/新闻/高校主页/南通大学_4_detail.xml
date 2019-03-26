@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>
+	<!-- 南通大学http://dx.ntu.edu.cn//dx/dtxx/content/2067A680950E42FCE050007F01000E6D.html -->
+	<forurlReg><![CDATA[http://dx.ntu.edu.cn/[\S]+]]></forurlReg>
+	<!-- 临时集合 页面下载前获取-->
+	<load_on_items>
+		<item name="siteName" mode="str">
+   	 		<![CDATA[南通大学]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[page]]>
+		</item>
+		<item name="id" mode="regular" type="tmp" ref="url"> <!-- 引用  url匹配 -->    
+    	<![CDATA[content/(\d+).html]]>
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<!-- 能够获取到列表块 视为此模板匹配成功 -->
+		<item name="page" mode="xpath" type="tmp">
+   			<![CDATA[//div[@id='page']/@id]]>
+		</item> 
+	</tmp_items>
+	<Contents>
+		<!--标题 -->
+		<item name="Title" mode="xpath">
+    	<![CDATA[//div[@id='document-title']/text()]]>
+		</item>
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="tmp_pubDateTime" mode="xpath" type="tmp">
+    	<![CDATA[//div[@id='document-time']/text()]]>
+		</item>
+		<item name="pubDateTime" mode="regular" dateformat="yyyy-MM-dd"
+			parent="tmp_pubDateTime">
+    	<![CDATA[\d+-\d+-\d+]]>
+		</item>
+		<item name="ClickCount1" mode="regular" type="tmp"><!--点击量 -->
+    	<![CDATA[siteId = '(\S+)']]>
+		</item>
+		<item name="Content" mode="xpath" ><!--内容 -->
+    	<![CDATA[//div[@id='document-body']/html()]]>
+		</item>
+	</Contents>
+	<!-- ajax异步获取 -->
+	<ajax>
+		<method><![CDATA[get]]></method>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<!-- 组装 请求连接  ref引用已获取或已处理数据  data_type 数据类型 -->
+		<!-- http://210.29.65.177:8001/TrueCMS/sysVisitorLogController/visit.do?callback=jQuery172055296941739019_1502161603661&visitorCountry=%E4%B8%AD%E5%9B%BD&visitorProvince=%E5%B9%BF%E4%B8%9C&visitorCity=%E5%B9%BF%E5%B7%9E&siteId=a87d5566-bf84-44ea-b61c-61baca26983e&_=1502161603754 -->
+		<url_join ref="ClickCount1" data_type="String"><![CDATA[http://210.29.65.177:8001/TrueCMS/sysVisitorLogController/visit.do?callback=jQuery172055296941739019_1502161603661&visitorCountry=%E4%B8%AD%E5%9B%BD&visitorProvince=%E5%B9%BF%E4%B8%9C&visitorCity=%E5%B9%BF%E5%B7%9E&siteId=]]></url_join>
+		<url_join ref="gen_str" data_type="String"><![CDATA[&_=1502161603754]]></url_join>
+		<item name="ClickCount" mode="json">
+	    	<![CDATA[$..count]]>
+		</item>
+	</ajax>
+</html>

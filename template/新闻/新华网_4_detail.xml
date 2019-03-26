@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>	
+	<!--新华网 http://news.xinhuanet.com/politics/2017-03/12/c_1120612021.htm详细页 -->                               
+	<forurlReg ><![CDATA[http://[\S]+.xinhuanet.com/[\S]+]]></forurlReg>
+	<!-- 临时集合 页面下载前获取-->
+	<load_on_items>
+	   <item name="siteName" mode="str">
+   			<![CDATA[新华网 ]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[Title|Content]]>
+		</item>
+		<item name="next_url" mode="regular" type="tmp" ref="url"><!--引用  url匹配  -->
+    	<![CDATA[^(.*?)\.htm]]>
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		<item name="widthMain" mode="xpath" type="tmp">
+   			<![CDATA[//div[@class="widthMain main"]/@class|//div[@class='conW']/@class]]>
+		</item>
+	</tmp_items>
+	<tmp_items>
+		
+	</tmp_items>
+	<!--内容块 -->
+	<Contents>	
+		  <!--  http://news.xinhuanet.com/politics/2017-03/12/c_1120612021.htm -->
+		        <!--标题 -->
+	  	<item name="Title"  mode="xpath" >
+    		<![CDATA[//div[@id='conTit']/h1/text()|//span[@id='title']/text()|//div[@id='ArticleTit']/text()|//div[@class="C"]/h1]]>
+		</item>		
+		<item name="tmp_Author" mode="xpath" type="tmp">
+    		<![CDATA[//div[@class='edit']/html()]]>
+		</item>
+		<item name="Author" mode="regular" parent="tmp_Author" >
+    		<![CDATA[\[责任编辑：(.+?)\]]]>
+		</item>		
+		<item name="tmp_Author" mode="xpath" type="tmp">
+    		<![CDATA[//span[@class='editor']/text()]]>
+		</item>
+		<item name="Author" mode="regular" parent="tmp_Author" >
+    		<![CDATA[\[责任编辑:(.+?)\]]]>
+		</item>	
+		<item name="Author" mode="regular">
+    		<![CDATA[编辑：(.*?)\]]]>
+		</item>	
+		
+					
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="tmp_pubDateTime" mode="xpath" type="tmp">
+    		<![CDATA[//div[@class='info']/span[@class='h-time']/text()|//div[@class='laiyuan']/text()]]>
+		</item>
+		<item name="pubDateTime" mode="regular" dateformat="yyyy-MM-dd HH:mm"
+			parent="tmp_pubDateTime">
+    		<![CDATA[\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}]]>
+		</item> 
+		<item name="tmp_pubDateTime1" mode="xpath" type="tmp">
+    		<![CDATA[//span[@id='pubtime']/text()]]>
+		</item>
+		<item name="pubDateTime" mode="regular" dateformat="yyyy年MM月dd日 HH:mm:ss"
+			parent="tmp_pubDateTime1">
+    		<![CDATA[^(.*?)$]]>
+		</item> 
+		
+		<item name="tmp_pubDateTime2" mode="xpath" type="tmp">
+    		<![CDATA[//div[@class="info"]/text()]]>
+		</item>
+		<item name="pubDateTime" mode="regular" dateformat="yyyy-MM-dd HH:mm:ss" parent="tmp_pubDateTime2">
+    		<![CDATA[(\d+-\d+-\d+ \d+:\d+:\d+)]]>
+		</item> 
+		
+		<item name="tmp_From" mode="xpath" type="tmp" >
+		<![CDATA[//div[@class='info']/span[@class='source']/text()]]>
+		</item>
+		<item name="From" mode="regular" parent="tmp_From">
+    		<![CDATA[来源：(.*?)$]]>
+		</item>
+		
+		<item name="From" mode="regular" parent="tmp_pubDateTime2">
+    		<![CDATA[来源：(.*?)$]]>
+		</item>
+		
+		
+		<item name="tmp_From" mode="xpath" type="tmp" >
+		<![CDATA[//em[@id='source']/text()|//div[@class='laiyuan']/a/text()]]>
+		</item>
+		<item name="From" mode="regular" parent="tmp_From">
+    		<![CDATA[^(.*?)$]]>
+		</item>
+		<item name="Content" mode="xpath"><!--内容 -->
+    	<![CDATA[//div[@id='content']/html()]]>
+		</item>	
+		<item name="Content" mode="xpath"><!--内容 -->
+    	<![CDATA[//div[@class='content']/html()]]>
+		</item>	
+	</Contents>	
+	<page>
+	<!--翻页 下一页规则 -->
+        <item name="tmp_page" mode="xpath" type="tmp">
+	       <![CDATA[//div[@id='div_currpage']/html()]]>
+	    </item>
+	    <item name="page" mode="regular" parent="tmp_page" type="tmp">
+	       <![CDATA[<a href="([^>]+?)" class="nextpage">下一页</a>]]>
+		</item>
+	</page> 		
+	<!--翻页 下一页内容-->
+	<Next_Contents>
+		<item name="Content" mode="xpath" ><!--内容 -->
+    	<![CDATA[//div[@id='content']/html()]]>
+		</item>
+		<item name="Content" mode="xpath" ><!--内容 -->
+    	<![CDATA[//div[@class='content']/html()]]>
+		</item>
+	</Next_Contents>
+	<regex_filter ><![CDATA[<div width="100%">[\s\S]+?</center>[\s\S]+?</div>]]></regex_filter>
+</html>

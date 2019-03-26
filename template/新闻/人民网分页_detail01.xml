@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html>	
+	<!--人民网http://pic.people.com.cn/n1/2017/0313/c1016-29140787.html详细页 -->
+	<forurlReg ><![CDATA[http://pic.people.com.cn/[\S]+]]></forurlReg>
+	<!-- 临时集合 页面下载前获取-->
+	<load_on_items>
+	   <item name="siteName" mode="str">
+   			<![CDATA[人民网]]>
+		</item>
+		<item name="type" mode="str">
+   			<![CDATA[2]]> <!-- 1 搜索列表  2 详情 -->
+		</item>
+		<item name="charset" mode="str">
+   			<![CDATA[gb2312]]>
+		</item>
+		<item name="url_charset" mode="str">
+   			<![CDATA[utf-8]]>
+		</item>
+		<item name="statusCode" mode="str">
+   			<![CDATA[200]]><!--下载返回码为 200 视为成功 -->
+		</item>
+		<item name="cycle_retry_times" mode="str">
+   			<![CDATA[1]]><!-- 重试次数 -->
+		</item>
+		<!--内容解析成功必须存在的几个 值 -->
+		<item name="exist_keys" mode="str">
+   			<![CDATA[Title|Content|pubDateTime]]>
+		</item>
+		<item name="next_url" mode="regular" type="tmp" ref="url"><!--引用  url匹配  -->
+    	<![CDATA[^(.*?)\.htm]]>
+		</item>
+	</load_on_items>
+	<!-- 临时集合  页面下载后获取-->
+	<tmp_items>
+		
+	</tmp_items>
+	<!--内容块 -->
+	<Contents>
+		<!--标题 -->
+	  	<item name="Title" mode="xpath">
+    		<![CDATA[//div[@class='title']/h1/html()]]>
+		</item>
+		<item name="tmp_Author" mode="xpath"  type="tmp">
+    		<![CDATA[//div[@class='edit clearfix']/i/text()]]>
+		</item>
+		<item name="Author" mode="regular" parent="tmp_Author">
+    		<![CDATA[\(责编：(.+?)\)]]>
+		</item>  
+		<!--发布时间 datetimeformat时间格式 多个以 ， , | 或空格隔开 -->
+		<item name="tmp_pubDateTime" mode="xpath" type="tmp">
+    		<![CDATA[//div[@class='content clear clearfix']/div[@class='page_c' and @style='text-align:right;']/html()]]>
+		</item>
+		<item name="pubDateTime" mode="regular" dateformat="yyyy年MM月dd日HH:mm" parent="tmp_pubDateTime">
+    		<![CDATA[&nbsp;&nbsp;(.*?)$]]>
+		</item> 
+		<item name="From" mode="xpath" >
+		<![CDATA[//div[@class='content clear clearfix']/div[@class='page_c' and @style='text-align:right;']/a/text()]]>
+		</item>
+		
+		<item name="ClickCount" mode="xpath" regex="," replacement="" trim="1"><!--点击量 -->
+    	<![CDATA[]]>
+		</item>
+		<item name="ReplyCount" mode="xpath"><!--回复数 -->
+    	<![CDATA[]]>
+		</item>
+		<item name="Summary" mode="xpath"><!-- 摘要 -->
+		 <![CDATA[]]>
+		</item>
+		
+		<item name="Content" mode="xpath"><!--内容 -->
+    	<![CDATA[//div[@class='content clear clearfix']/html()]]>
+		</item>
+	</Contents>
+	<!--内容累加-->
+	<Append_Contents>
+		<!--json 图文  http://slide.news.sina.com.cn/w/slide_1_2841_108369.html -->
+		<!-- <item name="slide_data" mode="regular" type="tmp">
+	    	<![CDATA[var slide_data = ([\S\s]+})\s+var ARTICLE_DATA]]>
+		</item>
+		标题
+		<item name="Title" mode="json" parent="slide_data">
+    	<![CDATA[$.. slide.title]]>
+		</item>
+		<item name="pubDateTime" mode="json" dateformat="yyyy-MM-dd HH:mm:ss" parent="slide_data">
+    	<![CDATA[$.. slide.createtime]]>
+		</item>
+		<item name="images" mode="json" parent="slide_data" type="tmp">
+    	<![CDATA[$..images]]>
+		</item>
+		<item name="Content" mode="json_subset" parent="images" append_s="&lt;p&gt;" append_e="&lt;/p&gt;">
+    	<![CDATA[$..image_url@IMG|$..intro]]>如果存在@IMG <img> src="" 包围</img>
+		</item> -->
+	</Append_Contents>
+	
+	<page>
+	<!--翻页 下一页规则 -->
+	<!-- <item name="page" mode="css" attr="href"  >
+	<![CDATA[div.content.clear.clearfix>center>table>tbody>tr>td:last-child>a]]>
+ 	     </item>
+	 -->
+	<item name="tmp_page" mode="xpath" type="tmp">
+	 <![CDATA[//div[@class='content clear clearfix']/center/table/tbody/tr/td/a]]>
+	 </item>
+	  <item name="page" mode="regular" parent="tmp_page" >
+	  <![CDATA[<a href="([^>]+?)"><img src="/img/next_page.jpg" border="0"></a>]]>
+	  </item>
+
+	</page> 
+	<!--翻页 下一页内容-->
+	<Next_Contents>
+		<item name="Content" mode="xpath"><!--内容 -->
+    	<![CDATA[//div[@class='content clear clearfix']/html()]]>
+		</item>
+	</Next_Contents>
+	
+	<!-- <regex_filter><![CDATA[中共中央总书记]]></regex_filter>
+	<regex_filter><![CDATA[<p[^>]*?>[\s\S]+?</p>]]></regex_filter>
+	<css_filter><![CDATA[a[href]]]></css_filter>
+	<css_filter><![CDATA[img[src$=0337546.jpg]]]></css_filter>
+	<css_filter><![CDATA[p[align$=center2]]]></css_filter>
+	<css_filter><![CDATA[h3.r > a]]></css_filter> -->
+</html>
+
+<!-- 
+a. 转义序列各字符间不能有空格； 
+b. 转义序列必须以"；"结束； 
+c. 单独的&不被认为是转义开始； 
+d. 区分大小写。
+
+以下是XML中需要的转义字符:
+&(逻辑与)  &amp;        
+<(小于)    &lt;        
+>(大于)    &gt;        
+"(双引号)  &quot;      
+'(单引号)  &apos;  
+-->

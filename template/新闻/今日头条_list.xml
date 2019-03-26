@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html>
+     <!--今日头条   https://www.toutiao.com/search/?keyword=%E9%AA%91%E5%A3%AB%E4%B8%8D%E6%95%8C%E6%B9%96%E4%BA%BA  列表页 -->
+     <forurlReg><![CDATA[https://www.toutiao.com/search/?[\S]+]]></forurlReg>
+     <load_on_items>
+          <item name="siteCode" mode="str"><![CDATA[N0000697]]></item>
+          <item name="siteName" mode="str"><![CDATA[今日头条]]></item>
+          <item name="type" mode="str">
+               <![CDATA[1]]>
+               <!-- 1 搜索列表  2 详情 -->
+          </item> 
+          <item name="siteUrl" mode="str">
+<!--                <![CDATA[https://www.toutiao.com/search/?keyword={Keyword}]]> -->
+               <![CDATA[https://www.toutiao.com/search_content/?offset=0&format=json&keyword={Keyword}&autoload=true&count=20&cur_tab=1&from=search_tab]]>
+               <!--搜索链接 -->
+          </item>
+          <item name="charset" mode="str"><![CDATA[utf-8]]></item>
+          <item name="url_charset" mode="str"><![CDATA[utf-8]]></item>
+          <item name="statusCode" mode="str">
+               <![CDATA[200]]>
+               <!--下载返回码为 200 视为成功 -->
+          </item>
+          <item name="cycle_retry_times" mode="str">
+               <![CDATA[1]]>
+               <!-- 重试次数 -->
+          </item>
+          <!--内容解析成功必须存在的几个 值  -->
+          <item name="exist_keys" mode="str">
+               <![CDATA[ct]]>
+               <!-- 能够获取到列表块 视为此模板匹配成功 -->
+          </item>
+     </load_on_items>
+     <!-- 临时集合 -->
+     <tmp_items>
+          <item name="ct" mode="json" type="tmp"><![CDATA[$..count]]></item>
+     </tmp_items>
+     <!--翻页 下一页规则 -->
+     <page>
+<!--           <item name="page" mode="regular"><![CDATA[<a href="([\S]+)">下一页]]></item> -->
+     </page>
+     <list>
+          <item name="list_items" mode="json" type="tmp"><![CDATA[$..data]]></item>
+     </list>
+     <items>
+          <item name="Title" mode="json"><![CDATA[$..title]]></item>
+          <item name="Url" mode="json"><![CDATA[$..article_url]]></item>
+          <item name="pubDateTime" mode="json" dateformat="yyyy-MM-dd HH:mm"><![CDATA[$..datetime]]></item>
+     </items>
+</html>
+<!-- 
+a. 转义序列各字符间不能有空格； 
+b. 转义序列必须以"；"结束； 
+c. 单独的&不被认为是转义开始； 
+d. 区分大小写。
+
+以下是XML中需要的转义字符:
+&(逻辑与)  &amp;        
+<(小于)    &lt;        
+>(大于)    &gt;        
+"(双引号)  &quot;      
+'(单引号)  &apos;  
+-->
+

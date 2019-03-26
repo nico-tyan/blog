@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html>
+     <!-- 中华女子学院 http://www.cwu.edu.cn/cms/search/searchResults.jsp?query=%25E4%25B8%25AD%25E5%258D%258E&siteID=37&offset=0&rows=10&flg=1 -->
+     <forurlReg><![CDATA[http://www.cwu.edu.cn/cms/search/searchResults.jsp\?[\S]+]]></forurlReg>
+     <!-- 临时集合 页面下载前获取-->
+     <load_on_items>
+          <item name="siteCode" mode="str"><![CDATA[N0000956]]></item>
+          <item name="siteName" mode="str"><![CDATA[中华女子学院]]></item>
+          <item name="type" mode="str">
+               <![CDATA[1]]>
+               <!-- 1 搜索列表  2 详情 -->
+          </item>
+          <item name="siteUrl" mode="str">
+               <![CDATA[http://www.cwu.edu.cn/cms/search/searchResults.jsp?query={Keyword}&siteID=37&offset={Page}0&rows=10&flg=1]]>
+               <!--搜索链接 -->
+          </item>
+          <item name="charset" mode="str"><![CDATA[utf-8]]></item>
+          <item name="url_charset" mode="str"><![CDATA[utf-8]]></item>
+          <item name="get_next_url" mode="str">
+               <![CDATA[1]]>
+               <!--  get_next_url =1 为获取下一页， 其它为替换 -->
+          </item>
+          <item name="load_referer" mode="str" type="tmp">
+               <!-- 检查是否需要referer -->
+               <![CDATA[#]]>
+          </item>
+          <item name="statusCode" mode="str">
+               <![CDATA[200]]>
+               <!--下载返回码为 200 视为成功 -->
+          </item>
+          <item name="cycle_retry_times" mode="str">
+               <![CDATA[1]]>
+               <!-- 重试次数 -->
+          </item>
+          <!--内容解析成功必须存在的几个 值  -->
+          <item name="exist_keys" mode="str">
+               <![CDATA[center]]>
+               <!-- 能够获取到列表块 视为此模板匹配成功 -->
+          </item>
+     </load_on_items>
+     <!-- 临时集合  页面下载后获取-->
+     <tmp_items>
+          <!-- 能够获取到列表块 视为此模板匹配成功 -->
+          <item name="center" mode="xpath" type="tmp"><![CDATA[//table[@align='center']/@align]]></item>
+     </tmp_items>
+     <list>
+          <item name="list_items" mode="xpath" type="tmp">
+               <!--相当于添加了一个父类 （标题url这些需要获取的共同路径）  下面的网站主题就可以写精简 -->
+               <![CDATA[/html/body/table[4]/tbody/tr[2]/td/table[1]/tbody/tr]]>
+          </item>
+     </list>
+     <items>
+          <item name="Title" mode="xpath">
+               <!-- 标题 -->
+               <![CDATA[td[@class='border2']/blockquote/p/a/font/allText()]]>
+          </item>
+          <item name="Url" mode="xpath">
+               <!-- url链接 -->
+               <![CDATA[td[@class='border2']/blockquote/p/a/@href]]>
+          </item>
+          <item name="tmp_pubDateTime" mode="xpath" type="tmp">
+               <!-- 时间 -->
+               <![CDATA[td[@class='border2']/blockquote/p/font[2]/text()]]>
+          </item>
+          <item name="pubDateTime" mode="regular" parent="tmp_pubDateTime" dateformat="yyyy年MM月dd日"><![CDATA[\d+年\d+月\d+日]]></item>
+     </items>
+     <!-- 获取下一页地址 -->
+     <page>
+          <item name="page" mode="ragular" type="tmp"><![CDATA[href="(\S+)" class="pager">下一页]]></item>
+     </page>
+</html>
+
