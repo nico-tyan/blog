@@ -72,6 +72,7 @@ spring:
 # 合并多个DruidDataSource的监控数据  
      useGlobalDataSourceStat: true
    redis:
+        database: 2
         host: 192.168.254.108
         port: 6379
         password: 
@@ -82,7 +83,7 @@ spring:
         timeout: 5000
         commandTimeout: 5000
 sendserver:
-   HOST: 'http://211.156.32.71:8081/Consensus/Client/'
+   HOST: 'http://211.147.234.85:8081/Consensus/Client/'
    MAC: 52:54:00:1D:D2:FE
    PWD: 123456
    JSON: '{"type":1,"mac":"52:54:00:1D:D2:FE","synonym":{"邮储银行":"邮政储蓄银行 邮储行","湖南":"长沙 湘潭 株洲 邵阳 岳阳 常德 益阳 郴州 衡阳 娄底 怀化 永州 张家界 湘西"},"depth":20,"task":{"bean_status":null,"id":98,"title":"邮储银行","categoryId":42,"attention":0.3,"mustword":"湖南 邮储银行","orword":"","notword":"","issnapshot":null,"isdownphoto":null,"enable":1,"monitortime":180,"createon":"1551150726000","createby":"youchubank","updateby":"youchubank","updateon":"1551150726000","name":"常规监测","companyName":"湖南邮储银行","companyId":19,"sitetype":null},"targetsite":{"siteCode":"N0000759","sysType":0,"scanfrequency":180,"title":"百度网页","sitetype":"1","sleep":2,"serialVersionUID":1,"depth":10,"id":476,"state":0},"isdownphoto":0,"warning":{"serialVersionUID":1,"replyCount":1000,"clickCount":1000,"citedCount":1000},"id":"23654-21","targetsiteid":476,"state":3,"time":1551150726154,"taskid":98}'

@@ -18,6 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
+import redis.clients.jedis.Protocol;
 
 @Configuration
 @EnableCaching
@@ -36,6 +37,9 @@ public class RedisConfig extends CachingConfigurerSupport {
 
 	@Value("${spring.redis.pool.max-wait}")
 	private long maxWaitMillis;
+	
+	@Value("${spring.redis.database}")
+	private int database;
 
 	@Bean
 	public JedisPool redisPoolFactory() {
@@ -44,7 +48,7 @@ public class RedisConfig extends CachingConfigurerSupport {
 		JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
 		jedisPoolConfig.setMaxIdle(maxIdle);
 		jedisPoolConfig.setMaxWaitMillis(maxWaitMillis);
-		JedisPool jedisPool = new JedisPool(jedisPoolConfig, host, port);
+		JedisPool jedisPool = new JedisPool(jedisPoolConfig, host, port,Protocol.DEFAULT_TIMEOUT, null,database);
 		return jedisPool;
 	}
 

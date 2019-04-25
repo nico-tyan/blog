@@ -3,6 +3,7 @@ package com.yx.rednet;
 import javax.annotation.Resource;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSON;
@@ -19,6 +20,8 @@ import us.codecraft.webmagic.scheduler.component.DuplicateRemover;
 public class CustomRedisScheduler extends DuplicateRemovedScheduler implements MonitorableScheduler, DuplicateRemover{
 	@Resource
 	protected JedisPool pool;
+	@Resource
+	protected RedisTemplate redisTemplate;
 
     private static final String QUEUE_PREFIX = "queue_";
 
@@ -117,6 +120,7 @@ public class CustomRedisScheduler extends DuplicateRemovedScheduler implements M
 
     @Override
     public int getLeftRequestsCount(Task task) {
+    	redisTemplate.opsForList();
         Jedis jedis = pool.getResource();
         try {
             Long size = jedis.llen(getQueueKey(task));

@@ -26,6 +26,7 @@ public class HtmlunitUtil {
 		// 这里选择不需要
 		webClient.getOptions().setActiveXNative(false);
 		webClient.getOptions().setCssEnabled(false);// 是否启用CSS, 因为不需要展现页面,
+//		webClient.getOptions().setThrowExceptionOnScriptError(false);
 		// 所以不需要启用
 		webClient.getOptions().setJavaScriptEnabled(true); // 很重要，启用JS
 		webClient.setAjaxController(new NicelyResynchronizingAjaxController());// 很重要，设置支持AJAX
