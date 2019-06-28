@@ -16,6 +16,14 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.selector.Html;
 
+/**
+ * HtmlUnit工具类
+ * @Title: 
+ * @Package com.yx.youchubank  
+ * @Description:  
+ * @date 2019年6月10日  
+ * @version
+ */
 public class HtmlunitUtil {
 	
 	public static WebClient getWebClient(){
@@ -47,21 +55,26 @@ public class HtmlunitUtil {
 	
 	public static void main(String[] args) throws IOException {
 		WebClient webClient = HtmlunitUtil.getWebClient();
-		for (int i = 2; i < 7; i++) {
-			String downPage = HtmlunitUtil.downPage(webClient, "http://www.zhgnj.com/e/search/result/?searchid=671");
-			Page page =new Page();
-			page.setHtml(new Html(downPage));
-			page.setRawText(downPage);
-			String detailRegurl=".*zhgnj.com/.*[\\d]+.html";
-			List<String> targetRequest = page.getHtml().links().regex(detailRegurl).all();
-			Set<String> urlset=new HashSet<>();
-			for (String url : targetRequest) {
-				urlset.add(url);
-			}
-			//FileUtils.writeStringToFile(new File("E:/测试/"+i+".txt"), downPage, false);
-			FileUtils.writeLines(new File("E:/测试/"+i+".txt"),
-					urlset, false);
-		}
+//		for (int i = 2; i < 7; i++) {
+//			String downPage = HtmlunitUtil.downPage(webClient, "http://www.zhgnj.com/e/search/result/?searchid=671");
+//			Page page =new Page();
+//			page.setHtml(new Html(downPage));
+//			page.setRawText(downPage);
+//			String detailRegurl=".*zhgnj.com/.*[\\d]+.html";
+//			List<String> targetRequest = page.getHtml().links().regex(detailRegurl).all();
+//			Set<String> urlset=new HashSet<>();
+//			for (String url : targetRequest) {
+//				urlset.add(url);
+//			}
+//			//FileUtils.writeStringToFile(new File("E:/测试/"+i+".txt"), downPage, false);
+//			FileUtils.writeLines(new File("E:/测试/"+i+".txt"),
+//					urlset, false);
+//		}
+		
+		String downPage = HtmlunitUtil.downPage(webClient, "https://zt.voc.com.cn/Topic/youchuyinhangshoujiyinhang/mobile/");
+		Page page =new Page();
+		page.setHtml(new Html(downPage));
+		List<String> all = page.getHtml().links().regex(".*youchuyinhangshoujiyinhang/mobile/article.*html").all();
 		webClient.close();
 	}
 	

@@ -16,6 +16,14 @@ import us.codecraft.webmagic.scheduler.DuplicateRemovedScheduler;
 import us.codecraft.webmagic.scheduler.MonitorableScheduler;
 import us.codecraft.webmagic.scheduler.component.DuplicateRemover;
 
+/**
+ * 自定义redis去重url
+ * @Title: 
+ * @Package com.yx.youchubank  
+ * @Description:  
+ * @date 2019年6月10日  
+ * @version
+ */
 @Component
 public class CustomDuplicateRedisScheduler extends DuplicateRemovedScheduler implements MonitorableScheduler, DuplicateRemover{
 	protected final static Logger logger = LoggerFactory.getLogger(CustomDuplicateRedisScheduler.class);

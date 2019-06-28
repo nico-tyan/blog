@@ -27,6 +27,14 @@ import us.codecraft.webmagic.scheduler.DuplicateRemovedScheduler;
 import us.codecraft.webmagic.scheduler.MonitorableScheduler;
 import us.codecraft.webmagic.scheduler.component.DuplicateRemover;
 
+/**
+ * 自定义文件方式 URL管理器
+ * @Title: 
+ * @Package com.yx.rednet  
+ * @Description:  
+ * @date 2019年6月10日  
+ * @version
+ */
 public class CustomFileCacheQueueScheduler extends DuplicateRemovedScheduler implements MonitorableScheduler,Closeable {
 
     private String filePath = System.getProperty("java.io.tmpdir");

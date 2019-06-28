@@ -20,6 +20,14 @@ import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.Protocol;
 
+/**
+ * redis配置
+ * @Title: 
+ * @Package com.yx.config  
+ * @Description:  
+ * @date 2019年6月10日  
+ * @version
+ */
 @Configuration
 @EnableCaching
 public class RedisConfig extends CachingConfigurerSupport {
@@ -38,8 +46,8 @@ public class RedisConfig extends CachingConfigurerSupport {
 	@Value("${spring.redis.pool.max-wait}")
 	private long maxWaitMillis;
 	
-	@Value("${spring.redis.database}")
-	private int database;
+//	@Value("${spring.redis.database}")
+//	private int database;
 
 	@Bean
 	public JedisPool redisPoolFactory() {
@@ -48,9 +56,20 @@ public class RedisConfig extends CachingConfigurerSupport {
 		JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
 		jedisPoolConfig.setMaxIdle(maxIdle);
 		jedisPoolConfig.setMaxWaitMillis(maxWaitMillis);
-		JedisPool jedisPool = new JedisPool(jedisPoolConfig, host, port,Protocol.DEFAULT_TIMEOUT, null,database);
+		JedisPool jedisPool = new JedisPool(jedisPoolConfig, host, port);
 		return jedisPool;
 	}
+	
+//	@Bean
+//	public JedisPool redisPoolFactory() {
+//		System.out.println("JedisPool注入成功！！");
+//		System.out.println("redis地址：" + host + ":" + port);
+//		JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
+//		jedisPoolConfig.setMaxIdle(maxIdle);
+//		jedisPoolConfig.setMaxWaitMillis(maxWaitMillis);
+//		JedisPool jedisPool = new JedisPool(jedisPoolConfig, host, port,Protocol.DEFAULT_TIMEOUT, null,database);
+//		return jedisPool;
+//	}
 
 	/**
 	 * 设置数据存入redis 的序列化方式 </br>

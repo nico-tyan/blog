@@ -5,6 +5,14 @@ import com.gargoylesoftware.htmlunit.NicelyResynchronizingAjaxController;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
+/**
+ * HtmlUnit模拟下载类
+ * @Title: 
+ * @Package com.yx.youchubank  
+ * @Description:  
+ * @date 2019年6月10日  
+ * @version
+ */
 public class HtmlUnit {
 	public static void main(String[] args) {
 		final WebClient webClient = new WebClient(BrowserVersion.CHROME);// 新建一个模拟谷歌Chrome浏览器的浏览器客户端对象

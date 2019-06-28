@@ -16,6 +16,14 @@ import us.codecraft.webmagic.ResultItems;
 import us.codecraft.webmagic.Task;
 import us.codecraft.webmagic.pipeline.Pipeline;
 
+/**
+ * 自定义文章持久化数据库
+ * @Title: 
+ * @Package com.yx.pipeline  
+ * @Description:  
+ * @date 2019年6月10日  
+ * @version
+ */
 @Component
 public class ArticlePipeline implements Pipeline {
 

@@ -21,7 +21,14 @@ import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.support.http.StatViewServlet;
 import com.alibaba.druid.support.http.WebStatFilter;
 
-
+/**
+ * 数据源配置
+ * @Title: 
+ * @Package com.yx.config  
+ * @Description:  
+ * @date 2019年6月10日  
+ * @version
+ */
 @Configuration
 public class DataSourceConfig {
 

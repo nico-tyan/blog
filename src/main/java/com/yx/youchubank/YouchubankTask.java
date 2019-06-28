@@ -28,6 +28,14 @@ import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Spider;
 import us.codecraft.webmagic.selector.Html;
 
+/**
+ * 邮储银行爬取定时任务 
+ * @Title:
+ * @Package com.yx.youchubank  
+ * @Description:  
+ * @date 2019年6月10日  
+ * @version
+ */
 @Component
 public class YouchubankTask {
 	protected final static Logger logger = LoggerFactory.getLogger(YouchubankTask.class);

@@ -23,7 +23,12 @@ import org.apache.commons.lang3.StringUtils;
 import com.yx.entity.Article;
 
 /**
- * @author code4crafter@gmail.com <br>
+ * 红网解析器
+ * @Title: 
+ * @Package com.yx.rednet  
+ * @Description:  
+ * @date 2019年6月10日  
+ * @version
  */
 public class RednetProcessor implements PageProcessor {
     @Override

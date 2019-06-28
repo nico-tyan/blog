@@ -30,6 +30,14 @@ import com.alibaba.fastjson.JSONObject;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
+/**
+ * 定时发送数据至服务端
+ * @Title: 
+ * @Package com.yx.youchubank  
+ * @Description:  
+ * @date 2019年6月10日  
+ * @version
+ */
 @Component
 public class Send2ServerTask {
 	@Autowired
@@ -79,7 +87,7 @@ public class Send2ServerTask {
 			CloseableHttpClient client =httpClientBuilder.build();
 			CloseableHttpResponse response = null;
 			HttpPost post = new HttpPost(HOST + action);
-			String filepath=Send2ServerTask.class.getClassLoader().getResource("send_task_json.txt").getPath();
+			//String filepath=Send2ServerTask.class.getClassLoader().getResource("send_task_json.txt").getPath();
 			//String readFileToString = FileUtils.readFileToString(new File(filepath), "utf-8");//"E:/测试.txt"
 			//JSONObject jsonParam = JSONObject.parseObject(readFileToString);
 			JSONObject jsonParam = JSONObject.parseObject(JSON);

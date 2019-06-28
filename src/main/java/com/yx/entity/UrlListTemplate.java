@@ -6,12 +6,12 @@ import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.enums.IdType;
 
 /**
- * <p>
- * 
- * </p>
- *
- * @author 
- * @since 2019-02-27
+ * url模板设定
+ * @Title: 
+ * @Package com.yx.entity  
+ * @Description:  
+ * @date 2019年6月10日  
+ * @version
  */
 public class UrlListTemplate implements Serializable {
 

@@ -10,7 +10,12 @@ import us.codecraft.webmagic.processor.PageProcessor;
 import java.util.List;
 
 /**
- * @author code4crafter@gmail.com <br>
+ * 虎嗅网解析器
+ * @Title: 
+ * @Package com.yx.rednet  
+ * @Description:  
+ * @date 2019年6月10日  
+ * @version
  */
 public class HuxiuProcessor implements PageProcessor {
     @Override

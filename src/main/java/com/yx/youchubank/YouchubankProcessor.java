@@ -1,34 +1,24 @@
 package com.yx.youchubank;
 
-import us.codecraft.webmagic.Site;
-import us.codecraft.webmagic.Page;
-import us.codecraft.webmagic.Request;
-import us.codecraft.webmagic.Spider;
-import us.codecraft.webmagic.Task;
-import us.codecraft.webmagic.pipeline.FilePipeline;
-import us.codecraft.webmagic.pipeline.JsonFilePipeline;
-import us.codecraft.webmagic.processor.PageProcessor;
-import us.codecraft.webmagic.scheduler.FileCacheQueueScheduler;
-import us.codecraft.webmagic.scheduler.Scheduler;
-
-import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
-import javax.annotation.Resource;
-
-import org.apache.commons.lang3.StringUtils;
-
-import com.yx.entity.Article;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
+import us.codecraft.webmagic.Page;
+import us.codecraft.webmagic.Request;
+import us.codecraft.webmagic.Site;
+import us.codecraft.webmagic.Spider;
+import us.codecraft.webmagic.processor.PageProcessor;
 
 /**
- * @author code4crafter@gmail.com <br>
+ * 自定义通用解析器
+ * @Title: 
+ * @Package com.yx.youchubank  
+ * @Description:  
+ * @date 2019年6月10日  
+ * @version
  */
 public class YouchubankProcessor implements PageProcessor {
 	
@@ -84,7 +74,6 @@ public class YouchubankProcessor implements PageProcessor {
 		List<String> sendRequests = page.getHtml().links().regex(_detailRegurl!=null?_detailRegurl:detailRegurl).all();
 		Jedis jedis = pool.getResource();
 		try {
-			String pageDomain=domain+"_send_url";
 			for (String targeturl : sendRequests) {
 				if(jedis.sadd(domain+"_send_duplicate", targeturl)!=0){
 					   jedis.rpush(domain+"_send_list", targeturl);

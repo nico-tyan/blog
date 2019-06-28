@@ -21,6 +21,14 @@ import com.baomidou.mybatisplus.plugins.PaginationInterceptor;
 import com.baomidou.mybatisplus.plugins.PerformanceInterceptor;
 import com.baomidou.mybatisplus.spring.MybatisSqlSessionFactoryBean;
 
+/**
+ * mybatis配置
+ * @Title: 
+ * @Package com.yx.config  
+ * @Description:  
+ * @date 2019年6月10日  
+ * @version
+ */
 @Configuration
 @MapperScan(basePackages={"com.yx.entity.mapper*"})//扫描多个mapper接口
 @EntityScan("com.yx.entity*")//实体扫描

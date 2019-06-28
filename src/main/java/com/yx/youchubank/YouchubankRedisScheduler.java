@@ -14,6 +14,14 @@ import us.codecraft.webmagic.scheduler.DuplicateRemovedScheduler;
 import us.codecraft.webmagic.scheduler.MonitorableScheduler;
 import us.codecraft.webmagic.scheduler.component.DuplicateRemover;
 
+/**
+ * 自定义redis url管理器
+ * @Title: 
+ * @Package com.yx.youchubank  
+ * @Description:  
+ * @date 2019年6月10日  
+ * @version
+ */
 @Component
 public class YouchubankRedisScheduler extends DuplicateRemovedScheduler implements MonitorableScheduler, DuplicateRemover{
 	@Autowired
